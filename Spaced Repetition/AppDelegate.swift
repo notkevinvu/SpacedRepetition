@@ -18,8 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
+        let navController = UINavigationController()
         let vc = DecksViewController()
-        window?.rootViewController = vc
+        
+        navController.viewControllers = [vc]
+        window?.rootViewController = navController
         
         
         return true

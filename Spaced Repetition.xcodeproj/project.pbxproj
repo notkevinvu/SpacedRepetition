@@ -43,6 +43,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		25BF7921243454F900CE0E7A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		25BF79222434550000CE0E7A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		25BF7923243455FE00CE0E7A /* Cards */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Cards;
+			sourceTree = "<group>";
+		};
 		8E02E94E2429753A0023992C = {
 			isa = PBXGroup;
 			children = (
@@ -62,11 +83,13 @@
 		8E02E9592429753A0023992C /* Spaced Repetition */ = {
 			isa = PBXGroup;
 			children = (
+				25BF79222434550000CE0E7A /* Services */,
+				25BF7921243454F900CE0E7A /* Models */,
+				8E02E979242AF4670023992C /* Scene */,
 				8E02E95A2429753A0023992C /* AppDelegate.swift */,
 				8E02E9632429753B0023992C /* Assets.xcassets */,
 				8E02E9652429753B0023992C /* LaunchScreen.storyboard */,
 				8E02E9682429753B0023992C /* Info.plist */,
-				8E02E979242AF4670023992C /* Scene */,
 			);
 			path = "Spaced Repetition";
 			sourceTree = "<group>";
@@ -87,6 +110,7 @@
 		8E02E979242AF4670023992C /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				25BF7923243455FE00CE0E7A /* Cards */,
 				8E02E978242AF4600023992C /* Decks */,
 			);
 			path = Scene;
