@@ -19,7 +19,20 @@ class DecksWorker {
         self.decksStore = decksStore
     }
     
+    // fetchDecks should give a [Deck] object when it is finished being called
     func fetchDecks(completion: @escaping ([Deck]) -> Void) {
-        
+        decksStore.fetchDecks { (decks: () throws -> [Deck]) -> Void in
+            do {
+                let decks = try decks()
+                DispatchQueue.main.async {
+                    // passes out a [Deck] object as the decks variable
+                    completion(decks)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    completion([])
+                }
+            }
+        }
     }
 }
