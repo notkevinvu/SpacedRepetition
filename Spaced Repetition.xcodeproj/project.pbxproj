@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		25BF792524345E9300CE0E7A /* DecksMemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* DecksMemStore.swift */; };
 		25BF79272435B2F100CE0E7A /* DecksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF79262435B2F100CE0E7A /* DecksTableViewCell.swift */; };
+		25BF792F2436916500CE0E7A /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792E2436916500CE0E7A /* Deck.swift */; };
+		25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF7930243691A100CE0E7A /* DecksWorker.swift */; };
 		8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E95A2429753A0023992C /* AppDelegate.swift */; };
 		8E02E9642429753B0023992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9632429753B0023992C /* Assets.xcassets */; };
 		8E02E9672429753B0023992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9652429753B0023992C /* LaunchScreen.storyboard */; };
@@ -23,6 +25,8 @@
 /* Begin PBXFileReference section */
 		25BF792424345E9300CE0E7A /* DecksMemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksMemStore.swift; sourceTree = "<group>"; };
 		25BF79262435B2F100CE0E7A /* DecksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksTableViewCell.swift; sourceTree = "<group>"; };
+		25BF792E2436916500CE0E7A /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
+		25BF7930243691A100CE0E7A /* DecksWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksWorker.swift; sourceTree = "<group>"; };
 		8E02E9572429753A0023992C /* Spaced Repetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spaced Repetition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E02E95A2429753A0023992C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E02E9632429753B0023992C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -50,7 +54,7 @@
 		25BF7921243454F900CE0E7A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				25BF792424345E9300CE0E7A /* DecksMemStore.swift */,
+				25BF792E2436916500CE0E7A /* Deck.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -58,6 +62,7 @@
 		25BF79222434550000CE0E7A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				25BF792424345E9300CE0E7A /* DecksMemStore.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -67,6 +72,14 @@
 			children = (
 			);
 			path = Cards;
+			sourceTree = "<group>";
+		};
+		25BF792D24368F4600CE0E7A /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				25BF7930243691A100CE0E7A /* DecksWorker.swift */,
+			);
+			path = Workers;
 			sourceTree = "<group>";
 		};
 		8E02E94E2429753A0023992C = {
@@ -88,6 +101,7 @@
 		8E02E9592429753A0023992C /* Spaced Repetition */ = {
 			isa = PBXGroup;
 			children = (
+				25BF792D24368F4600CE0E7A /* Workers */,
 				25BF79222434550000CE0E7A /* Services */,
 				25BF7921243454F900CE0E7A /* Models */,
 				8E02E979242AF4670023992C /* Scene */,
@@ -194,8 +208,10 @@
 			files = (
 				8E02E975242AF4590023992C /* DecksModels.swift in Sources */,
 				8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */,
+				25BF792F2436916500CE0E7A /* Deck.swift in Sources */,
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
 				25BF79272435B2F100CE0E7A /* DecksTableViewCell.swift in Sources */,
+				25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */,
 				8E02E973242AF4590023992C /* DecksPresenter.swift in Sources */,
 				25BF792524345E9300CE0E7A /* DecksMemStore.swift in Sources */,
 				8E02E974242AF4590023992C /* DecksRouter.swift in Sources */,

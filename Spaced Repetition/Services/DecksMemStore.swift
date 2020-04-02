@@ -8,12 +8,11 @@
 
 import Foundation
 
-protocol DecksStoreProtocol {
-    
-}
-
 class DecksMemStore: DecksStoreProtocol {
     
     
     
+    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
+        
+    }
 }
