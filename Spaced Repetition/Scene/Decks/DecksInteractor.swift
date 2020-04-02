@@ -9,6 +9,7 @@
 import UIKit
 
 protocol DecksBusinessLogic: DecksViewDelegate {
+    func fetchDecks(request: Decks.FetchDecks.Request)
 }
 
 protocol DecksBusinessLogicDelegate: class {
@@ -27,12 +28,19 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
   
     var presenter: DecksPresentationLogic!
     weak var delegate: DecksBusinessLogicDelegate?
+    var decksWorker = DecksWorker(decksStore: DecksMemStore())
   
     // MARK: Setup
   
     // MARK: User Input
   
     // MARK: Private
+    
+    func fetchDecks(request: Decks.FetchDecks.Request) {
+        decksWorker.fetchDecks { (decks) in
+            
+        }
+    }
 }
 
 // MARK: - DecksViewDelegate

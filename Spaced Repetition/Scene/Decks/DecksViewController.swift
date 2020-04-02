@@ -57,7 +57,15 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        fetchDecksOnLoad()
+    }
+    
+    // MARK: Fetching Decks
+    
+    func fetchDecksOnLoad() {
+        // starting with VC, make a request to send to the interactor
+        let request = Decks.FetchDecks.Request()
+        interactor?.fetchDecks(request: request)
     }
   
     // MARK: Properties

@@ -13,5 +13,13 @@ protocol DecksStoreProtocol {
 }
 
 class DecksWorker {
+    var decksStore: DecksStoreProtocol
     
+    init(decksStore: DecksStoreProtocol) {
+        self.decksStore = decksStore
+    }
+    
+    func fetchDecks(completion: @escaping ([Deck]) -> Void) {
+        
+    }
 }
