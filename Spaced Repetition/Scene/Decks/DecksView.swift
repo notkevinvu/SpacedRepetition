@@ -14,12 +14,14 @@ protocol DecksViewDelegate: class {
 
 final class DecksView: UIView {
     
+    let tableView = UITableView()
+    
     typealias Delegate = DecksViewDelegate
     
     private lazy var addDeckButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
         // TODO: Style it to designs
-        button.layer.borderWidth = 2
+        button.layer.borderWidth = 1
         button.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)
         return button
     }()
@@ -37,6 +39,24 @@ final class DecksView: UIView {
     }
     
     private func setupSubviews() {
+        
+        // todo: remove green background
+        tableView.backgroundColor = UIColor.green.withAlphaComponent(0.5)
+        addSubview(tableView)
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        let tableLeftAnchor = tableView.leftAnchor.constraint(equalTo: self.leftAnchor)
+        let tableRightAnchor = tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
+        let tableBottomAnchor = tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.topAnchor)
+        self.addConstraints([
+            tableLeftAnchor,
+            tableRightAnchor,
+            tableTopAnchor,
+            tableBottomAnchor
+        ])
+        
+        addDeckButton.backgroundColor = UIColor.white
         addSubview(addDeckButton)
         
         addDeckButton.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +65,14 @@ final class DecksView: UIView {
         let addDeckRightAnchor = addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50)
         let addDeckBottomAnchor = addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -60)
         let addDeckHeightAnchor = addDeckButton.heightAnchor.constraint(equalToConstant: 70)
-        self.addConstraints([addDeckHorizontalAnchor, addDeckLeftAnchor, addDeckRightAnchor, addDeckBottomAnchor, addDeckHeightAnchor])
+        self.addConstraints([
+            addDeckHorizontalAnchor,
+            addDeckLeftAnchor,
+            addDeckRightAnchor,
+            addDeckBottomAnchor,
+            addDeckHeightAnchor
+        ])
+        
     }
     
     @objc private func handleAddDeck() {

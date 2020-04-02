@@ -24,7 +24,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         navController.viewControllers = [vc]
         window?.rootViewController = navController
         
-        
         return true
     }
 
