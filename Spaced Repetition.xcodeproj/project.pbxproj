@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25BF792524345E9300CE0E7A /* DecksMemStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* DecksMemStore.swift */; };
 		8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E95A2429753A0023992C /* AppDelegate.swift */; };
 		8E02E9642429753B0023992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9632429753B0023992C /* Assets.xcassets */; };
 		8E02E9672429753B0023992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9652429753B0023992C /* LaunchScreen.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		25BF792424345E9300CE0E7A /* DecksMemStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksMemStore.swift; sourceTree = "<group>"; };
 		8E02E9572429753A0023992C /* Spaced Repetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spaced Repetition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E02E95A2429753A0023992C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8E02E9632429753B0023992C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 		25BF7921243454F900CE0E7A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				25BF792424345E9300CE0E7A /* DecksMemStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -190,6 +193,7 @@
 				8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */,
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
 				8E02E973242AF4590023992C /* DecksPresenter.swift in Sources */,
+				25BF792524345E9300CE0E7A /* DecksMemStore.swift in Sources */,
 				8E02E974242AF4590023992C /* DecksRouter.swift in Sources */,
 				8E02E97B242AF4CF0023992C /* DecksView.swift in Sources */,
 				8E02E976242AF4590023992C /* DecksViewController.swift in Sources */,

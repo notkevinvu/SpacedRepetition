@@ -10,6 +10,16 @@ import UIKit
 
 enum Decks {
     
-    
+    enum FetchDecks {
+        struct Request {
+            
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
   
 }
