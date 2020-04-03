@@ -1,5 +1,5 @@
 //
-//  CardsViewController.swift
+//  DeckDetailViewController.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,15 +12,15 @@
 
 import UIKit
 
-protocol CardsDisplayLogic: class
+protocol DeckDetailDisplayLogic: class
 {
-  func displaySomething(viewModel: Cards.Something.ViewModel)
+  func displaySomething(viewModel: DeckDetail.Something.ViewModel)
 }
 
-class CardsViewController: UIViewController, CardsDisplayLogic
+class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 {
-  var interactor: CardsBusinessLogic?
-  var router: (NSObjectProtocol & CardsRoutingLogic & CardsDataPassing)?
+  var interactor: DeckDetailBusinessLogic?
+  var router: (NSObjectProtocol & DeckDetailRoutingLogic & DeckDetailDataPassing)?
 
   // MARK: Object lifecycle
   
@@ -41,9 +41,9 @@ class CardsViewController: UIViewController, CardsDisplayLogic
   private func setup()
   {
     let viewController = self
-    let interactor = CardsInteractor()
-    let presenter = CardsPresenter()
-    let router = CardsRouter()
+    let interactor = DeckDetailInteractor()
+    let presenter = DeckDetailPresenter()
+    let router = DeckDetailRouter()
     viewController.interactor = interactor
     viewController.router = router
     interactor.presenter = presenter
@@ -78,11 +78,11 @@ class CardsViewController: UIViewController, CardsDisplayLogic
   
   func doSomething()
   {
-    let request = Cards.Something.Request()
+    let request = DeckDetail.Something.Request()
     interactor?.doSomething(request: request)
   }
   
-  func displaySomething(viewModel: Cards.Something.ViewModel)
+  func displaySomething(viewModel: DeckDetail.Something.ViewModel)
   {
     //nameTextField.text = viewModel.name
   }

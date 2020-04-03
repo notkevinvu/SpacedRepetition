@@ -1,5 +1,5 @@
 //
-//  CardsWorker.swift
+//  DeckDetailWorker.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,7 +12,7 @@
 
 import UIKit
 
-class CardsWorker
+class DeckDetailWorker
 {
   func doSomeWork()
   {

@@ -1,5 +1,5 @@
 //
-//  CardsRouter.swift
+//  DeckDetailRouter.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,20 +12,20 @@
 
 import UIKit
 
-@objc protocol CardsRoutingLogic
+@objc protocol DeckDetailRoutingLogic
 {
   //func routeToSomewhere(segue: UIStoryboardSegue?)
 }
 
-protocol CardsDataPassing
+protocol DeckDetailDataPassing
 {
-  var dataStore: CardsDataStore? { get }
+  var dataStore: DeckDetailDataStore? { get }
 }
 
-class CardsRouter: NSObject, CardsRoutingLogic, CardsDataPassing
+class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
 {
-  weak var viewController: CardsViewController?
-  var dataStore: CardsDataStore?
+  weak var viewController: DeckDetailViewController?
+  var dataStore: DeckDetailDataStore?
   
   // MARK: Routing
   
@@ -46,14 +46,14 @@ class CardsRouter: NSObject, CardsRoutingLogic, CardsDataPassing
 
   // MARK: Navigation
   
-  //func navigateToSomewhere(source: CardsViewController, destination: SomewhereViewController)
+  //func navigateToSomewhere(source: DeckDetailViewController, destination: SomewhereViewController)
   //{
   //  source.show(destination, sender: nil)
   //}
   
   // MARK: Passing data
   
-  //func passDataToSomewhere(source: CardsDataStore, destination: inout SomewhereDataStore)
+  //func passDataToSomewhere(source: DeckDetailDataStore, destination: inout SomewhereDataStore)
   //{
   //  destination.name = source.name
   //}

@@ -1,5 +1,5 @@
 //
-//  CardsInteractor.swift
+//  DeckDetailInteractor.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,30 +12,30 @@
 
 import UIKit
 
-protocol CardsBusinessLogic
+protocol DeckDetailBusinessLogic
 {
-  func doSomething(request: Cards.Something.Request)
+  func doSomething(request: DeckDetail.Something.Request)
 }
 
-protocol CardsDataStore
+protocol DeckDetailDataStore
 {
   //var name: String { get set }
 }
 
-class CardsInteractor: CardsBusinessLogic, CardsDataStore
+class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 {
-  var presenter: CardsPresentationLogic?
-  var worker: CardsWorker?
+  var presenter: DeckDetailPresentationLogic?
+  var worker: DeckDetailWorker?
   //var name: String = ""
   
   // MARK: Do something
   
-  func doSomething(request: Cards.Something.Request)
+  func doSomething(request: DeckDetail.Something.Request)
   {
-    worker = CardsWorker()
+    worker = DeckDetailWorker()
     worker?.doSomeWork()
     
-    let response = Cards.Something.Response()
+    let response = DeckDetail.Something.Response()
     presenter?.presentSomething(response: response)
   }
 }

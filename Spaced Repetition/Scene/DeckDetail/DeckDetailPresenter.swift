@@ -1,5 +1,5 @@
 //
-//  CardsPresenter.swift
+//  DeckDetailPresenter.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,20 +12,20 @@
 
 import UIKit
 
-protocol CardsPresentationLogic
+protocol DeckDetailPresentationLogic
 {
-  func presentSomething(response: Cards.Something.Response)
+  func presentSomething(response: DeckDetail.Something.Response)
 }
 
-class CardsPresenter: CardsPresentationLogic
+class DeckDetailPresenter: DeckDetailPresentationLogic
 {
-  weak var viewController: CardsDisplayLogic?
+  weak var viewController: DeckDetailDisplayLogic?
   
   // MARK: Do something
   
-  func presentSomething(response: Cards.Something.Response)
+  func presentSomething(response: DeckDetail.Something.Response)
   {
-    let viewModel = Cards.Something.ViewModel()
+    let viewModel = DeckDetail.Something.ViewModel()
     viewController?.displaySomething(viewModel: viewModel)
   }
 }

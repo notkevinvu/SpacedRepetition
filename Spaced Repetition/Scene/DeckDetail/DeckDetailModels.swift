@@ -1,5 +1,5 @@
 //
-//  CardsModels.swift
+//  DeckDetailModels.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/3/20.
@@ -12,7 +12,7 @@
 
 import UIKit
 
-enum Cards
+enum DeckDetail
 {
   // MARK: Use cases
   
