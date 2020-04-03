@@ -9,6 +9,8 @@
 import UIKit
 
 protocol DecksDisplayLogic: class {
+    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
+    
     func displayDeckDetail()
 }
 
@@ -67,11 +69,17 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
     }
-  
+    
     // MARK: Properties
   
   
     // MARK: Display
+    
+    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
+        contentView.displayedDecks = viewModel.displayedDecks
+        print("\(viewModel.displayedDecks[1].nameOfDeck)")
+        contentView.tableView.reloadData()
+    }
     
     func displayDeckDetail() {
         router.routeToDeckDetail()

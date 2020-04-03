@@ -16,6 +16,8 @@ final class DecksView: UIView {
     
     let tableView = UITableView()
     
+    var displayedDecks: [Deck] = []
+    
     typealias Delegate = DecksViewDelegate
     
     private lazy var addDeckButton: UIButton = {
@@ -32,6 +34,7 @@ final class DecksView: UIView {
         super.init(frame: .zero)
         backgroundColor = .white
         setupSubviews()
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     required init?(coder: NSCoder) {
@@ -40,15 +43,14 @@ final class DecksView: UIView {
     
     private func setupSubviews() {
         
-        // todo: remove green background
-        tableView.backgroundColor = UIColor.green.withAlphaComponent(0.5)
+        // MARK: Table view setup
         addSubview(tableView)
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         let tableLeftAnchor = tableView.leftAnchor.constraint(equalTo: self.leftAnchor)
         let tableRightAnchor = tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
         let tableBottomAnchor = tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.topAnchor)
+        let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         self.addConstraints([
             tableLeftAnchor,
             tableRightAnchor,
@@ -56,6 +58,7 @@ final class DecksView: UIView {
             tableBottomAnchor
         ])
         
+        // MARK: add deck button setup
         addDeckButton.backgroundColor = UIColor.white
         addSubview(addDeckButton)
         
@@ -78,6 +81,31 @@ final class DecksView: UIView {
     @objc private func handleAddDeck() {
         delegate?.decksViewSelectAddDeck()
         print("Button tapped")
+        for deck in 0 ..< displayedDecks.count {
+            print("\(displayedDecks[deck].nameOfDeck)")
+        }
+        tableView.reloadData()
+    }
+    
+    
+}
+
+extension DecksView: UITableViewDataSource {
+    
+    // MARK: - Table view methods
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return displayedDecks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = displayedDecks[indexPath.row].nameOfDeck
+        return cell
     }
     
 }

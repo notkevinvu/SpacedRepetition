@@ -15,10 +15,10 @@ enum Decks {
             
         }
         struct Response {
-            
+            var decks: [Deck]
         }
         struct ViewModel {
-            
+            var displayedDecks: [Deck]
         }
     }
   

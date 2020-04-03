@@ -29,6 +29,7 @@ class DecksMemStore: DecksStoreProtocol {
     Deck(nameOfDeck: "Science", cards: scienceCards)
     ]
     
+    // this just returns a [Deck] object and passes it to whoever calls this function (i.e. the worker)
     func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
         completion { return type(of: self).decks}
     }

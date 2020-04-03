@@ -29,6 +29,8 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     var presenter: DecksPresentationLogic!
     weak var delegate: DecksBusinessLogicDelegate?
     var decksWorker = DecksWorker(decksStore: DecksMemStore())
+    
+    var decks: [Deck] = []
   
     // MARK: Setup
   
@@ -38,7 +40,9 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     
     func fetchDecks(request: Decks.FetchDecks.Request) {
         decksWorker.fetchDecks { (decks) in
-            
+            self.decks = decks
+            let response = Decks.FetchDecks.Response(decks: decks)
+            self.presenter.presentFetchedDecks(response: response)
         }
     }
 }
