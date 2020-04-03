@@ -60,6 +60,9 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchDecksOnLoad()
+        contentView.tableView.delegate = self
+        contentView.tableView.dataSource = self
+        contentView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     // MARK: Fetching Decks
@@ -89,6 +92,24 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Navigation
   
+}
+
+extension DecksViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return contentView.displayedDecks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = "Deck: \(contentView.displayedDecks[indexPath.row].nameOfDeck)"
+        
+        return cell
+    }
+    
 }
 
 

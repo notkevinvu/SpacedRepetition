@@ -34,7 +34,6 @@ final class DecksView: UIView {
         super.init(frame: .zero)
         backgroundColor = .white
         setupSubviews()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
     required init?(coder: NSCoder) {
@@ -80,32 +79,6 @@ final class DecksView: UIView {
     
     @objc private func handleAddDeck() {
         delegate?.decksViewSelectAddDeck()
-        print("Button tapped")
-        for deck in 0 ..< displayedDecks.count {
-            print("\(displayedDecks[deck].nameOfDeck)")
-        }
-        tableView.reloadData()
-    }
-    
-    
-}
-
-extension DecksView: UITableViewDataSource {
-    
-    // MARK: - Table view methods
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return displayedDecks.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = displayedDecks[indexPath.row].nameOfDeck
-        return cell
     }
     
 }
