@@ -62,7 +62,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         fetchDecksOnLoad()
         contentView.tableView.delegate = self
         contentView.tableView.dataSource = self
-        contentView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        contentView.tableView.register(DecksTableViewCell.self, forCellReuseIdentifier: "deckCardCell")
     }
     
     // MARK: Fetching Decks
@@ -80,7 +80,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
         contentView.displayedDecks = viewModel.displayedDecks
-        print("\(viewModel.displayedDecks[1].nameOfDeck)")
         contentView.tableView.reloadData()
     }
     
@@ -94,6 +93,8 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
 }
 
+// MARK: - Table View Methods
+
 extension DecksViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -104,10 +105,14 @@ extension DecksViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Deck: \(contentView.displayedDecks[indexPath.row].nameOfDeck)"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "deckCardCell", for: indexPath) as! DecksTableViewCell
+        cell.deckTitleLabel.text = "Deck test"
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
     
 }
