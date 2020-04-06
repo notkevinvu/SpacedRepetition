@@ -21,6 +21,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 {
   var interactor: DeckDetailBusinessLogic?
   var router: (NSObjectProtocol & DeckDetailRoutingLogic & DeckDetailDataPassing)?
+    var contentView: DeckDetailView!
 
   // MARK: Object lifecycle
   
@@ -44,8 +45,11 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     let interactor = DeckDetailInteractor()
     let presenter = DeckDetailPresenter()
     let router = DeckDetailRouter()
+    let view = DeckDetailView()
+    
     viewController.interactor = interactor
     viewController.router = router
+    viewController.contentView = view
     interactor.presenter = presenter
     presenter.viewController = viewController
     router.viewController = viewController
@@ -65,11 +69,15 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   }
   
   // MARK: View lifecycle
+    
+    override func loadView() {
+        view = contentView
+    }
   
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    view.backgroundColor = .white
+//    view.backgroundColor = .white
   }
   
   // MARK: Do something

@@ -48,7 +48,6 @@ final class DecksView: UIView {
         let tableRightAnchor = tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
         let tableBottomAnchor = tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
-        // switch to activate(_:)
         NSLayoutConstraint.activate([
         tableLeftAnchor,
         tableRightAnchor,
