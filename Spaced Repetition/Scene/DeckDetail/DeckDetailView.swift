@@ -10,6 +10,8 @@
 // 2) go to deckdetailVC, add a "contentView" var which is of type DeckDetailView!
 // 3) in the private setup() method, add "let view = DeckDetailView()" and "viewController.contentView = view"
 // 4) set the view of the VC to the content view in the loadView() lifecycle method
+// 5) put collection view methods in an extension of the deck detail VC, which should conform to the UICollectionViewFlowLayoutDelegate and UICollectionViewDataSource protocols
+// 6) remember to set the delegate and data source of the contentView.collectionView to self in the deck detail VC (i.e. the delegate/data source of the DeckDetailView's collectionView should be DeckDetailViewController)
 
 import UIKit
 
@@ -25,7 +27,7 @@ class DeckDetailView: UIView {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "deckDetailCell")
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = .blue
         
         return collectionView
     }()

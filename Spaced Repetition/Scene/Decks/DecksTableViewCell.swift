@@ -15,7 +15,8 @@ class DecksTableViewCell: UITableViewCell {
     var deckCardView = UIView()
     
     var deckTitleLabel: UILabel = {
-        let deckTitleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 40))
+        let deckTitleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 200, height: 30))
+        deckTitleLabel.font = UIFont.systemFont(ofSize: 30.0)
         deckTitleLabel.layer.borderWidth = 0.5
         deckTitleLabel.layer.borderColor = UIColor.black.cgColor
         return deckTitleLabel

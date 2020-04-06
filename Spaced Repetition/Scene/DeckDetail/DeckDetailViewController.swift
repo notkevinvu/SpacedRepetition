@@ -77,7 +77,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   override func viewDidLoad()
   {
     super.viewDidLoad()
-//    view.backgroundColor = .white
+    contentView.collectionView.delegate = self
+    contentView.collectionView.dataSource = self
   }
   
   // MARK: Do something
@@ -94,4 +95,27 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   {
     //nameTextField.text = viewModel.name
   }
+}
+
+
+extension DeckDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 380, height: 100)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "deckDetailCell", for: indexPath)
+        cell.backgroundColor = .red
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("Tapped collection view cell: \(indexPath.row)")
+    }
+    
 }
