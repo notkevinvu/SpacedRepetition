@@ -78,18 +78,21 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Display
     
-    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
-        contentView.displayedDecks = viewModel.displayedDecks
-        contentView.tableView.reloadData()
-    }
+    var displayedDecks: [Deck] = []
     
-    func displayDeckDetail() {
-        router.routeToDeckDetail()
+    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
+        displayedDecks = viewModel.displayedDecks
+        contentView.tableView.reloadData()
     }
   
     // MARK: User Interaction
   
     // MARK: Navigation
+    
+    func displayDeckDetail() {
+        router.routeToDeckDetail()
+    }
+    
   
 }
 
@@ -101,12 +104,12 @@ extension DecksViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contentView.displayedDecks.count
+        return displayedDecks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "deckCardCell", for: indexPath) as! DecksTableViewCell
-        cell.deckTitleLabel.text = "Deck test"
+        cell.deckTitleLabel.text = "\(displayedDecks[indexPath.row].nameOfDeck)"
         
         return cell
     }

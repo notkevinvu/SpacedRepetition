@@ -23,10 +23,10 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     // MARK: Routing
     
     func routeToDeckDetail() {
-//        let destinationVC = DeckDetailViewController()
+        let destinationVC = DeckDetailViewController()
 //        let destinationDS = destinationVC.router.dataStore
 //        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS)
-//        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     // MARK: Navigation

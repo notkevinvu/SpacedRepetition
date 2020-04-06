@@ -69,7 +69,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   override func viewDidLoad()
   {
     super.viewDidLoad()
-    doSomething()
+    view.backgroundColor = .white
   }
   
   // MARK: Do something

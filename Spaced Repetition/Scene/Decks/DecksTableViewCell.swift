@@ -18,7 +18,6 @@ class DecksTableViewCell: UITableViewCell {
         let deckTitleLabel = UILabel(frame: CGRect(x: 10, y: 10, width: 100, height: 40))
         deckTitleLabel.layer.borderWidth = 0.5
         deckTitleLabel.layer.borderColor = UIColor.black.cgColor
-//        deckTitleLabel.translatesAutoresizingMaskIntoConstraints = false
         return deckTitleLabel
     }()
     

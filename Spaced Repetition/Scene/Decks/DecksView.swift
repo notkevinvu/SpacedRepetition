@@ -16,8 +16,6 @@ final class DecksView: UIView {
     
     let tableView = UITableView()
     
-    var displayedDecks: [Deck] = []
-    
     typealias Delegate = DecksViewDelegate
     
     private lazy var addDeckButton: UIButton = {
@@ -50,11 +48,12 @@ final class DecksView: UIView {
         let tableRightAnchor = tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
         let tableBottomAnchor = tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
-        self.addConstraints([
-            tableLeftAnchor,
-            tableRightAnchor,
-            tableTopAnchor,
-            tableBottomAnchor
+        // switch to activate(_:)
+        NSLayoutConstraint.activate([
+        tableLeftAnchor,
+        tableRightAnchor,
+        tableTopAnchor,
+        tableBottomAnchor
         ])
         
         // MARK: add deck button setup
