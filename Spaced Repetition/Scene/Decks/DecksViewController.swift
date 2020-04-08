@@ -50,6 +50,18 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         router.dataStore = interactor
         view.delegate = interactor
     }
+    
+    private func configureTableViewData() {
+        contentView.tableView.delegate = self
+        contentView.tableView.dataSource = self
+        contentView.tableView.register(DecksTableViewCell.self, forCellReuseIdentifier: "deckCardCell")
+    }
+    
+    private func configureNavigationbar() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        // why do we use navigationitem.title instead of navigationController.title?
+        navigationItem.title = "All Decks"
+    }
   
     // MARK: View lifecycle
     
@@ -60,9 +72,8 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     override func viewDidLoad() {
         super.viewDidLoad()
         fetchDecksOnLoad()
-        contentView.tableView.delegate = self
-        contentView.tableView.dataSource = self
-        contentView.tableView.register(DecksTableViewCell.self, forCellReuseIdentifier: "deckCardCell")
+        configureTableViewData()
+        configureNavigationbar()
     }
     
     // MARK: Fetching Decks

@@ -19,25 +19,25 @@ protocol DeckDetailDisplayLogic: class
 
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 {
-  var interactor: DeckDetailBusinessLogic?
-  var router: (NSObjectProtocol & DeckDetailRoutingLogic & DeckDetailDataPassing)?
+    var interactor: DeckDetailBusinessLogic?
+    var router: (NSObjectProtocol & DeckDetailRoutingLogic & DeckDetailDataPassing)?
     var contentView: DeckDetailView!
 
-  // MARK: Object lifecycle
+    // MARK: Object lifecycle
   
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-  {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+    {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
+    }
   
-  required init?(coder aDecoder: NSCoder)
-  {
-    super.init(coder: aDecoder)
-    setup()
-  }
+    required init?(coder aDecoder: NSCoder)
+    {
+        super.init(coder: aDecoder)
+        setup()
+    }
   
-  // MARK: Setup
+    // MARK: Setup
   
   private func setup()
   {
