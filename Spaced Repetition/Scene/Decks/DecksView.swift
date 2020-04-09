@@ -14,7 +14,16 @@ protocol DecksViewDelegate: class {
 
 final class DecksView: UIView {
     
-    let tableView = UITableView()
+    let collectionView: UICollectionView = {
+       let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.register(DecksCollectionViewCell.self, forCellWithReuseIdentifier: "decksCell")
+        collectionView.backgroundColor = .systemBackground
+        
+        return collectionView
+    }()
     
     typealias Delegate = DecksViewDelegate
     
@@ -40,20 +49,26 @@ final class DecksView: UIView {
     
     private func setupSubviews() {
         
-        // MARK: Table view setup
-        addSubview(tableView)
+        // MARK: Collection view setup
+        addSubview(collectionView)
         
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        let tableLeftAnchor = tableView.leftAnchor.constraint(equalTo: self.leftAnchor)
-        let tableRightAnchor = tableView.rightAnchor.constraint(equalTo: self.rightAnchor)
-        let tableBottomAnchor = tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        let tableTopAnchor = tableView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let collectionLeftAnchor = collectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
+        let collectionRightAnchor = collectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
+        let collectionBottomAnchor = collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        let collectionTopAnchor = collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         NSLayoutConstraint.activate([
-        tableLeftAnchor,
-        tableRightAnchor,
-        tableTopAnchor,
-        tableBottomAnchor
+        collectionLeftAnchor,
+        collectionRightAnchor,
+        collectionBottomAnchor,
+        collectionTopAnchor
         ])
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 30
+        layout.itemSize = CGSize(width: 360, height: 110)
+        
+        collectionView.collectionViewLayout = layout
         
         // MARK: add deck button setup
         addDeckButton.backgroundColor = UIColor.white
@@ -72,6 +87,11 @@ final class DecksView: UIView {
             addDeckBottomAnchor,
             addDeckHeightAnchor
         ])
+        addDeckButton.layer.shadowOffset = .zero
+        addDeckButton.layer.shadowRadius = 7
+        addDeckButton.setTitle("+ Add Deck", for: .normal)
+        addDeckButton.setTitleColor(.black, for: .normal)
+        
         
     }
     

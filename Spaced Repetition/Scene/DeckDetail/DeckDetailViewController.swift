@@ -97,6 +97,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   }
 }
 
+// MARK: - Collection view methods
 
 extension DeckDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
@@ -114,6 +115,7 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         return cell
     }
     
+    // REMOVE WHEN FINISHED WITH CONFIGURATION
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Tapped collection view cell: \(indexPath.row)")
     }
