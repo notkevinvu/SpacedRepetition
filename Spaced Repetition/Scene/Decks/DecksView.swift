@@ -30,7 +30,7 @@ final class DecksView: UIView {
     private lazy var addDeckButton: UIButton = {
         let button = UIButton(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
         // TODO: Style it to designs
-        button.layer.borderWidth = 1
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)
         return button
     }()
@@ -78,7 +78,7 @@ final class DecksView: UIView {
         let addDeckHorizontalAnchor = addDeckButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         let addDeckLeftAnchor = addDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50)
         let addDeckRightAnchor = addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50)
-        let addDeckBottomAnchor = addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -60)
+        let addDeckBottomAnchor = addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40)
         let addDeckHeightAnchor = addDeckButton.heightAnchor.constraint(equalToConstant: 70)
         self.addConstraints([
             addDeckHorizontalAnchor,
@@ -89,6 +89,8 @@ final class DecksView: UIView {
         ])
         addDeckButton.layer.shadowOffset = .zero
         addDeckButton.layer.shadowRadius = 7
+        addDeckButton.layer.shadowOpacity = 0.2
+        addDeckButton.layer.cornerRadius = 7
         addDeckButton.setTitle("+ Add Deck", for: .normal)
         addDeckButton.setTitleColor(.black, for: .normal)
         

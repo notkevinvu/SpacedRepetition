@@ -27,7 +27,7 @@ class DeckDetailView: UIView {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "deckDetailCell")
-        collectionView.backgroundColor = .blue
+        collectionView.backgroundColor = .white
         
         return collectionView
     }()

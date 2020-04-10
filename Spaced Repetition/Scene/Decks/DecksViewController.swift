@@ -128,12 +128,14 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
         // 3) settings/options gear button
         // 4) needs review/up to date label
         cell.deckTitleLabel.text = "\(displayedDecks[indexPath.row].nameOfDeck)"
+        cell.numOfCardsLabel.text = "\(displayedDecks[indexPath.row].cards.count) Cards"
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("tapped cell: \(indexPath.row)")
+        displayDeckDetail()
     }
     
 }
