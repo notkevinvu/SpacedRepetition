@@ -14,18 +14,21 @@ import UIKit
 
 protocol DeckDetailPresentationLogic
 {
-  func presentSomething(response: DeckDetail.Something.Response)
+    func presentDeck(response: DeckDetail.ShowDeck.Response)
 }
 
 class DeckDetailPresenter: DeckDetailPresentationLogic
 {
-  weak var viewController: DeckDetailDisplayLogic?
-  
-  // MARK: Do something
-  
-  func presentSomething(response: DeckDetail.Something.Response)
-  {
-    let viewModel = DeckDetail.Something.ViewModel()
-    viewController?.displaySomething(viewModel: viewModel)
-  }
+    weak var viewController: DeckDetailDisplayLogic?
+    
+    func presentDeck(response: DeckDetail.ShowDeck.Response) {
+        let deck = response.deck
+        
+        let nameOfDeck = deck.nameOfDeck
+        let cards = deck.cards
+        
+        let displayedDeck = DeckDetail.ShowDeck.ViewModel.DisplayedDeck(nameOfDeck: nameOfDeck, cards: cards)
+        let viewModel = DeckDetail.ShowDeck.ViewModel(displayedDeck: displayedDeck)
+        viewController?.displayDeck(viewModel: viewModel)
+    }
 }

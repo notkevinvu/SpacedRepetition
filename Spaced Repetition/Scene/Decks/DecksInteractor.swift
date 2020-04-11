@@ -18,6 +18,10 @@ protocol DecksBusinessLogicDelegate: class {
 
 protocol DecksDataStore {
     var delegate: DecksBusinessLogicDelegate? { get set }
+    
+    var deckInfoToPass: Deck? { get set }
+    
+    var decks: [Deck] { get }
 }
 
 class DecksInteractor: DecksBusinessLogic, DecksDataStore {
@@ -31,6 +35,8 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     var decksWorker = DecksWorker(decksStore: DecksMemStore())
     
     var decks: [Deck] = []
+    
+    var deckInfoToPass: Deck?
   
     // MARK: Setup
   

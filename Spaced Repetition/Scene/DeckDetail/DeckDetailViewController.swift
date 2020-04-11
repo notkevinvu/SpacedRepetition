@@ -14,7 +14,7 @@ import UIKit
 
 protocol DeckDetailDisplayLogic: class
 {
-  func displaySomething(viewModel: DeckDetail.Something.ViewModel)
+    func displayDeck(viewModel: DeckDetail.ShowDeck.ViewModel)
 }
 
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
@@ -73,28 +73,37 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     override func loadView() {
         view = contentView
     }
-  
-  override func viewDidLoad()
-  {
-    super.viewDidLoad()
-    contentView.collectionView.delegate = self
-    contentView.collectionView.dataSource = self
-  }
-  
-  // MARK: Do something
-  
-  //@IBOutlet weak var nameTextField: UITextField!
-  
-  func doSomething()
-  {
-    let request = DeckDetail.Something.Request()
-    interactor?.doSomething(request: request)
-  }
-  
-  func displaySomething(viewModel: DeckDetail.Something.ViewModel)
-  {
-    //nameTextField.text = viewModel.name
-  }
+      
+    override func viewDidLoad()
+    {
+        super.viewDidLoad()
+        contentView.collectionView.delegate = self
+        contentView.collectionView.dataSource = self
+        navigationItem.largeTitleDisplayMode = .automatic
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getDeck()
+    }
+
+    // MARK: Display Deck
+    
+    var displayedDeckName: String = "Untitled Deck"
+    var displayedDeckCards: [Card] = []
+    
+    func displayDeck(viewModel: DeckDetail.ShowDeck.ViewModel) {
+        displayedDeckName = viewModel.displayedDeck.nameOfDeck
+        displayedDeckCards = viewModel.displayedDeck.cards
+    }
+    
+    // MARK: Get Deck when view appears
+    
+    func getDeck() {
+        let request = DeckDetail.ShowDeck.Request()
+        interactor?.getDeck(request: request)
+    }
+
 }
 
 // MARK: - Collection view methods
@@ -104,17 +113,34 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: 380, height: 100)
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return displayedDeckCards.count
     }
-    
+
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "deckDetailCell", for: indexPath)
+        
+        let frontLabel: UILabel = {
+            let label = UILabel(frame: CGRect(x: 20, y: 20, width: 300, height: 30))
+            label.text = displayedDeckCards[indexPath.row].frontSide
+            
+            return label
+        }()
+        
+        let backLabel: UILabel = {
+            let label = UILabel(frame: CGRect(x: 20, y: 60, width: 300, height: 30))
+            label.text = displayedDeckCards[indexPath.row].backSide
+            
+            return label
+        }()
+        
+        cell.addSubview(frontLabel)
+        cell.addSubview(backLabel)
         cell.backgroundColor = .red
         return cell
     }
-    
+
     // REMOVE WHEN FINISHED WITH CONFIGURATION
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Tapped collection view cell: \(indexPath.row)")

@@ -134,8 +134,8 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("tapped cell: \(indexPath.row)")
-        displayDeckDetail()
+        router.dataStore?.deckInfoToPass = displayedDecks[indexPath.row]
+        router.routeToDeckDetail()
     }
     
 }

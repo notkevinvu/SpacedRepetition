@@ -14,28 +14,28 @@ import UIKit
 
 protocol DeckDetailBusinessLogic
 {
-  func doSomething(request: DeckDetail.Something.Request)
+    func getDeck(request: DeckDetail.ShowDeck.Request)
 }
 
 protocol DeckDetailDataStore
 {
-  //var name: String { get set }
+    var deckInfo: Deck? { get set }
 }
 
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 {
-  var presenter: DeckDetailPresentationLogic?
-  var worker: DeckDetailWorker?
-  //var name: String = ""
-  
-  // MARK: Do something
-  
-  func doSomething(request: DeckDetail.Something.Request)
-  {
-    worker = DeckDetailWorker()
-    worker?.doSomeWork()
+    var presenter: DeckDetailPresentationLogic?
+    var worker: DeckDetailWorker?
     
-    let response = DeckDetail.Something.Response()
-    presenter?.presentSomething(response: response)
-  }
+    var deckInfo: Deck?
+  
+    // MARK: Do something
+    
+    func getDeck(request: DeckDetail.ShowDeck.Request) {
+        if let deckInfo = deckInfo {
+            let response = DeckDetail.ShowDeck.Response(deck: deckInfo)
+            presenter?.presentDeck(response: response)
+        }
+    }
+    
 }

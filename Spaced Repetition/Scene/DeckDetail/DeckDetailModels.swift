@@ -15,6 +15,23 @@ import UIKit
 enum DeckDetail
 {
   // MARK: Use cases
+    
+    enum ShowDeck {
+        struct Request {
+            
+        }
+        struct Response {
+            var deck: Deck
+        }
+        struct ViewModel {
+            struct DisplayedDeck {
+                var nameOfDeck: String
+                var cards: [Card]
+            }
+            
+            var displayedDeck: DisplayedDeck
+        }
+    }
   
   enum Something
   {
