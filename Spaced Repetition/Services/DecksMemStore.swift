@@ -24,13 +24,24 @@ class DecksMemStore: DecksStoreProtocol {
     Card(frontSide: "Derivative of Velocity", backSide: "Acceleration")
     ]
     
-    static var decks = [
+    var decks = [
     Deck(nameOfDeck: "Kevin", cards: kevinCards),
     Deck(nameOfDeck: "Science", cards: scienceCards)
     ]
     
     // this just returns a [Deck] object and passes it to whoever calls this function (i.e. the worker)
     func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
-        completion { return type(of: self).decks}
+//        completion { return type(of: self).decks}
+        completion { return decks }
+    }
+    
+    // MARK: CRUD Operations
+    
+    func createDeck(completion: @escaping (Deck) -> Void) {
+        let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [])
+        decks.append(newDeck)
+        DispatchQueue.main.async {
+            completion(newDeck)
+        }
     }
 }

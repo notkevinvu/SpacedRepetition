@@ -140,10 +140,10 @@
 				8E02E97A242AF4CF0023992C /* DecksView.swift */,
 				25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */,
 				8E02E971242AF4590023992C /* DecksViewController.swift */,
+				8E02E972242AF4590023992C /* DecksInteractor.swift */,
 				8E02E96E242AF4590023992C /* DecksPresenter.swift */,
 				8E02E96F242AF4590023992C /* DecksRouter.swift */,
 				8E02E970242AF4590023992C /* DecksModels.swift */,
-				8E02E972242AF4590023992C /* DecksInteractor.swift */,
 			);
 			path = Decks;
 			sourceTree = "<group>";

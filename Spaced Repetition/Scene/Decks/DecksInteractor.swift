@@ -58,7 +58,11 @@ extension DecksInteractor: DecksViewDelegate {
     
     func decksViewSelectAddDeck() {
         // TODO: Create a deck
+        decksWorker.createDeck { (deck) in
+            self.deckInfoToPass = deck
+        }
         
+        // do we need to follow the VIP cycle here in regards to creating boundary model structs (i.e. request, response, viewmodel etc?)
         presenter.presentDeckDetail()
     }
     

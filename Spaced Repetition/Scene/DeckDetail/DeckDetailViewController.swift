@@ -80,11 +80,13 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         contentView.collectionView.delegate = self
         contentView.collectionView.dataSource = self
         navigationItem.largeTitleDisplayMode = .automatic
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+ Card", style: .done, target: self, action: #selector(handleAddCardButton()))
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getDeck()
+        navigationItem.title = displayedDeckName
     }
 
     // MARK: Display Deck
@@ -103,6 +105,10 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         let request = DeckDetail.ShowDeck.Request()
         interactor?.getDeck(request: request)
     }
+    
+//    @objc func handleAddCardButton() {
+//        let request = DeckDetail
+//    }
 
 }
 

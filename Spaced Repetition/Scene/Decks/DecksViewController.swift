@@ -67,12 +67,15 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     override func loadView() {
         view = contentView
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDecksOnLoad()
+    }
   
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionViewSource()
         configureNavigationbar()
-        fetchDecksOnLoad()
     }
     
     // MARK: Fetching Decks
@@ -135,7 +138,8 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         router.dataStore?.deckInfoToPass = displayedDecks[indexPath.row]
-        router.routeToDeckDetail()
+        displayDeckDetail()
+        router.dataStore?.deckInfoToPass = nil
     }
     
 }
