@@ -32,17 +32,23 @@ enum DeckDetail
             var displayedDeck: DisplayedDeck
         }
     }
-  
-  enum Something
-  {
-    struct Request
-    {
+    
+    // this use case should show a UIAlertController
+    // do I show the UIAlertController from the view controller directly and then pass that data through the VIP cycle or should I handle the add/create card button tap through the VIP cycle first to present the UIAlertController and then when the UIAlertController is finished, pass that data through the VIP cycle?
+    enum CreateCard {
+        struct Request {
+            
+        }
+        struct Response {
+            var card: Card
+        }
+        struct ViewModel {
+            struct DisplayedCard {
+                var frontSide: String
+                var backSide: String
+            }
+            
+            var displayedCard: DisplayedCard
+        }
     }
-    struct Response
-    {
-    }
-    struct ViewModel
-    {
-    }
-  }
 }

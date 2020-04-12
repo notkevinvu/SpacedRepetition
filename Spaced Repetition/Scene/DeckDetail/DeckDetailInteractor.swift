@@ -15,6 +15,8 @@ import UIKit
 protocol DeckDetailBusinessLogic
 {
     func getDeck(request: DeckDetail.ShowDeck.Request)
+    
+    func createCard(request: DeckDetail.CreateCard.Request)
 }
 
 protocol DeckDetailDataStore
@@ -36,6 +38,10 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             let response = DeckDetail.ShowDeck.Response(deck: deckInfo)
             presenter?.presentDeck(response: response)
         }
+    }
+    
+    func createCard(request: DeckDetail.CreateCard.Request) {
+        
     }
     
 }
