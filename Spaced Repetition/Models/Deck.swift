@@ -9,12 +9,13 @@
 import Foundation
 
 struct Deck {
-    var nameOfDeck: String
+    // immutability > mutability
+    let nameOfDeck: String
     
-    var cards: [Card]
+    let cards: [Card]
 }
 
 struct Card {
-    var frontSide: String
-    var backSide: String
+    let frontSide: String
+    let backSide: String
 }

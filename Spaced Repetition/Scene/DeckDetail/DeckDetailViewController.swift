@@ -55,18 +55,22 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     router.viewController = viewController
     router.dataStore = interactor
   }
+    
+    private func configureNavBar() {
+        navigationItem.largeTitleDisplayMode = .automatic
+        let plusImage = UIImage(systemName: "plus.rectangle")
+        let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
+        addCardBarButton.tintColor = .black
+        navigationItem.rightBarButtonItem = addCardBarButton
+    }
+    
+    private func configureCollectionDataSource() {
+        contentView.collectionView.delegate = self
+        contentView.collectionView.dataSource = self
+    }
   
   // MARK: Routing
   
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
-    if let scene = segue.identifier {
-      let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-      if let router = router, router.responds(to: selector) {
-        router.perform(selector, with: segue)
-      }
-    }
-  }
   
   // MARK: View lifecycle
     
@@ -77,10 +81,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        contentView.collectionView.delegate = self
-        contentView.collectionView.dataSource = self
-        navigationItem.largeTitleDisplayMode = .automatic
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "+ Card", style: .done, target: self, action: #selector(handleAddCardButton))
+        configureCollectionDataSource()
+        configureNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -45,7 +45,8 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     // MARK: Private
     
     func fetchDecks(request: Decks.FetchDecks.Request) {
-        decksWorker.fetchDecks { (decks) in
+        decksWorker.fetchDecks { [weak self] decks in
+            guard let self = self else { return }
             self.decks = decks
             let response = Decks.FetchDecks.Response(decks: decks)
             self.presenter.presentFetchedDecks(response: response)
@@ -56,14 +57,15 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
 // MARK: - DecksViewDelegate
 extension DecksInteractor: DecksViewDelegate {
     
-    func decksViewSelectAddDeck() {
-        // TODO: Create a deck
-        decksWorker.createDeck { (deck) in
-            self.deckInfoToPass = deck
+    func decksViewSelectAddDeck(request: Decks.CreateDeck.Request) {
+        decksWorker.createDeck { [weak self] (deck) in
+            guard let self = self else { return }
+            
+            let response = Decks.CreateDeck.Response(deckInfoToPass: deck)
+            self.presenter.presentDeckDetail(response: response)
         }
         
-        // do we need to follow the VIP cycle here in regards to creating boundary model structs (i.e. request, response, viewmodel etc?)
-        presenter.presentDeckDetail()
+        
     }
     
 }

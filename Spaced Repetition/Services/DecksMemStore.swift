@@ -12,34 +12,34 @@ class DecksMemStore: DecksStoreProtocol {
     
     // MARK: - Data
     
-    static var kevinCards: [Card] = [
+    static let kevinCards: [Card] = [
     Card(frontSide: "Kevin's Birthday", backSide: "Sep 22"),
     Card(frontSide: "Kevin's Height", backSide: "58 in."),
     Card(frontSide: "Kevin's Age", backSide: "23")
     ]
     
-    static var scienceCards: [Card] = [
+    static let scienceCards: [Card] = [
     Card(frontSide: "Chemical formula of glucose", backSide: "C6H12O6"),
     Card(frontSide: "Derivative of Position", backSide: "Velocity"),
     Card(frontSide: "Derivative of Velocity", backSide: "Acceleration")
     ]
     
-    var decks = [
+    static var decks = [
     Deck(nameOfDeck: "Kevin", cards: kevinCards),
     Deck(nameOfDeck: "Science", cards: scienceCards)
     ]
     
-    // this just returns a [Deck] object and passes it to whoever calls this function (i.e. the worker)
-    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
-//        completion { return type(of: self).decks}
-        completion { return decks }
-    }
-    
     // MARK: CRUD Operations
     
+    // this just returns a [Deck] object and passes it to whoever calls this function (i.e. the worker)
+    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
+        // decks needs to be a static var in order to return this type - alternatively, we could just do 'return decks' if we want to pull the decks object from this memstore
+        completion { return type(of: self).decks}
+    }
+    
     func createDeck(completion: @escaping (Deck) -> Void) {
-        let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [])
-        decks.append(newDeck)
+        let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [Card(frontSide: "Test front 1", backSide: "Test front 2"), Card(frontSide: "Test front 2", backSide: "Test back 2")])
+        DecksMemStore.decks.append(newDeck)
         DispatchQueue.main.async {
             completion(newDeck)
         }

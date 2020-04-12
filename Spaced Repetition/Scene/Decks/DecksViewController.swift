@@ -11,7 +11,9 @@ import UIKit
 protocol DecksDisplayLogic: class {
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     
-    func displayDeckDetail()
+    func displayDeckDetail(deckInfoToPass: Deck)
+    
+    func displayDeckDetailFromAddDeck(deckModel: Decks.CreateDeck.DeckModel)
 }
 
 class DecksViewController: UIViewController, DecksDisplayLogic {
@@ -102,8 +104,16 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Navigation
     
-    func displayDeckDetail() {
+    // feels kinda redundant to have two separate functions for this, but doesn't really make sense to pass a deckModel in within the view controller since it's supposed to be a boundary model
+    func displayDeckDetail(deckInfoToPass: Deck) {
+        router.dataStore?.deckInfoToPass = deckInfoToPass
         router.routeToDeckDetail()
+    }
+    
+    func displayDeckDetailFromAddDeck(deckModel: Decks.CreateDeck.DeckModel) {
+        router.dataStore?.deckInfoToPass = deckModel.deckInfoToPass
+        router.routeToDeckDetail()
+        router.dataStore?.deckInfoToPass = nil
     }
     
 }
@@ -137,9 +147,7 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        router.dataStore?.deckInfoToPass = displayedDecks[indexPath.row]
-        displayDeckDetail()
-        router.dataStore?.deckInfoToPass = nil
+        displayDeckDetail(deckInfoToPass: displayedDecks[indexPath.row])
     }
     
 }

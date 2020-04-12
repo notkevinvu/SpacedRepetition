@@ -70,11 +70,11 @@
 			children = (
 				25DABD49243BD53300037E7E /* DeckDetailView.swift */,
 				2534395024379DB700EA34D0 /* DeckDetailViewController.swift */,
+				2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */,
 				2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */,
 				2534394D24379DB700EA34D0 /* DeckDetailWorker.swift */,
 				2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */,
 				2534394F24379DB700EA34D0 /* DeckDetailModels.swift */,
-				2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */,
 			);
 			path = DeckDetail;
 			sourceTree = "<group>";

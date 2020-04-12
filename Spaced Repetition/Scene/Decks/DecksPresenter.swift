@@ -12,7 +12,7 @@ protocol DecksPresentationLogic {
     
     func presentFetchedDecks(response: Decks.FetchDecks.Response)
     
-    func presentDeckDetail()
+    func presentDeckDetail(response: Decks.CreateDeck.Response)
 }
 
 class DecksPresenter: DecksPresentationLogic {
@@ -34,8 +34,12 @@ class DecksPresenter: DecksPresentationLogic {
         viewController?.displayFetchedDecks(viewModel: viewModel)
     }
     
-    func presentDeckDetail() {
-        viewController?.displayDeckDetail()
+    func presentDeckDetail(response: Decks.CreateDeck.Response) {
+        let deckInfoToPass = response.deckInfoToPass
+        
+        let deckModel = Decks.CreateDeck.DeckModel(deckInfoToPass: deckInfoToPass)
+        viewController?.displayDeckDetailFromAddDeck(deckModel: deckModel)
+        
     }
   
 }
