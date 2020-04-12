@@ -18,6 +18,10 @@ protocol DecksBusinessLogicDelegate: class {
 
 protocol DecksDataStore {
     var delegate: DecksBusinessLogicDelegate? { get set }
+    
+    var deckInfoToPass: Deck? { get set }
+    
+    var decks: [Deck] { get }
 }
 
 class DecksInteractor: DecksBusinessLogic, DecksDataStore {
@@ -31,6 +35,8 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     var decksWorker = DecksWorker(decksStore: DecksMemStore())
     
     var decks: [Deck] = []
+    
+    var deckInfoToPass: Deck?
   
     // MARK: Setup
   
@@ -52,7 +58,11 @@ extension DecksInteractor: DecksViewDelegate {
     
     func decksViewSelectAddDeck() {
         // TODO: Create a deck
+        decksWorker.createDeck { (deck) in
+            self.deckInfoToPass = deck
+        }
         
+        // do we need to follow the VIP cycle here in regards to creating boundary model structs (i.e. request, response, viewmodel etc?)
         presenter.presentDeckDetail()
     }
     

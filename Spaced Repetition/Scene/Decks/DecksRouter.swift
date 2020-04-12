@@ -13,7 +13,7 @@ import UIKit
 }
 
 protocol DecksDataPassing {
-    var dataStore: DecksDataStore? { get }
+    var dataStore: DecksDataStore? { get set }
 }
 
 class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
@@ -23,10 +23,10 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     // MARK: Routing
     
     func routeToDeckDetail() {
-//        let destinationVC = DeckDetailViewController()
-//        let destinationDS = destinationVC.router.dataStore
-//        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS)
-//        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+        let destinationVC = DeckDetailViewController()
+        var destinationDS = destinationVC.router!.dataStore
+        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     // MARK: Navigation
@@ -34,8 +34,8 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     
     // MARK: Passing data
     
-//    func passDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: DeckDetailDataStore) {
-//      toDataStore.deckInfo = fromDataStore.deckInfoToPass
-//    }
+    func passDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
+        toDataStore.deckInfo = fromDataStore.deckInfoToPass
+    }
     
 }

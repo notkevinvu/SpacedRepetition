@@ -50,19 +50,32 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         router.dataStore = interactor
         view.delegate = interactor
     }
+    
+    private func configureCollectionViewSource() {
+        contentView.collectionView.delegate = self
+        contentView.collectionView.dataSource = self
+    }
+    
+    private func configureNavigationbar() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        // why do we use navigationitem.title instead of navigationController.title?
+        navigationItem.title = "All Decks"
+    }
   
     // MARK: View lifecycle
     
     override func loadView() {
         view = contentView
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        fetchDecksOnLoad()
+    }
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        fetchDecksOnLoad()
-        contentView.tableView.delegate = self
-        contentView.tableView.dataSource = self
-        contentView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        configureCollectionViewSource()
+        configureNavigationbar()
     }
     
     // MARK: Fetching Decks
@@ -78,36 +91,55 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Display
     
-    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
-        contentView.displayedDecks = viewModel.displayedDecks
-        print("\(viewModel.displayedDecks[1].nameOfDeck)")
-        contentView.tableView.reloadData()
-    }
+    var displayedDecks: [Deck] = []
     
-    func displayDeckDetail() {
-        router.routeToDeckDetail()
+    func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
+        displayedDecks = viewModel.displayedDecks
+        contentView.collectionView.reloadData()
     }
   
     // MARK: User Interaction
   
     // MARK: Navigation
-  
+    
+    func displayDeckDetail() {
+        router.routeToDeckDetail()
+    }
+    
 }
 
-extension DecksViewController: UITableViewDataSource, UITableViewDelegate {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+// MARK: - Collection view methods
+
+extension DecksViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return displayedDecks.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contentView.displayedDecks.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Deck: \(contentView.displayedDecks[indexPath.row].nameOfDeck)"
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "decksCell", for: indexPath) as! DecksCollectionViewCell
+        cell.backgroundColor = .white
+        cell.layer.cornerRadius = 10
+        
+        cell.layer.shadowRadius = 8
+        cell.layer.shadowOffset = .zero
+        cell.layer.shadowOpacity = 0.25
+        
+        // probably need to make a custom collection view cell to contain a:
+        // 1) Deck title label
+        // 2) # of cards label
+        // 3) settings/options gear button
+        // 4) needs review/up to date label
+        cell.deckTitleLabel.text = "\(displayedDecks[indexPath.row].nameOfDeck)"
+        cell.numOfCardsLabel.text = "\(displayedDecks[indexPath.row].cards.count) Cards"
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        router.dataStore?.deckInfoToPass = displayedDecks[indexPath.row]
+        displayDeckDetail()
+        router.dataStore?.deckInfoToPass = nil
     }
     
 }

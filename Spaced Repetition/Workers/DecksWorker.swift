@@ -10,6 +10,8 @@ import Foundation
 
 protocol DecksStoreProtocol {
     func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void)
+    
+    func createDeck(completion: @escaping (Deck) -> Void)
 }
 
 class DecksWorker {
@@ -32,6 +34,14 @@ class DecksWorker {
                 DispatchQueue.main.async {
                     completion([])
                 }
+            }
+        }
+    }
+    
+    func createDeck(completion: @escaping (Deck) -> Void) {
+        decksStore.createDeck { (deck) in
+            DispatchQueue.main.async {
+                completion(deck)
             }
         }
     }
