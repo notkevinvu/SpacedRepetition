@@ -37,11 +37,9 @@ class DecksMemStore: DecksStoreProtocol {
         completion { return type(of: self).decks}
     }
     
-    func createDeck(completion: @escaping (Deck) -> Void) {
+    func createDeck() -> Deck {
         let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [Card(frontSide: "Test front 1", backSide: "Test front 2"), Card(frontSide: "Test front 2", backSide: "Test back 2")])
         DecksMemStore.decks.append(newDeck)
-        DispatchQueue.main.async {
-            completion(newDeck)
-        }
+        return newDeck
     }
 }

@@ -65,15 +65,12 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
 extension DecksInteractor: DecksViewDelegate {
     
     func decksViewSelectAddDeck(request: Decks.CreateDeck.Request) {
-        decksWorker.createDeck { [weak self] (deck) in
-            guard let self = self else { return }
-            
-            // after we create a deck, we capture it in a response model and pass
-            // through the presenter
-            let response = Decks.CreateDeck.Response(deckInfoToPass: deck)
-            self.presenter.presentDeckDetail(response: response)
-        }
-        
+        // only need to care about completion and main queue when working with
+        // serverside creation, but since we create deck within local
+        // data store, it should work fine to not have async results/calls
+        let newDeck = decksWorker.createDeck()
+        let response = Decks.CreateDeck.Response(deckInfoToPass: newDeck)
+        presenter.presentDeckDetail(response: response)
         
     }
     
