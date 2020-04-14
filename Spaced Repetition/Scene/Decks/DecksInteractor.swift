@@ -10,6 +10,8 @@ import UIKit
 
 protocol DecksBusinessLogic: DecksViewDelegate {
     func fetchDecks(request: Decks.FetchDecks.Request)
+    
+    func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request)
 }
 
 protocol DecksBusinessLogicDelegate: class {
@@ -52,6 +54,11 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
             self.presenter.presentFetchedDecks(response: response)
         }
     }
+    
+    func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request) {
+        let response = Decks.ShowDeck.Response(deckInfoToPass: decks[request.indexPathRow])
+        presenter.presentDeckDetail(response: response)
+    }
 }
 
 // MARK: - DecksViewDelegate
@@ -61,6 +68,8 @@ extension DecksInteractor: DecksViewDelegate {
         decksWorker.createDeck { [weak self] (deck) in
             guard let self = self else { return }
             
+            // after we create a deck, we capture it in a response model and pass
+            // through the presenter
             let response = Decks.CreateDeck.Response(deckInfoToPass: deck)
             self.presenter.presentDeckDetail(response: response)
         }

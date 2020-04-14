@@ -12,11 +12,26 @@ class DecksCollectionViewCell: UICollectionViewCell {
     
     // MARK: Properties
     
+    /*
+     this is to avoid "stringly" code - when we register and dequeue a cell,
+     instead of putting in the string identifier, we can simply use the
+     static identifier as the identifier string (e.g.
+     identifier: DecksCollectionViewCell.identifier - which should get
+     autocompleted)
+     */
+    static let identifier = "DeckCollectionCell"
+    
+    struct DeckCellModel {
+        let deckTitle: String
+        let numberOfCards: Int
+    }
+    
     var deckTitleLabel: UILabel = {
-        let deckTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        let deckTitleLabel = UILabel(frame: CGRect.zero)
         deckTitleLabel.font = UIFont.boldSystemFont(ofSize: 27)
-//        deckTitleLabel.layer.borderWidth = 0.5
         deckTitleLabel.textAlignment = .left
+        deckTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         return deckTitleLabel
     }()
     
@@ -24,6 +39,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         let deckOptionsButton = UIButton()
         deckOptionsButton.setImage(UIImage(systemName: "gear"), for: .normal)
         deckOptionsButton.tintColor = .black
+        deckOptionsButton.translatesAutoresizingMaskIntoConstraints = false
         
         return deckOptionsButton
     }()
@@ -32,8 +48,8 @@ class DecksCollectionViewCell: UICollectionViewCell {
         let numOfCardsLabel = UILabel(frame: CGRect.zero)
         numOfCardsLabel.font = UIFont.boldSystemFont(ofSize: 16)
         numOfCardsLabel.textColor = .gray
-//        numOfCardsLabel.layer.borderWidth = 0.5
         numOfCardsLabel.textAlignment = .left
+        numOfCardsLabel.translatesAutoresizingMaskIntoConstraints = false
         
         return numOfCardsLabel
     }()
@@ -45,6 +61,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         label.layer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
         label.textAlignment = .left
         label.text = "Needs Review"
+        label.translatesAutoresizingMaskIntoConstraints = false
         // TODO: Need to provide insets, may have to subclass UILabel and override the drawText(in:) method
         
         return label
@@ -54,7 +71,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
+        configureCellView()
         setup()
     }
     
@@ -65,67 +82,53 @@ class DecksCollectionViewCell: UICollectionViewCell {
     // MARK: Setup subviews
     
     func setup() {
-        // MARK: Title label
+        // adding subviews
         contentView.addSubview(deckTitleLabel)
-        deckTitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        let titleLabelLeftAnchor = deckTitleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20)
-        let titleLabelRightAnchor = deckTitleLabel.rightAnchor.constraint(equalTo: deckOptionsButton.leftAnchor, constant: -10)
-        let titleLabelTopAnchor = deckTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10)
-        let titleLabelHeightAnchor = deckTitleLabel.heightAnchor.constraint(equalToConstant: 30)
-        
-        // MARK: Deck options button
         contentView.addSubview(deckOptionsButton)
-        deckOptionsButton.translatesAutoresizingMaskIntoConstraints = false
-        let optionsWidthAnchor = deckOptionsButton.widthAnchor.constraint(equalToConstant: 25)
-        let optionsHeightAnchor = deckOptionsButton.heightAnchor.constraint(equalToConstant: 25)
-        let optionsTopAnchor = deckOptionsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 18)
-        let optionsRightAnchor = deckOptionsButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15)
-        
-        // MARK: Card # label
         contentView.addSubview(numOfCardsLabel)
-        numOfCardsLabel.translatesAutoresizingMaskIntoConstraints = false
-        let cardsLabelLeftAnchor = numOfCardsLabel.leftAnchor.constraint(equalTo: deckTitleLabel.leftAnchor)
-        let cardsLabelWidthAnchor = numOfCardsLabel.widthAnchor.constraint(equalToConstant: 100)
-        let cardsLabelTopAnchor = numOfCardsLabel.topAnchor.constraint(equalTo: deckTitleLabel.bottomAnchor)
-        let cardsLabelHeightAnchor = numOfCardsLabel.heightAnchor.constraint(equalToConstant: 25)
-        
-        // MARK: review label
         contentView.addSubview(reviewNotificationLabel)
-        reviewNotificationLabel.translatesAutoresizingMaskIntoConstraints = false
-        let reviewLabelLeftAnchor = reviewNotificationLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10)
-        let reviewLabelRightAnchor = reviewNotificationLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10)
-        let reviewLabelBottomAnchor = reviewNotificationLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10)
-        let reviewLabelHeightAnchor = reviewNotificationLabel.heightAnchor.constraint(equalToConstant: 30)
         
+        // configuring autolayout constraints
         NSLayoutConstraint.activate([
         // title label
-            titleLabelLeftAnchor,
-            titleLabelRightAnchor,
-            titleLabelTopAnchor,
-            titleLabelHeightAnchor,
-        
+        deckTitleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20),
+        deckTitleLabel.rightAnchor.constraint(equalTo: deckOptionsButton.leftAnchor, constant: -10),
+        deckTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
+        deckTitleLabel.heightAnchor.constraint(equalToConstant: 30),
+            
         // options button
-            optionsWidthAnchor,
-            optionsHeightAnchor,
-            optionsTopAnchor,
-            optionsRightAnchor,
-        
+        deckOptionsButton.widthAnchor.constraint(equalToConstant: 25),
+        deckOptionsButton.heightAnchor.constraint(equalToConstant: 25),
+        deckOptionsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 18),
+        deckOptionsButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
+            
         // number of cards label
-            cardsLabelLeftAnchor,
-            cardsLabelWidthAnchor,
-            cardsLabelTopAnchor,
-            cardsLabelHeightAnchor,
+        numOfCardsLabel.leftAnchor.constraint(equalTo: deckTitleLabel.leftAnchor),
+        numOfCardsLabel.widthAnchor.constraint(equalToConstant: 100),
+        numOfCardsLabel.topAnchor.constraint(equalTo: deckTitleLabel.bottomAnchor),
+        numOfCardsLabel.heightAnchor.constraint(equalToConstant: 25),
             
         // review label
-            reviewLabelLeftAnchor,
-            reviewLabelRightAnchor,
-            reviewLabelBottomAnchor,
-            reviewLabelHeightAnchor
+        reviewNotificationLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
+        reviewNotificationLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
+        reviewNotificationLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+        reviewNotificationLabel.heightAnchor.constraint(equalToConstant: 30)
         ])
     }
     
-    func configureCardView() {
+    func configureCellView() {
+        backgroundColor = .white
+        layer.cornerRadius = 10
         
+        layer.shadowRadius = 8
+        layer.shadowOffset = .zero
+        layer.shadowOpacity = 0.25
+    }
+    
+    // MARK: Display Configuration
+    func configureWithModel(_ model: DeckCellModel) {
+        deckTitleLabel.text = model.deckTitle
+        numOfCardsLabel.text = "\(model.numberOfCards) Cards"
     }
 
 }

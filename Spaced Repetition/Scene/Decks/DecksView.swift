@@ -14,25 +14,40 @@ protocol DecksViewDelegate: class {
 
 final class DecksView: UIView {
     
+    typealias Delegate = DecksViewDelegate
+    
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 30
+        layout.itemSize = CGSize(width: 360, height: 110)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(DecksCollectionViewCell.self, forCellWithReuseIdentifier: "decksCell")
+        collectionView.register(DecksCollectionViewCell.self, forCellWithReuseIdentifier: DecksCollectionViewCell.identifier)
         collectionView.backgroundColor = .systemBackground
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        
+        collectionView.collectionViewLayout = layout
         
         return collectionView
     }()
     
-    typealias Delegate = DecksViewDelegate
-    
     private lazy var addDeckButton: UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
+        let addDeckButton = UIButton(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
         // TODO: Style it to designs
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)
-        return button
+        addDeckButton.layer.shadowOffset = .zero
+        addDeckButton.layer.shadowRadius = 7
+        addDeckButton.layer.shadowOpacity = 0.2
+        addDeckButton.layer.cornerRadius = 7
+        addDeckButton.backgroundColor = .white
+        addDeckButton.setTitle("+ Add Deck", for: .normal)
+        addDeckButton.setTitleColor(.black, for: .normal)
+        addDeckButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        addDeckButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        addDeckButton.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)
+        return addDeckButton
     }()
     
     weak var delegate: Delegate?
@@ -52,48 +67,22 @@ final class DecksView: UIView {
         // MARK: Collection view setup
         addSubview(collectionView)
         
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let collectionLeftAnchor = collectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
-        let collectionRightAnchor = collectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
-        let collectionBottomAnchor = collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        let collectionTopAnchor = collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         NSLayoutConstraint.activate([
-        collectionLeftAnchor,
-        collectionRightAnchor,
-        collectionBottomAnchor,
-        collectionTopAnchor
+        collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
+        collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
+        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
         ])
-        collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 30
-        layout.itemSize = CGSize(width: 360, height: 110)
-        
-        collectionView.collectionViewLayout = layout
         
         // MARK: add deck button setup
-        addDeckButton.backgroundColor = UIColor.white
         addSubview(addDeckButton)
-        
-        addDeckButton.translatesAutoresizingMaskIntoConstraints = false
-        let addDeckHorizontalAnchor = addDeckButton.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-        let addDeckLeftAnchor = addDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50)
-        let addDeckRightAnchor = addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50)
-        let addDeckBottomAnchor = addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40)
-        let addDeckHeightAnchor = addDeckButton.heightAnchor.constraint(equalToConstant: 70)
-        self.addConstraints([
-            addDeckHorizontalAnchor,
-            addDeckLeftAnchor,
-            addDeckRightAnchor,
-            addDeckBottomAnchor,
-            addDeckHeightAnchor
+        NSLayoutConstraint.activate([
+        addDeckButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+        addDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50),
+        addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50),
+        addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40),
+        addDeckButton.heightAnchor.constraint(equalToConstant: 70)
         ])
-        addDeckButton.layer.shadowOffset = .zero
-        addDeckButton.layer.shadowRadius = 7
-        addDeckButton.layer.shadowOpacity = 0.2
-        addDeckButton.layer.cornerRadius = 7
-        addDeckButton.setTitle("+ Add Deck", for: .normal)
-        addDeckButton.setTitleColor(.black, for: .normal)
-        
         
     }
     

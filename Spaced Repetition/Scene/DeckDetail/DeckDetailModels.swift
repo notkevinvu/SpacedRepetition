@@ -21,15 +21,15 @@ enum DeckDetail
             
         }
         struct Response {
-            var deck: Deck
+            let deck: Deck
         }
         struct ViewModel {
             struct DisplayedDeck {
-                var nameOfDeck: String
-                var cards: [Card]
+                let nameOfDeck: String
+                let cards: [Card]
             }
             
-            var displayedDeck: DisplayedDeck
+            let displayedDeck: DisplayedDeck
         }
     }
     
@@ -42,15 +42,15 @@ enum DeckDetail
             
         }
         struct Response {
-            var card: Card
+            let card: Card
         }
         struct ViewModel {
             struct DisplayedCard {
-                var frontSide: String
-                var backSide: String
+                let frontSide: String
+                let backSide: String
             }
             
-            var displayedCard: DisplayedCard
+            let displayedCard: DisplayedCard
         }
     }
 }

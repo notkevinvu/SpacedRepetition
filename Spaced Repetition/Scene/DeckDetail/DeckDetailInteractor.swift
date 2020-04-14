@@ -35,17 +35,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     
     func getDeck(request: DeckDetail.ShowDeck.Request) {
         guard let deckInfo = deckInfo else {
-            /*
-             TODO: implement assertionFailure() when the createDeck use case
-             has been modified to pass a new deck object as the
-             deckInfoToPass property
-             
-             For now, we just print the "No deck info available" message
-             since the add deck button doesn't correctly pass a new deck as the
-             deckInfoToPass
-             */
-//            assertionFailure("No deck info available")
-            print("No deck info available")
+            assertionFailure("No deck info available")
             return
         }
         

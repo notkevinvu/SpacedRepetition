@@ -10,6 +10,8 @@ import UIKit
 
 @objc protocol DecksRoutingLogic {
     func routeToDeckDetail()
+    
+    func routeToDeckDetailFromCollection(indexPath: IndexPath)
 }
 
 protocol DecksDataPassing {
@@ -23,10 +25,31 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     // MARK: Routing
     
     func routeToDeckDetail() {
+        // if indexPath == nil, proceed to navigating after default data passing
+        // TODO: review this idea if the current implementation of
+        // handling deck cell tap is not logical (i.e. conforming two
+        // model Responses to one protocol and the presenter function
+        // takes in any object that conforms to that protocol
+        
+        /*
+         this code currently not working - I think using indexPath.row to
+         get the corresponding deck is correct, just need to figure out
+         how to get the list of decks from the router
+         
+         maybe we can pass both the cell model and the deck itself
+         from presenter to the VC so that we can have the deck as reference
+         */
         let destinationVC = DeckDetailViewController()
         var destinationDS = destinationVC.router!.dataStore
         passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
         viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
+    func routeToDeckDetailFromCollection(indexPath: IndexPath) {
+//        let destinationVC = DeckDetailViewController()
+//        var destinationDS = destinationVC.router!.dataStore
+//        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+//        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     // MARK: Navigation

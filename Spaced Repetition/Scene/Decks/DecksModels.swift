@@ -8,6 +8,14 @@
 
 import UIKit
 
+protocol DeckResponse {
+    var deckInfoToPass: Deck { get }
+}
+
+protocol DeckInfoModel {
+    var deckInfoToPass: Deck { get }
+}
+
 enum Decks {
     
     enum FetchDecks {
@@ -15,7 +23,7 @@ enum Decks {
             
         }
         struct Response {
-            var decks: [Deck]
+            let decks: [Deck]
         }
         struct ViewModel {
             /*
@@ -28,7 +36,7 @@ enum Decks {
              var deckTitle: String = Untitled Deck (for default deck title)
              var numOfCardsInDeck: String (this should be 0 for a new deck)
             */
-            var displayedDecks: [Deck]
+            let displayedDecks: [DecksCollectionViewCell.DeckCellModel]
         }
     }
     
@@ -40,12 +48,28 @@ enum Decks {
             // don't need any object from the request,
             // since once we tap the add deck button, it should make a default empty deck
         }
-        struct Response {
-            var deckInfoToPass: Deck
+        struct Response: DeckResponse {
+            let deckInfoToPass: Deck
         }
-        struct DeckModel {
-            var deckInfoToPass: Deck
+        struct DeckModel: DeckInfoModel {
+            let deckInfoToPass: Deck
         }
+    }
+    
+    enum ShowDeck {
+        // the ShowDeck.Request struct is initialized with an indexPathRow Int
+        // to grab the corresponding deck from the decks array in the interactor
+        // i.e. the dataStore for the router
+        struct Request {
+            let indexPathRow: Int
+        }
+        struct Response: DeckResponse {
+            let deckInfoToPass: Deck
+        }
+        struct DeckModel: DeckInfoModel {
+            let deckInfoToPass: Deck
+        }
+        
     }
   
 }

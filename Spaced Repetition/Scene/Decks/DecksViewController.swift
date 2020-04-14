@@ -12,11 +12,11 @@ protocol DecksDisplayLogic: class {
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     
     func displayDeckDetail(deckInfoToPass: Deck)
-    
-    func displayDeckDetailFromAddDeck(deckModel: Decks.CreateDeck.DeckModel)
 }
 
 class DecksViewController: UIViewController, DecksDisplayLogic {
+    
+    // MARK: Properties
     
     var interactor: DecksBusinessLogic?
     var router: (NSObjectProtocol & DecksRoutingLogic & DecksDataPassing)!
@@ -67,10 +67,12 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     // MARK: View lifecycle
     
     override func loadView() {
+        super.loadView()
         view = contentView
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         fetchDecksOnLoad()
     }
   
@@ -87,16 +89,13 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
     }
-    
-    // MARK: Properties
-  
   
     // MARK: Display
     
-    var displayedDecks: [Deck] = []
+    var cellModels: [DecksCollectionViewCell.DeckCellModel] = []
     
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
-        displayedDecks = viewModel.displayedDecks
+        cellModels = viewModel.displayedDecks
         contentView.collectionView.reloadData()
     }
   
@@ -104,14 +103,8 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Navigation
     
-    // feels kinda redundant to have two separate functions for this, but doesn't really make sense to pass a deckModel in within the view controller since it's supposed to be a boundary model
     func displayDeckDetail(deckInfoToPass: Deck) {
         router.dataStore?.deckInfoToPass = deckInfoToPass
-        router.routeToDeckDetail()
-    }
-    
-    func displayDeckDetailFromAddDeck(deckModel: Decks.CreateDeck.DeckModel) {
-        router.dataStore?.deckInfoToPass = deckModel.deckInfoToPass
         router.routeToDeckDetail()
         router.dataStore?.deckInfoToPass = nil
     }
@@ -123,31 +116,21 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
 extension DecksViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return displayedDecks.count
+        return cellModels.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "decksCell", for: indexPath) as! DecksCollectionViewCell
-        cell.backgroundColor = .white
-        cell.layer.cornerRadius = 10
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DecksCollectionViewCell.identifier, for: indexPath) as! DecksCollectionViewCell
         
-        cell.layer.shadowRadius = 8
-        cell.layer.shadowOffset = .zero
-        cell.layer.shadowOpacity = 0.25
-        
-        // probably need to make a custom collection view cell to contain a:
-        // 1) Deck title label
-        // 2) # of cards label
-        // 3) settings/options gear button
-        // 4) needs review/up to date label
-        cell.deckTitleLabel.text = "\(displayedDecks[indexPath.row].nameOfDeck)"
-        cell.numOfCardsLabel.text = "\(displayedDecks[indexPath.row].cards.count) Cards"
+        cell.configureWithModel(cellModels[indexPath.row])
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        displayDeckDetail(deckInfoToPass: displayedDecks[indexPath.row])
+        let request = Decks.ShowDeck.Request(indexPathRow: indexPath.row)
+        interactor?.decksViewHandleTapDeckCell(request: request)
+        
     }
     
 }
