@@ -24,10 +24,13 @@ class DeckDetailView: UIView {
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 30
+        layout.itemSize = CGSize(width: 360, height: 100)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "deckDetailCell")
+        collectionView.register(DeckDetailCollectionViewCell.self, forCellWithReuseIdentifier: DeckDetailCollectionViewCell.identifier)
         collectionView.backgroundColor = .white
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         
         return collectionView
     }()
@@ -47,16 +50,11 @@ class DeckDetailView: UIView {
         // MARK: Collection view setup
         addSubview(collectionView)
         
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        let collectionLeftAnchor = collectionView.leftAnchor.constraint(equalTo: self.leftAnchor)
-        let collectionRightAnchor = collectionView.rightAnchor.constraint(equalTo: self.rightAnchor)
-        let collectionBottomAnchor = collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        let collectionTopAnchor = collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         NSLayoutConstraint.activate([
-        collectionLeftAnchor,
-        collectionRightAnchor,
-        collectionBottomAnchor,
-        collectionTopAnchor
+        collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
+        collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
+        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+        collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
         ])
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)

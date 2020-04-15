@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */; };
 		2534395224379DB700EA34D0 /* DeckDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */; };
 		2534395324379DB700EA34D0 /* DeckDetailWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394D24379DB700EA34D0 /* DeckDetailWorker.swift */; };
 		2534395424379DB700EA34D0 /* DeckDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */; };
@@ -30,6 +31,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailPresenter.swift; sourceTree = "<group>"; };
 		2534394D24379DB700EA34D0 /* DeckDetailWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailWorker.swift; sourceTree = "<group>"; };
 		2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailRouter.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				25DABD49243BD53300037E7E /* DeckDetailView.swift */,
+				250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */,
 				2534395024379DB700EA34D0 /* DeckDetailViewController.swift */,
 				2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */,
 				2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */,
@@ -234,6 +237,7 @@
 				25DABD4A243BD53300037E7E /* DeckDetailView.swift in Sources */,
 				25BF792F2436916500CE0E7A /* Deck.swift in Sources */,
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
+				250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */,
 				25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */,
 				2534395324379DB700EA34D0 /* DeckDetailWorker.swift in Sources */,
 				25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */,

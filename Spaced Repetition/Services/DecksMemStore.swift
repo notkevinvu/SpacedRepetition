@@ -38,7 +38,7 @@ class DecksMemStore: DecksStoreProtocol {
     }
     
     func createDeck() -> Deck {
-        let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [Card(frontSide: "Test front 1", backSide: "Test front 2"), Card(frontSide: "Test front 2", backSide: "Test back 2")])
+        let newDeck = Deck(nameOfDeck: "Untitled Deck", cards: [Card(frontSide: "Test front 1", backSide: "Test front 1"), Card(frontSide: "Test front 2", backSide: "Test back 2"), Card(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
         DecksMemStore.decks.append(newDeck)
         return newDeck
     }

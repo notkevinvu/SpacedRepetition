@@ -26,7 +26,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         let numberOfCards: Int
     }
     
-    var deckTitleLabel: UILabel = {
+    let deckTitleLabel: UILabel = {
         let deckTitleLabel = UILabel(frame: CGRect.zero)
         deckTitleLabel.font = UIFont.boldSystemFont(ofSize: 27)
         deckTitleLabel.textAlignment = .left
@@ -35,7 +35,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         return deckTitleLabel
     }()
     
-    var deckOptionsButton: UIButton = {
+    let deckOptionsButton: UIButton = {
         let deckOptionsButton = UIButton()
         deckOptionsButton.setImage(UIImage(systemName: "gear"), for: .normal)
         deckOptionsButton.tintColor = .black
@@ -44,7 +44,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         return deckOptionsButton
     }()
     
-    var numOfCardsLabel: UILabel = {
+    let numOfCardsLabel: UILabel = {
         let numOfCardsLabel = UILabel(frame: CGRect.zero)
         numOfCardsLabel.font = UIFont.boldSystemFont(ofSize: 16)
         numOfCardsLabel.textColor = .gray
@@ -54,17 +54,34 @@ class DecksCollectionViewCell: UICollectionViewCell {
         return numOfCardsLabel
     }()
     
-    var reviewNotificationLabel: UILabel = {
+    let reviewNotificationView: UIView = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
+        label.layer.cornerRadius = 5
+        
+        return label
+    }()
+    
+    let reviewNotificationLabel: UILabel = {
         let label = UILabel(frame: CGRect.zero)
         label.font = UIFont.boldSystemFont(ofSize: 15)
-        label.layer.cornerRadius = 5
-        label.layer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
         label.textAlignment = .left
         label.text = "Needs Review"
         label.translatesAutoresizingMaskIntoConstraints = false
         // TODO: Need to provide insets, may have to subclass UILabel and override the drawText(in:) method
         
         return label
+    }()
+    
+    let reviewNotificationImageView: UIImageView = {
+        let imageView = UIImageView(frame: .zero)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        let image = UIImage(systemName: "timer")!
+        imageView.image = image
+        imageView.tintColor = .black
+        
+        return imageView
     }()
     
     // MARK: Initialization
@@ -86,7 +103,9 @@ class DecksCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(deckTitleLabel)
         contentView.addSubview(deckOptionsButton)
         contentView.addSubview(numOfCardsLabel)
-        contentView.addSubview(reviewNotificationLabel)
+        contentView.addSubview(reviewNotificationView)
+        reviewNotificationView.addSubview(reviewNotificationLabel)
+        reviewNotificationView.addSubview(reviewNotificationImageView)
         
         // configuring autolayout constraints
         NSLayoutConstraint.activate([
@@ -107,19 +126,30 @@ class DecksCollectionViewCell: UICollectionViewCell {
         numOfCardsLabel.widthAnchor.constraint(equalToConstant: 100),
         numOfCardsLabel.topAnchor.constraint(equalTo: deckTitleLabel.bottomAnchor),
         numOfCardsLabel.heightAnchor.constraint(equalToConstant: 25),
+        
+        // review notification view
+        reviewNotificationView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
+        reviewNotificationView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
+        reviewNotificationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+        reviewNotificationView.heightAnchor.constraint(equalToConstant: 30),
             
         // review label
-        reviewNotificationLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
-        reviewNotificationLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
-        reviewNotificationLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
-        reviewNotificationLabel.heightAnchor.constraint(equalToConstant: 30)
+        reviewNotificationLabel.leftAnchor.constraint(equalTo: reviewNotificationView.leftAnchor, constant: 10),
+        reviewNotificationLabel.rightAnchor.constraint(equalTo: reviewNotificationView.rightAnchor, constant: -30),
+        reviewNotificationLabel.topAnchor.constraint(equalTo: reviewNotificationView.topAnchor),
+        reviewNotificationLabel.bottomAnchor.constraint(equalTo: reviewNotificationView.bottomAnchor),
+        
+        // review image notifier
+        reviewNotificationImageView.leftAnchor.constraint(equalTo: reviewNotificationLabel.rightAnchor, constant: 5),
+        reviewNotificationImageView.rightAnchor.constraint(equalTo: reviewNotificationView.rightAnchor, constant: -5),
+        reviewNotificationImageView.topAnchor.constraint(equalTo: reviewNotificationView.topAnchor, constant: 5),
+        reviewNotificationImageView.bottomAnchor.constraint(equalTo: reviewNotificationView.bottomAnchor, constant: -5)
         ])
     }
     
     func configureCellView() {
         backgroundColor = .white
         layer.cornerRadius = 10
-        
         layer.shadowRadius = 8
         layer.shadowOffset = .zero
         layer.shadowOpacity = 0.25

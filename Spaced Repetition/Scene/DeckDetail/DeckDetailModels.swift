@@ -23,20 +23,21 @@ enum DeckDetail
         struct Response {
             let deck: Deck
         }
-        struct ViewModel {
-            struct DisplayedDeck {
-                let nameOfDeck: String
-                let cards: [Card]
+        enum ViewModel {
+            struct DeckNameModel {
+                let displayedDeckName: String
             }
-            
-            let displayedDeck: DisplayedDeck
+            struct DeckCardModels {
+                let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
+            }
         }
+        
     }
     
     // this use case should show a UIAlertController
     // do I show the UIAlertController from the view controller directly and then pass that data through the VIP cycle or should I handle the add/create card button tap through the VIP cycle first to present the UIAlertController and then when the UIAlertController is finished, pass that data through the VIP cycle?
-    // always go through VIP, handleAddCardButton will go to interactor -> presenter -> VC -> router
-    // interactor should provide a block that gets passed through VIP and
+    // always go through VIP, handleAddCardButton will go to interactor -> presenter -> VC
+    // interactor should provide a variable block that gets passed through VIP (like a var didFinishCreatingCard = {}) and then when it is finished, call the block to go back to screen?
     enum CreateCard {
         struct Request {
             
@@ -45,12 +46,7 @@ enum DeckDetail
             let card: Card
         }
         struct ViewModel {
-            struct DisplayedCard {
-                let frontSide: String
-                let backSide: String
-            }
-            
-            let displayedCard: DisplayedCard
+            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
         }
     }
 }

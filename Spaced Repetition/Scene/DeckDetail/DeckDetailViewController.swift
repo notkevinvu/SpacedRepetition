@@ -14,7 +14,8 @@ import UIKit
 
 protocol DeckDetailDisplayLogic: class
 {
-    func displayDeck(viewModel: DeckDetail.ShowDeck.ViewModel)
+    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel)
+    func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
 }
 
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
@@ -39,29 +40,29 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   
     // MARK: Setup
   
-  private func setup()
-  {
-    let viewController = self
-    let interactor = DeckDetailInteractor()
-    let presenter = DeckDetailPresenter()
-    let router = DeckDetailRouter()
-    let view = DeckDetailView()
-    
-    viewController.interactor = interactor
-    viewController.router = router
-    viewController.contentView = view
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
+    private func setup()
+    {
+        let viewController = self
+        let interactor = DeckDetailInteractor()
+        let presenter = DeckDetailPresenter()
+        let router = DeckDetailRouter()
+        let view = DeckDetailView()
+        
+        viewController.interactor = interactor
+        viewController.router = router
+        viewController.contentView = view
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
     
     private func configureNavBar() {
         navigationItem.largeTitleDisplayMode = .automatic
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
-        addCardBarButton.tintColor = .black
         navigationItem.rightBarButtonItem = addCardBarButton
+        navigationItem.title = "Untitled Deck"
     }
     
     private func configureCollectionDataSource() {
@@ -71,8 +72,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
   
   // MARK: Routing
   
-    
-    
     
     
   // MARK: View lifecycle
@@ -92,25 +91,30 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         getDeck()
-        navigationItem.title = displayedDeckName
-    }
-
-    // MARK: Display Deck
-    
-    var displayedDeckName: String = "Untitled Deck"
-    var displayedDeckCards: [Card] = []
-    
-    func displayDeck(viewModel: DeckDetail.ShowDeck.ViewModel) {
-        displayedDeckName = viewModel.displayedDeck.nameOfDeck
-        displayedDeckCards = viewModel.displayedDeck.cards
     }
     
-    // MARK: Get Deck when view appears
+    // MARK: Get Deck
     
     func getDeck() {
         let request = DeckDetail.ShowDeck.Request()
         interactor?.getDeck(request: request)
     }
+
+    // MARK: Display Deck
+    
+//    var displayedDeckCards: [Card] = []
+    var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?
+    
+    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel) {
+        navigationItem.title = viewModel.displayedDeckName
+    }
+    
+    func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels) {
+        displayedDeckCards = viewModel.displayedCards
+        contentView.collectionView.reloadData()
+    }
+    
+    // MARK: Button methods
     
     @objc func handleAddCardButton() {
         let request = DeckDetail.CreateCard.Request()
@@ -128,29 +132,16 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let displayedDeckCards = displayedDeckCards else { return 0 }
         return displayedDeckCards.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "deckDetailCell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeckDetailCollectionViewCell.identifier, for: indexPath) as! DeckDetailCollectionViewCell
         
-        let frontLabel: UILabel = {
-            let label = UILabel(frame: CGRect(x: 20, y: 20, width: 300, height: 30))
-            label.text = displayedDeckCards[indexPath.row].frontSide
-            
-            return label
-        }()
+        guard let displayedDeckCards = displayedDeckCards else { return cell }
+        cell.configureWithModel(displayedDeckCards[indexPath.row])
         
-        let backLabel: UILabel = {
-            let label = UILabel(frame: CGRect(x: 20, y: 60, width: 300, height: 30))
-            label.text = displayedDeckCards[indexPath.row].backSide
-            
-            return label
-        }()
-        
-        cell.addSubview(frontLabel)
-        cell.addSubview(backLabel)
-        cell.backgroundColor = .red
         return cell
     }
 

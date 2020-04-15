@@ -24,11 +24,22 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     func presentDeck(response: DeckDetail.ShowDeck.Response) {
         let deck = response.deck
         
+        // name formatting for viewmodel
         let nameOfDeck = deck.nameOfDeck
-        let cards = deck.cards
+        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckNameModel(displayedDeckName: nameOfDeck)
+        viewController?.displayDeckName(viewModel: deckNameModel)
         
-        let displayedDeck = DeckDetail.ShowDeck.ViewModel.DisplayedDeck(nameOfDeck: nameOfDeck, cards: cards)
-        let viewModel = DeckDetail.ShowDeck.ViewModel(displayedDeck: displayedDeck)
-        viewController?.displayDeck(viewModel: viewModel)
+        // card formatting for viewmodel
+        var cards: [DeckDetailCollectionViewCell.CardCellModel] = []
+        
+        for card in deck.cards {
+            let cellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: card.frontSide, backSide: card.backSide)
+            cards.append(cellModel)
+        }
+        
+        let cardViewModel = DeckDetail.ShowDeck.ViewModel.DeckCardModels(displayedCards: cards)
+        viewController?.displayDeckCards(viewModel: cardViewModel)
+        
+        
     }
 }
