@@ -49,4 +49,16 @@ enum DeckDetail
             let displayedCard: DeckDetailCollectionViewCell.CardCellModel
         }
     }
+    
+    enum StudyDeck {
+        struct Request {
+            
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
 }

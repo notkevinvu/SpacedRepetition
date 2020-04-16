@@ -55,6 +55,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         presenter.viewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
+        view.delegate = interactor
     }
     
     private func configureNavBar() {
@@ -102,12 +103,11 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 
     // MARK: Display Deck
     
-//    var displayedDeckCards: [Card] = []
-    var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?
-    
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel) {
         navigationItem.title = viewModel.displayedDeckName
     }
+    
+    var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?
     
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels) {
         displayedDeckCards = viewModel.displayedCards
@@ -126,10 +126,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 // MARK: - Collection view methods
 
 extension DeckDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 380, height: 100)
-    }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let displayedDeckCards = displayedDeckCards else { return 0 }

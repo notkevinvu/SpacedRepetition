@@ -48,3 +48,11 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
 }
+
+extension DeckDetailInteractor: DeckDetailViewDelegate {
+    
+    func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request) {
+        
+    }
+    
+}

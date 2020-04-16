@@ -14,7 +14,7 @@ class DecksMemStore: DecksStoreProtocol {
     
     static let kevinCards: [Card] = [
     Card(frontSide: "Kevin's Birthday", backSide: "Sep 22"),
-    Card(frontSide: "Kevin's Height", backSide: "58 in."),
+    Card(frontSide: "Kevin's Height", backSide: "68 in."),
     Card(frontSide: "Kevin's Age", backSide: "23")
     ]
     

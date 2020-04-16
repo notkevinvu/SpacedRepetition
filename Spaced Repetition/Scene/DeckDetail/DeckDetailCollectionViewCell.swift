@@ -31,17 +31,10 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         let backSide: String
     }
     
-    let cardFrontSideView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
     let cardFrontSideLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.textAlignment = .left
         
         return label
@@ -56,17 +49,10 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
        return view
     }()
     
-    let cardBackSideView: UIView = {
-        let view = UIView(frame: .zero)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
-    }()
-    
     let cardBackSideLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 20)
         label.textAlignment = .left
         label.numberOfLines = 2
         
@@ -77,45 +63,34 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     
     func setup() {
         // adding subviews
+        
+        // there are front and back UIViews so
         contentView.addSubview(cardFrontAndBackSeparator)
-        cardFrontSideView.addSubview(cardFrontSideLabel)
-        contentView.addSubview(cardFrontSideView)
-        cardBackSideView.addSubview(cardBackSideLabel)
-        contentView.addSubview(cardBackSideView)
+        contentView.addSubview(cardFrontSideLabel)
+        contentView.addSubview(cardBackSideLabel)
         
         // autolayout constraint configuration
         NSLayoutConstraint.activate([
             // separator
-            cardFrontAndBackSeparator.topAnchor.constraint(equalTo: self.topAnchor, constant: 45),
+            // the separator line should be ~50 points from the top of the collection cell
+            // maybe switch from raw constant to collection cell height * 0.45?
+            cardFrontAndBackSeparator.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
             cardFrontAndBackSeparator.bottomAnchor.constraint(equalTo: cardFrontAndBackSeparator.topAnchor, constant: 0.5),
             cardFrontAndBackSeparator.leftAnchor.constraint(equalTo: self.leftAnchor),
             cardFrontAndBackSeparator.rightAnchor.constraint(equalTo: self.rightAnchor),
             
-            // frontSideView
-            cardFrontSideView.topAnchor.constraint(equalTo: self.topAnchor),
-            cardFrontSideView.heightAnchor.constraint(equalToConstant: 40),
-            cardFrontSideView.leftAnchor.constraint(equalTo: self.leftAnchor),
-            cardFrontSideView.rightAnchor.constraint(equalTo: self.rightAnchor),
-            
             // frontSideLabel
-            cardFrontSideLabel.leftAnchor.constraint(equalTo: cardFrontSideView.leftAnchor, constant: 20),
-            cardFrontSideLabel.rightAnchor.constraint(equalTo: cardFrontSideView.rightAnchor, constant: -20),
-            cardFrontSideLabel.topAnchor.constraint(equalTo: cardFrontSideView.topAnchor, constant: 5),
-            cardFrontSideLabel.bottomAnchor.constraint(equalTo: cardFrontSideView.bottomAnchor, constant: -5),
-            
-            // backSideView
-            cardBackSideView.topAnchor.constraint(equalTo: cardFrontSideView.bottomAnchor),
-            cardBackSideView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            cardBackSideView.leftAnchor.constraint(equalTo: cardFrontSideView.leftAnchor),
-            cardBackSideView.rightAnchor.constraint(equalTo: cardFrontSideView.rightAnchor),
+            cardFrontSideLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15),
+            cardFrontSideLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
+            cardFrontSideLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            cardFrontSideLabel.bottomAnchor.constraint(equalTo: cardFrontAndBackSeparator.topAnchor, constant: -5),
             
             // backSideLabel
-            cardBackSideLabel.leftAnchor.constraint(equalTo: cardBackSideView.leftAnchor, constant: 20),
-            cardBackSideLabel.rightAnchor.constraint(equalTo: cardBackSideView.rightAnchor, constant: -20),
-            cardBackSideLabel.topAnchor.constraint(equalTo: cardBackSideView.topAnchor, constant: 5),
-            cardBackSideLabel.bottomAnchor.constraint(equalTo: cardBackSideView.bottomAnchor, constant: -5)
+            cardBackSideLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15),
+            cardBackSideLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
+            cardBackSideLabel.topAnchor.constraint(equalTo: cardFrontAndBackSeparator.bottomAnchor, constant: 5),
+            cardBackSideLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5)
         ])
-        
         
     }
     

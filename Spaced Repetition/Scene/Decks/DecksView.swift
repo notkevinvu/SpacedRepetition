@@ -14,7 +14,10 @@ protocol DecksViewDelegate: class {
 
 final class DecksView: UIView {
     
+    // MARK: Properties
+    
     typealias Delegate = DecksViewDelegate
+    weak var delegate: Delegate?
     
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
@@ -50,7 +53,7 @@ final class DecksView: UIView {
         return addDeckButton
     }()
     
-    weak var delegate: Delegate?
+    // MARK: Object lifecycle
     
     init() {
         super.init(frame: .zero)
@@ -62,29 +65,34 @@ final class DecksView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Setup
+    
     private func setupSubviews() {
         
-        // MARK: Collection view setup
+        // Collection view setup
         addSubview(collectionView)
         
         NSLayoutConstraint.activate([
-        collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
-        collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
-        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-        collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
-        ])
-        
-        // MARK: add deck button setup
-        addSubview(addDeckButton)
-        NSLayoutConstraint.activate([
-        addDeckButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-        addDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50),
-        addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50),
-        addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40),
-        addDeckButton.heightAnchor.constraint(equalToConstant: 70)
+            // collection view
+            collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
+            ])
+            
+            // Add deck button setup
+            addSubview(addDeckButton)
+            NSLayoutConstraint.activate([
+            addDeckButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            addDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50),
+            addDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -50),
+            addDeckButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40),
+            addDeckButton.heightAnchor.constraint(equalToConstant: 70)
         ])
         
     }
+    
+    // MARK: Methods
     
     @objc private func handleAddDeck() {
         let request = Decks.CreateDeck.Request()

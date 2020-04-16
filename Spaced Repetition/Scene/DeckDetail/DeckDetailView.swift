@@ -15,17 +15,22 @@
 
 import UIKit
 
-protocol DeckDetailViewDelegate {
-    func deckDetailViewSelectStudyDeck()
+protocol DeckDetailViewDelegate: class {
+    // class conformance is required for weak variables
+    func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request)
 }
 
 class DeckDetailView: UIView {
+    
+    // MARK: Properties
+    typealias Delegate = DeckDetailViewDelegate
+    weak var delegate: Delegate?
     
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
-        layout.itemSize = CGSize(width: 360, height: 100)
+        layout.itemSize = CGSize(width: 360, height: 120)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(DeckDetailCollectionViewCell.self, forCellWithReuseIdentifier: DeckDetailCollectionViewCell.identifier)
@@ -34,6 +39,28 @@ class DeckDetailView: UIView {
         
         return collectionView
     }()
+    
+    let studyDeckButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Study Deck", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        // light blue-ish color
+//        button.backgroundColor = .init(red: 51, green: 153, blue: 254, alpha: 1)
+        button.backgroundColor = .blue
+        button.addTarget(self, action: #selector(handleTapStudyDeckButton), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    // MARK: Methods
+    
+    @objc func handleTapStudyDeckButton() {
+        
+    }
+    
+    
+    // MARK: Object lifecycle
 
     init() {
         super.init(frame: .zero)
@@ -45,16 +72,27 @@ class DeckDetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Setup
+    
     private func setupSubViews() {
         
-        // MARK: Collection view setup
+        // Adding subviews
         addSubview(collectionView)
+        addSubview(studyDeckButton)
         
         NSLayoutConstraint.activate([
-        collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
-        collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
-        collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-        collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor)
+            // collection view
+            collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
+            
+            // study deck button
+            studyDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 35),
+            studyDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -35),
+            studyDeckButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            studyDeckButton.heightAnchor.constraint(equalToConstant: 60)
+            
         ])
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
