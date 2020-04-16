@@ -34,6 +34,18 @@ enum DeckDetail
         
     }
     
+    // used to show/present the alert controller to prompt users to enter the card they want
+    enum ShowCreateCard {
+        struct Request {
+            
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            let acTitle: String
+        }
+    }
     // this use case should show a UIAlertController
     // do I show the UIAlertController from the view controller directly and then pass that data through the VIP cycle or should I handle the add/create card button tap through the VIP cycle first to present the UIAlertController and then when the UIAlertController is finished, pass that data through the VIP cycle?
     // always go through VIP, handleAddCardButton will go to interactor -> presenter -> VC

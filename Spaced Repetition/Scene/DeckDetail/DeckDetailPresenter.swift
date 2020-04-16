@@ -15,6 +15,8 @@ import UIKit
 protocol DeckDetailPresentationLogic
 {
     func presentDeck(response: DeckDetail.ShowDeck.Response)
+    
+    func presentCreateCard(response: DeckDetail.ShowCreateCard.Response)
 }
 
 class DeckDetailPresenter: DeckDetailPresentationLogic
@@ -39,7 +41,13 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         
         let cardViewModel = DeckDetail.ShowDeck.ViewModel.DeckCardModels(displayedCards: cards)
         viewController?.displayDeckCards(viewModel: cardViewModel)
+    }
+    
+    func presentCreateCard(response: DeckDetail.ShowCreateCard.Response) {
+        let acTitle = "Please enter card details"
+        let viewModel = DeckDetail.ShowCreateCard.ViewModel(acTitle: acTitle)
         
-        
+//        let ac = UIAlertController(title: acTitle, message: nil, preferredStyle: .alert)
+        viewController?.displayCreateCard(viewModel: viewModel)
     }
 }

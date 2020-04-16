@@ -84,7 +84,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
         return imageView
     }()
     
-    // MARK: Initialization
+    // MARK: Object Lifecycle
     
     override init(frame: CGRect) {
         super.init(frame: .zero)

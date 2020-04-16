@@ -17,6 +17,8 @@ protocol DeckDetailBusinessLogic
     func getDeck(request: DeckDetail.ShowDeck.Request)
     
     func createCard(request: DeckDetail.CreateCard.Request)
+    
+    func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
 }
 
 protocol DeckDetailDataStore
@@ -44,7 +46,12 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     func createCard(request: DeckDetail.CreateCard.Request) {
-        
+//        let response = DeckDetail.CreateCard.Response()
+    }
+    
+    func showCreateCard(request: DeckDetail.ShowCreateCard.Request) {
+        let response = DeckDetail.ShowCreateCard.Response()
+        presenter?.presentCreateCard(response: response)
     }
     
 }
@@ -52,7 +59,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 extension DeckDetailInteractor: DeckDetailViewDelegate {
     
     func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request) {
-        
+        print("tapped study deck button")
     }
     
 }

@@ -45,9 +45,10 @@ class DeckDetailView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Study Deck", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        // light blue-ish color
-//        button.backgroundColor = .init(red: 51, green: 153, blue: 254, alpha: 1)
-        button.backgroundColor = .blue
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
+        // light blue-ish color - converting trad. RGB values to 1.0 scale
+        button.backgroundColor = .init(red: (51/255), green: (153/255), blue: (254/255), alpha: 1)
+        button.layer.cornerRadius = 5
         button.addTarget(self, action: #selector(handleTapStudyDeckButton), for: .touchUpInside)
         
         return button
@@ -56,7 +57,8 @@ class DeckDetailView: UIView {
     // MARK: Methods
     
     @objc func handleTapStudyDeckButton() {
-        
+        let request = DeckDetail.StudyDeck.Request()
+        delegate?.deckDetailViewSelectStudyDeck(request: request)
     }
     
     

@@ -46,7 +46,7 @@ final class DecksView: UIView {
         addDeckButton.backgroundColor = .white
         addDeckButton.setTitle("+ Add Deck", for: .normal)
         addDeckButton.setTitleColor(.black, for: .normal)
-        addDeckButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        addDeckButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
         addDeckButton.translatesAutoresizingMaskIntoConstraints = false
         
         addDeckButton.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)

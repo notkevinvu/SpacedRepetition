@@ -16,10 +16,15 @@ protocol DeckDetailDisplayLogic: class
 {
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel)
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
+    
+    func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel)
 }
 
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 {
+    
+    // MARK: Properties
+    
     var interactor: DeckDetailBusinessLogic?
     var router: (NSObjectProtocol & DeckDetailRoutingLogic & DeckDetailDataPassing)?
     var contentView: DeckDetailView!
@@ -101,7 +106,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         interactor?.getDeck(request: request)
     }
 
-    // MARK: Display Deck
+    // MARK: Display Logic
     
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel) {
         navigationItem.title = viewModel.displayedDeckName
@@ -114,11 +119,34 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         contentView.collectionView.reloadData()
     }
     
+    func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel) {
+        let acTitle = viewModel.acTitle
+        let ac = UIAlertController(title: acTitle, message: nil, preferredStyle: .alert)
+        ac.addTextField { (frontCardText) in
+            frontCardText.placeholder = "Front of card"
+        }
+        ac.addTextField { (backCardText) in
+            backCardText.placeholder = "Back of card"
+        }
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        ac.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            guard let frontText = ac.textFields?[0].text else { return }
+            guard let backText = ac.textFields?[1].text else { return }
+            self.createCard(frontText: frontText, backText: backText)
+        }))
+        present(ac, animated: true)
+    }
+    
     // MARK: Button methods
     
+    func createCard(frontText: String, backText: String) {
+        print("Front text: \(frontText) \nBack text: \(backText)")
+    }
+    
     @objc func handleAddCardButton() {
-        let request = DeckDetail.CreateCard.Request()
-        interactor?.createCard(request: request)
+        let request = DeckDetail.ShowCreateCard.Request()
+        interactor?.showCreateCard(request: request)
     }
 
 }
