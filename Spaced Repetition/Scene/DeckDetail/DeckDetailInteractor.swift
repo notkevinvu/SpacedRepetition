@@ -19,6 +19,8 @@ protocol DeckDetailBusinessLogic
     func createCard(request: DeckDetail.CreateCard.Request)
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
+    
+    func showCreateCardVC(request: DeckDetail.ShowCreateCard.Request)
 }
 
 protocol DeckDetailDataStore
@@ -28,8 +30,10 @@ protocol DeckDetailDataStore
 
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 {
+    // MARK: Properties
+    
     var presenter: DeckDetailPresentationLogic?
-    var worker: DeckDetailWorker?
+    var decksWorker = DecksWorker(decksStore: DecksMemStore())
     
     var deckInfo: Deck?
   
@@ -46,12 +50,33 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     func createCard(request: DeckDetail.CreateCard.Request) {
-//        let response = DeckDetail.CreateCard.Response()
+        let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
+        decksWorker.createCard(forDeckID: request.deckID, card: cardToCreate)
+        
+        let response = DeckDetail.CreateCard.Response(card: cardToCreate)
+        presenter?.presentCard(response: response)
     }
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request) {
         let response = DeckDetail.ShowCreateCard.Response()
         presenter?.presentCreateCard(response: response)
+    }
+    
+    func showCreateCardVC(request: DeckDetail.ShowCreateCard.Request) {
+        
+        let frontTextField = AlertDisplayable.TextField { (textField) in
+            textField.placeholder = "Front side of card"
+        }
+        let backTextField = AlertDisplayable.TextField { (textField) in
+            textField.placeholder = "Back side of card"
+        }
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { _ in
+            // TODO: add card and save card
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextField, backTextField], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
     }
     
 }

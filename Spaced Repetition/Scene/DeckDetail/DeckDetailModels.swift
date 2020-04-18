@@ -24,8 +24,9 @@ enum DeckDetail
             let deck: Deck
         }
         enum ViewModel {
-            struct DeckNameModel {
+            struct DeckInfoModel {
                 let displayedDeckName: String
+                let displayedDeckID: String
             }
             struct DeckCardModels {
                 let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
@@ -52,7 +53,9 @@ enum DeckDetail
     // interactor should provide a variable block that gets passed through VIP (like a var didFinishCreatingCard = {}) and then when it is finished, call the block to go back to screen?
     enum CreateCard {
         struct Request {
-            
+            let deckID: String
+            let frontSideText: String
+            let backSideText: String
         }
         struct Response {
             let card: Card
@@ -72,5 +75,37 @@ enum DeckDetail
         struct ViewModel {
             
         }
+    }
+}
+
+public enum AlertDisplayable {
+    public struct ViewModel {
+        let title: String?
+        let message: String?
+        let textFields: [TextField]
+        let actions: [Action]
+        
+        public init(title: String?, message: String, textFields: [TextField], actions: [Action]) {
+            self.title = title
+            self.message = message
+            self.textFields = textFields
+            self.actions = actions
+        }
+    }
+    
+    public struct Action {
+        let title: String?
+        let style: UIAlertAction.Style
+        let handler: ((UIAlertAction) -> Void)?
+        
+        public init(title: String?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) {
+            self.title = title
+            self.style = style
+            self.handler = handler
+        }
+    }
+    
+    public struct TextField {
+        let textFieldConfig: ((UITextField) -> Void)?
     }
 }

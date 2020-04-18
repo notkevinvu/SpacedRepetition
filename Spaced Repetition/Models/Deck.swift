@@ -11,8 +11,9 @@ import Foundation
 struct Deck {
     // immutability > mutability
     let nameOfDeck: String
+    let deckID = UUID().uuidString
     
-    let cards: [Card]
+    var cards: [Card]
 }
 
 struct Card {

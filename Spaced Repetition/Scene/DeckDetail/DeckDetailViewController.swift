@@ -14,13 +14,44 @@ import UIKit
 
 protocol DeckDetailDisplayLogic: class
 {
-    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel)
+    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel)
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
     
     func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel)
+    
+    func displayCard(viewModel: DeckDetail.CreateCard.ViewModel)
 }
 
-class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
+public protocol AlertDisplayableViewController {
+    func displayAlert(viewModel: AlertDisplayable.ViewModel)
+}
+
+extension AlertDisplayableViewController where Self: UIViewController {
+    public func displayAlert(viewModel: AlertDisplayable.ViewModel) {
+        let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
+        
+        viewModel.textFields.forEach { (alertTextField) in
+            vc.addTextField { (textField) in
+                textField.placeholder = "Test"
+            }
+        }
+        
+        /*
+         if we change handler from
+         - let handler: ((UIAlertAction) -> Void)?
+         to
+         - let handler: ((UIAlertAction, UIAlertController) -> Void)?
+         then the following code does not work since the handler there
+         only accepts closures of type ((UIAlertAction) -> Void)
+         */
+        viewModel.actions.forEach { action in
+            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: action.handler))
+        }
+        present(vc, animated: true, completion: nil)
+    }
+}
+
+class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertDisplayableViewController
 {
     
     // MARK: Properties
@@ -58,6 +89,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
         viewController.contentView = view
         interactor.presenter = presenter
         presenter.viewController = viewController
+        presenter.alertDisplayableViewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
         view.delegate = interactor
@@ -108,8 +140,14 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
 
     // MARK: Display Logic
     
-    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckNameModel) {
+    // should viewcontroller hold deckID like this?
+    // could use name to filter when creating a card but has issue if user has
+    // multiple decks with the same deck name
+    var displayedDeckID: String?
+    
+    func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel) {
         navigationItem.title = viewModel.displayedDeckName
+        displayedDeckID = viewModel.displayedDeckID
     }
     
     var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?
@@ -121,7 +159,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
     
     func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel) {
         let acTitle = viewModel.acTitle
-        let ac = UIAlertController(title: acTitle, message: nil, preferredStyle: .alert)
+        let acMessage = "Please enter card details"
+        let ac = UIAlertController(title: acTitle, message: acMessage, preferredStyle: .alert)
         ac.addTextField { (frontCardText) in
             frontCardText.placeholder = "Front of card"
         }
@@ -133,20 +172,28 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic
             guard let self = self else { return }
             guard let frontText = ac.textFields?[0].text else { return }
             guard let backText = ac.textFields?[1].text else { return }
-            self.createCard(frontText: frontText, backText: backText)
+            guard let displayedDeckID = self.displayedDeckID else { return }
+            let request = DeckDetail.CreateCard.Request(deckID: displayedDeckID, frontSideText: frontText, backSideText: backText)
+            self.interactor?.createCard(request: request)
+            self.contentView.collectionView.reloadData()
         }))
         present(ac, animated: true)
     }
     
-    // MARK: Button methods
-    
-    func createCard(frontText: String, backText: String) {
-        print("Front text: \(frontText) \nBack text: \(backText)")
+    func displayCard(viewModel: DeckDetail.CreateCard.ViewModel) {
+        displayedDeckCards?.append(viewModel.displayedCard)
+        contentView.collectionView.reloadData()
     }
+    
+    // MARK: Button methods
     
     @objc func handleAddCardButton() {
         let request = DeckDetail.ShowCreateCard.Request()
+        
+        // this method is for the current implementation
         interactor?.showCreateCard(request: request)
+        // showCreateCardVC is for An's implementation using AlertDisplayable Protocols
+//        interactor?.showCreateCardVC(request: request)
     }
 
 }
@@ -169,6 +216,7 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         return cell
     }
 
+    // TODO: Remove this (tapping cell may potentialy lead to editing in future)
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Tapped collection view cell: \(indexPath.row)")
     }

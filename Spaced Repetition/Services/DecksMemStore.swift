@@ -42,4 +42,12 @@ class DecksMemStore: DecksStoreProtocol {
         DecksMemStore.decks.append(newDeck)
         return newDeck
     }
+    
+    func createCard(forDeckID deckID: String, card: Card) {
+        if let deckIndex = DecksMemStore.decks.firstIndex(where: { (memDeck) -> Bool in
+            memDeck.deckID == deckID
+        }) {
+            DecksMemStore.decks[deckIndex].cards.append(card)
+        }
+    }
 }

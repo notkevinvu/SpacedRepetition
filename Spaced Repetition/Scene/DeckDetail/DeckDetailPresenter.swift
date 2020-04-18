@@ -12,23 +12,43 @@
 
 import UIKit
 
-protocol DeckDetailPresentationLogic
+protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
 {
     func presentDeck(response: DeckDetail.ShowDeck.Response)
     
     func presentCreateCard(response: DeckDetail.ShowCreateCard.Response)
+    
+    func presentCard(response: DeckDetail.CreateCard.Response)
+}
+
+protocol AlertDisplayablePresenter {
+    var alertDisplayableViewController: AlertDisplayableViewController? { get }
+    func presentAlert(viewModel: AlertDisplayable.ViewModel)
+}
+
+extension AlertDisplayablePresenter {
+    // default implementation of any AlertDisplayablePresenter
+    public func presentAlert(viewModel: AlertDisplayable.ViewModel) {
+        alertDisplayableViewController?.displayAlert(viewModel: viewModel)
+    }
 }
 
 class DeckDetailPresenter: DeckDetailPresentationLogic
 {
+    
+    // MARK: Properties
+    
     weak var viewController: DeckDetailDisplayLogic?
+    var alertDisplayableViewController: AlertDisplayableViewController?
+    
+    // MARK: Present something
     
     func presentDeck(response: DeckDetail.ShowDeck.Response) {
         let deck = response.deck
         
         // name formatting for viewmodel
         let nameOfDeck = deck.nameOfDeck
-        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckNameModel(displayedDeckName: nameOfDeck)
+        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck, displayedDeckID: deck.deckID)
         viewController?.displayDeckName(viewModel: deckNameModel)
         
         // card formatting for viewmodel
@@ -44,10 +64,15 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     }
     
     func presentCreateCard(response: DeckDetail.ShowCreateCard.Response) {
-        let acTitle = "Please enter card details"
+        let acTitle = "New Card"
         let viewModel = DeckDetail.ShowCreateCard.ViewModel(acTitle: acTitle)
         
-//        let ac = UIAlertController(title: acTitle, message: nil, preferredStyle: .alert)
         viewController?.displayCreateCard(viewModel: viewModel)
+    }
+    
+    func presentCard(response: DeckDetail.CreateCard.Response) {
+        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
+        let cardViewModel = DeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
+        viewController?.displayCard(viewModel: cardViewModel)
     }
 }

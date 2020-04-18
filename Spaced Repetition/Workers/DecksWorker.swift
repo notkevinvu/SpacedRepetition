@@ -12,6 +12,8 @@ protocol DecksStoreProtocol {
     func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void)
     
     func createDeck() -> Deck
+    
+    func createCard(forDeckID deckID: String, card: Card)
 }
 
 class DecksWorker {
@@ -41,5 +43,9 @@ class DecksWorker {
     func createDeck() -> Deck {
         let newDeck = decksStore.createDeck()
         return newDeck
+    }
+    
+    func createCard(forDeckID deckID: String, card: Card) {
+        decksStore.createCard(forDeckID: deckID, card: card)
     }
 }
