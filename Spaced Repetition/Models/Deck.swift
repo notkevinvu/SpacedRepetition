@@ -8,6 +8,7 @@
 
 import Foundation
 
+// might be better to use a class instead of struct if we change anything
 struct Deck {
     // immutability > mutability
     let nameOfDeck: String

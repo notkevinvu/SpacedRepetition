@@ -29,8 +29,13 @@ protocol DecksDataStore {
 class DecksInteractor: DecksBusinessLogic, DecksDataStore {
   
     // MARK: Dependency Injection
+    
+//    init(factory: DecksWorkerFactory) {
+//        self.factory = factory
+//    }
   
     // MARK: Properties
+    
   
     var presenter: DecksPresentationLogic!
     weak var delegate: DecksBusinessLogicDelegate?

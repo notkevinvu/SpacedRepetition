@@ -17,11 +17,11 @@ protocol DeckDetailDisplayLogic: class
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel)
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
     
-    func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel)
-    
-    func displayCard(viewModel: DeckDetail.CreateCard.ViewModel)
+    func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
 }
 
+
+// MARK: AlertDisplayable protocol
 public protocol AlertDisplayableViewController {
     func displayAlert(viewModel: AlertDisplayable.ViewModel)
 }
@@ -32,24 +32,33 @@ extension AlertDisplayableViewController where Self: UIViewController {
         
         viewModel.textFields.forEach { (alertTextField) in
             vc.addTextField { (textField) in
-                textField.placeholder = "Test"
+                textField.placeholder = alertTextField.placeholder
             }
         }
         
-        /*
-         if we change handler from
-         - let handler: ((UIAlertAction) -> Void)?
-         to
-         - let handler: ((UIAlertAction, UIAlertController) -> Void)?
-         then the following code does not work since the handler there
-         only accepts closures of type ((UIAlertAction) -> Void)
-         */
         viewModel.actions.forEach { action in
-            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: action.handler))
+            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { actionIgnore in
+                guard let handler = action.handler else { return }
+                /*
+                 we call the action's handler here if it has one
+                 
+                 we don't really need the alert action parameter but it requires it
+                 so we pass one in anyway - the important one is the vc/alertcontroller
+                 since we need to access the alert controller's textfields property
+                 
+                 then, we can access the alert controller's textfields property
+                 wherever we declared the handler (i.e. the interactor in this case)
+                 */
+                
+                handler(actionIgnore, vc)
+            }))
         }
         present(vc, animated: true, completion: nil)
     }
 }
+
+
+
 
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertDisplayableViewController
 {
@@ -100,6 +109,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
         navigationItem.rightBarButtonItem = addCardBarButton
+        // replace title with a barbuttonitem to edit deck name
         navigationItem.title = "Untitled Deck"
     }
     
@@ -157,30 +167,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
-    func displayCreateCard(viewModel: DeckDetail.ShowCreateCard.ViewModel) {
-        let acTitle = viewModel.acTitle
-        let acMessage = "Please enter card details"
-        let ac = UIAlertController(title: acTitle, message: acMessage, preferredStyle: .alert)
-        ac.addTextField { (frontCardText) in
-            frontCardText.placeholder = "Front of card"
-        }
-        ac.addTextField { (backCardText) in
-            backCardText.placeholder = "Back of card"
-        }
-        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        ac.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak self] _ in
-            guard let self = self else { return }
-            guard let frontText = ac.textFields?[0].text else { return }
-            guard let backText = ac.textFields?[1].text else { return }
-            guard let displayedDeckID = self.displayedDeckID else { return }
-            let request = DeckDetail.CreateCard.Request(deckID: displayedDeckID, frontSideText: frontText, backSideText: backText)
-            self.interactor?.createCard(request: request)
-            self.contentView.collectionView.reloadData()
-        }))
-        present(ac, animated: true)
-    }
-    
-    func displayCard(viewModel: DeckDetail.CreateCard.ViewModel) {
+    func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel) {
         displayedDeckCards?.append(viewModel.displayedCard)
         contentView.collectionView.reloadData()
     }
@@ -188,12 +175,10 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     // MARK: Button methods
     
     @objc func handleAddCardButton() {
-        let request = DeckDetail.ShowCreateCard.Request()
+        guard let displayedDeckID = displayedDeckID else { return }
+        let request = DeckDetail.ShowCreateCard.Request(displayedDeckID: displayedDeckID)
         
-        // this method is for the current implementation
         interactor?.showCreateCard(request: request)
-        // showCreateCardVC is for An's implementation using AlertDisplayable Protocols
-//        interactor?.showCreateCardVC(request: request)
     }
 
 }

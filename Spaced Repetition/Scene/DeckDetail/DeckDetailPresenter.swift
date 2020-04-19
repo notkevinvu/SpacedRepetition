@@ -16,8 +16,6 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
 {
     func presentDeck(response: DeckDetail.ShowDeck.Response)
     
-    func presentCreateCard(response: DeckDetail.ShowCreateCard.Response)
-    
     func presentCard(response: DeckDetail.CreateCard.Response)
 }
 
@@ -26,6 +24,7 @@ protocol AlertDisplayablePresenter {
     func presentAlert(viewModel: AlertDisplayable.ViewModel)
 }
 
+// MARK: AlertController implementation
 extension AlertDisplayablePresenter {
     // default implementation of any AlertDisplayablePresenter
     public func presentAlert(viewModel: AlertDisplayable.ViewModel) {
@@ -63,16 +62,9 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         viewController?.displayDeckCards(viewModel: cardViewModel)
     }
     
-    func presentCreateCard(response: DeckDetail.ShowCreateCard.Response) {
-        let acTitle = "New Card"
-        let viewModel = DeckDetail.ShowCreateCard.ViewModel(acTitle: acTitle)
-        
-        viewController?.displayCreateCard(viewModel: viewModel)
-    }
-    
     func presentCard(response: DeckDetail.CreateCard.Response) {
         let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
         let cardViewModel = DeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
-        viewController?.displayCard(viewModel: cardViewModel)
+        viewController?.displayCreatedCard(viewModel: cardViewModel)
     }
 }

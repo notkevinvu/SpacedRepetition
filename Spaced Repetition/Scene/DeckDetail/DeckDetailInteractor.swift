@@ -19,8 +19,6 @@ protocol DeckDetailBusinessLogic
     func createCard(request: DeckDetail.CreateCard.Request)
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
-    
-    func showCreateCardVC(request: DeckDetail.ShowCreateCard.Request)
 }
 
 protocol DeckDetailDataStore
@@ -49,6 +47,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         presenter?.presentDeck(response: response)
     }
     
+    
     func createCard(request: DeckDetail.CreateCard.Request) {
         let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
         decksWorker.createCard(forDeckID: request.deckID, card: cardToCreate)
@@ -57,22 +56,30 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         presenter?.presentCard(response: response)
     }
     
-    func showCreateCard(request: DeckDetail.ShowCreateCard.Request) {
-        let response = DeckDetail.ShowCreateCard.Response()
-        presenter?.presentCreateCard(response: response)
-    }
     
-    func showCreateCardVC(request: DeckDetail.ShowCreateCard.Request) {
-        
-        let frontTextField = AlertDisplayable.TextField { (textField) in
-            textField.placeholder = "Front side of card"
-        }
-        let backTextField = AlertDisplayable.TextField { (textField) in
-            textField.placeholder = "Back side of card"
-        }
+    func showCreateCard(request: DeckDetail.ShowCreateCard.Request) {
+        let frontTextField = AlertDisplayable.TextField(placeholder: "Front side of Card")
+        let backTextField = AlertDisplayable.TextField(placeholder: "Back side of card")
+        let displayedDeckID = request.displayedDeckID
+
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
-        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { _ in
+        // note: the handler here can be called wherever/whenever we want
+        // as long as we pass in a UIAlertAction and UIAlertController
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, vc) in
             // TODO: add card and save card
+            print("Test action handler")
+            guard let self = self else { return }
+            guard let frontSideText = vc.textFields?[0].text else { return }
+            guard let backSideText = vc.textFields?[1].text else { return }
+            
+            // should we abstract this into a separate function? we have one above
+            // (the createCard(request:) function, but it is kinda weird to
+            // call an interactor function within the interactor
+            let cardToCreate = Card(frontSide: frontSideText, backSide: backSideText)
+            self.decksWorker.createCard(forDeckID: displayedDeckID, card: cardToCreate)
+            
+            let response = DeckDetail.CreateCard.Response(card: cardToCreate)
+            self.presenter?.presentCard(response: response)
         }
         
         let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextField, backTextField], actions: [cancelAction, saveAction])

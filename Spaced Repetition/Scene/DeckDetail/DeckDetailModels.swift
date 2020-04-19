@@ -38,7 +38,7 @@ enum DeckDetail
     // used to show/present the alert controller to prompt users to enter the card they want
     enum ShowCreateCard {
         struct Request {
-            
+            let displayedDeckID: String
         }
         struct Response {
             
@@ -96,9 +96,9 @@ public enum AlertDisplayable {
     public struct Action {
         let title: String?
         let style: UIAlertAction.Style
-        let handler: ((UIAlertAction) -> Void)?
+        let handler: ((UIAlertAction, UIAlertController) -> Void)?
         
-        public init(title: String?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?) {
+        public init(title: String?, style: UIAlertAction.Style, handler: ((UIAlertAction, UIAlertController) -> Void)?) {
             self.title = title
             self.style = style
             self.handler = handler
@@ -106,6 +106,7 @@ public enum AlertDisplayable {
     }
     
     public struct TextField {
-        let textFieldConfig: ((UITextField) -> Void)?
+//        let textFieldConfig: ((UITextField) -> Void)?
+        let placeholder: String
     }
 }
