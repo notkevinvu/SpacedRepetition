@@ -26,7 +26,7 @@ enum DeckDetail
         enum ViewModel {
             struct DeckInfoModel {
                 let displayedDeckName: String
-                let displayedDeckID: String
+                let displayedDeckID: UUID
             }
             struct DeckCardModels {
                 let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
@@ -38,7 +38,7 @@ enum DeckDetail
     // used to show/present the alert controller to prompt users to enter the card they want
     enum ShowCreateCard {
         struct Request {
-            let displayedDeckID: String
+            let displayedDeckID: UUID
         }
         struct Response {
             
@@ -53,7 +53,7 @@ enum DeckDetail
     // interactor should provide a variable block that gets passed through VIP (like a var didFinishCreatingCard = {}) and then when it is finished, call the block to go back to screen?
     enum CreateCard {
         struct Request {
-            let deckID: String
+            let deckID: UUID
             let frontSideText: String
             let backSideText: String
         }

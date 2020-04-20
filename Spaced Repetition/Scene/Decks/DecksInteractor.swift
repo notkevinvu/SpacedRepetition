@@ -30,16 +30,15 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
   
     // MARK: Dependency Injection
     
-//    init(factory: DecksWorkerFactory) {
-//        self.factory = factory
-//    }
+    init(factory: DecksWorkerFactory) {
+        self.decksWorker1 = factory.makeDecksWorker()
+    }
   
     // MARK: Properties
     
-  
     var presenter: DecksPresentationLogic!
     weak var delegate: DecksBusinessLogicDelegate?
-    var decksWorker = DecksWorker(decksStore: DecksMemStore())
+    let decksWorker1: DecksWorkerProtocol
     
     var decks: [Deck] = []
     
@@ -52,7 +51,7 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     // MARK: Private
     
     func fetchDecks(request: Decks.FetchDecks.Request) {
-        decksWorker.fetchDecks { [weak self] decks in
+        decksWorker1.fetchDecks { [weak self] decks in
             guard let self = self else { return }
             self.decks = decks
             let response = Decks.FetchDecks.Response(decks: decks)
@@ -73,7 +72,7 @@ extension DecksInteractor: DecksViewDelegate {
         // only need to care about completion and main queue when working with
         // serverside creation, but since we create deck within local
         // data store, it should work fine to not have async results/calls
-        let newDeck = decksWorker.createDeck()
+        let newDeck = decksWorker1.createDeck()
         let response = Decks.CreateDeck.Response(deckInfoToPass: newDeck)
         presenter.presentDeckDetail(response: response)
         

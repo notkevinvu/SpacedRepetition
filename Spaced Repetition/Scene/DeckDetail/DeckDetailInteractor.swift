@@ -29,11 +29,19 @@ protocol DeckDetailDataStore
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 {
     // MARK: Properties
-    
+    typealias Factory = DecksWorkerFactory
     var presenter: DeckDetailPresentationLogic?
-    var decksWorker = DecksWorker(decksStore: DecksMemStore())
+    var decksWorker1: DecksWorkerProtocol
     
     var deckInfo: Deck?
+    
+    // MARK: Initialization
+    
+    // pass in a factory, likely a dependency container that has an extension
+    // that conforms to the DecksWorkerFactory protocol to make a decks worker
+    init(factory: Factory) {
+        self.decksWorker1 = factory.makeDecksWorker()
+    }
   
     // MARK: Do something
     
@@ -50,7 +58,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     
     func createCard(request: DeckDetail.CreateCard.Request) {
         let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
-        decksWorker.createCard(forDeckID: request.deckID, card: cardToCreate)
+        decksWorker1.createCard(forDeckID: request.deckID, card: cardToCreate)
         
         let response = DeckDetail.CreateCard.Response(card: cardToCreate)
         presenter?.presentCard(response: response)
@@ -66,8 +74,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         // note: the handler here can be called wherever/whenever we want
         // as long as we pass in a UIAlertAction and UIAlertController
         let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, vc) in
-            // TODO: add card and save card
-            print("Test action handler")
             guard let self = self else { return }
             guard let frontSideText = vc.textFields?[0].text else { return }
             guard let backSideText = vc.textFields?[1].text else { return }
@@ -76,7 +82,9 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             // (the createCard(request:) function, but it is kinda weird to
             // call an interactor function within the interactor
             let cardToCreate = Card(frontSide: frontSideText, backSide: backSideText)
-            self.decksWorker.createCard(forDeckID: displayedDeckID, card: cardToCreate)
+            self.decksWorker1.createCard(forDeckID: displayedDeckID, card: cardToCreate)
+            
+            // TODO: Save card
             
             let response = DeckDetail.CreateCard.Response(card: cardToCreate)
             self.presenter?.presentCard(response: response)

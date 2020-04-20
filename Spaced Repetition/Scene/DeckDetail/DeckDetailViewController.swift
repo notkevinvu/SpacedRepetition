@@ -88,7 +88,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     private func setup()
     {
         let viewController = self
-        let interactor = DeckDetailInteractor()
+        let interactor = DeckDetailInteractor(factory: DependencyContainer())
         let presenter = DeckDetailPresenter()
         let router = DeckDetailRouter()
         let view = DeckDetailView()
@@ -153,7 +153,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     // should viewcontroller hold deckID like this?
     // could use name to filter when creating a card but has issue if user has
     // multiple decks with the same deck name
-    var displayedDeckID: String?
+    var displayedDeckID: UUID?
     
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel) {
         navigationItem.title = viewModel.displayedDeckName

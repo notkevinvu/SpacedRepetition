@@ -8,22 +8,29 @@
 
 import Foundation
 
-protocol DecksStoreProtocol {
-    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void)
-    
-    func createDeck() -> Deck
-    
-    func createCard(forDeckID deckID: String, card: Card)
+protocol DecksWorkerFactory {
+    func makeDecksWorker() -> DecksWorkerProtocol
 }
 
-class DecksWorker {
-    var decksStore: DecksStoreProtocol
+
+protocol DecksWorkerProtocol {
+    func fetchDecks(completion: @escaping ([Deck]) -> Void)
+    func createDeck() -> Deck
+    func createCard(forDeckID deckID: UUID, card: Card)
+}
+
+
+final class DecksWorker {
+    typealias Factory = DecksStoreFactory
     
-    init(decksStore: DecksStoreProtocol) {
-        self.decksStore = decksStore
+    private let decksStore: DecksStoreProtocol
+    
+    init(factory: Factory) {
+        self.decksStore = factory.makeDecksStore()
     }
-    
-    // fetchDecks should give a [Deck] object when it is finished being called
+}
+
+extension DecksWorker: DecksWorkerProtocol {
     func fetchDecks(completion: @escaping ([Deck]) -> Void) {
         decksStore.fetchDecks { (decks: () throws -> [Deck]) -> Void in
             do {
@@ -45,7 +52,7 @@ class DecksWorker {
         return newDeck
     }
     
-    func createCard(forDeckID deckID: String, card: Card) {
+    func createCard(forDeckID deckID: UUID, card: Card) {
         decksStore.createCard(forDeckID: deckID, card: card)
     }
 }

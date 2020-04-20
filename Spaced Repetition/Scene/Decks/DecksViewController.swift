@@ -38,7 +38,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     private func setup() {
         let viewController = self
-        let interactor = DecksInteractor()
+        let interactor = DecksInteractor(factory: DependencyContainer())
         let presenter = DecksPresenter()
         let router = DecksRouter()
         let view = DecksView()
