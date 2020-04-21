@@ -16,9 +16,11 @@ protocol DeckDetailBusinessLogic
 {
     func getDeck(request: DeckDetail.ShowDeck.Request)
     
-    func createCard(request: DeckDetail.CreateCard.Request)
+//    func createCard(request: DeckDetail.CreateCard.Request)
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
+    
+    func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
 }
 
 protocol DeckDetailDataStore
@@ -31,7 +33,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     // MARK: Properties
     typealias Factory = DecksWorkerFactory
     var presenter: DeckDetailPresentationLogic?
-    var decksWorker1: DecksWorkerProtocol
+    var decksWorker: DecksWorkerProtocol
     
     var deckInfo: Deck?
     
@@ -40,11 +42,11 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     // pass in a factory, likely a dependency container that has an extension
     // that conforms to the DecksWorkerFactory protocol to make a decks worker
     init(factory: Factory) {
-        self.decksWorker1 = factory.makeDecksWorker()
+        self.decksWorker = factory.makeDecksWorker()
     }
   
-    // MARK: Do something
     
+    // MARK: Get Deck
     func getDeck(request: DeckDetail.ShowDeck.Request) {
         guard let deckInfo = deckInfo else {
             assertionFailure("No deck info available")
@@ -56,15 +58,17 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     
-    func createCard(request: DeckDetail.CreateCard.Request) {
-        let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
-        decksWorker1.createCard(forDeckID: request.deckID, card: cardToCreate)
-        
-        let response = DeckDetail.CreateCard.Response(card: cardToCreate)
-        presenter?.presentCard(response: response)
-    }
+    // MARK: Create Card
+//    func createCard(request: DeckDetail.CreateCard.Request) {
+//        let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
+//        decksWorker.createCard(forDeckID: request.deckID, card: cardToCreate)
+//        
+//        let response = DeckDetail.CreateCard.Response(card: cardToCreate)
+//        presenter?.presentCard(response: response)
+//    }
     
     
+    // MARK: Show Create Card Alert
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request) {
         let frontTextField = AlertDisplayable.TextField(placeholder: "Front side of Card")
         let backTextField = AlertDisplayable.TextField(placeholder: "Back side of card")
@@ -82,7 +86,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             // (the createCard(request:) function, but it is kinda weird to
             // call an interactor function within the interactor
             let cardToCreate = Card(frontSide: frontSideText, backSide: backSideText)
-            self.decksWorker1.createCard(forDeckID: displayedDeckID, card: cardToCreate)
+            self.decksWorker.createCard(forDeckID: displayedDeckID, card: cardToCreate)
             
             // TODO: Save card
             
@@ -90,7 +94,33 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             self.presenter?.presentCard(response: response)
         }
         
+        
+        
         let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextField, backTextField], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
+    }
+    
+    // MARK: Show Edit Title Alert
+    func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request) {
+        let deckTitleTextField = AlertDisplayable.TextField(placeholder: "New Deck Title")
+        let displayedDeckID = request.deckID
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            guard let deckTitle = ac.textFields?[0].text else { return }
+            
+            self.decksWorker.editTitle(forDeckID: displayedDeckID, withNewTitle: deckTitle)
+            
+            let response = DeckDetail.ShowEditTitleAlert.Response(newDeckTitle: deckTitle)
+            self.presenter?.presentEditedDeckTitle(response: response)
+            
+        }
+        
+        
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "Please enter new deck title", textFields: [deckTitleTextField], actions: [cancelAction, saveAction])
         presenter?.presentAlert(viewModel: viewModel)
     }
     

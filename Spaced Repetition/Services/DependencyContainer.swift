@@ -13,8 +13,8 @@ final class DependencyContainer {
     // when we initialize the decksWorker here, we activate the init, which also
     // creates a decksStore for the decksWorker
     lazy var decksWorker: DecksWorkerProtocol = DecksWorker(factory: self)
+    lazy var testDecksStore: DecksStoreProtocol = TestDecksStore()
     lazy var memoryDecksStore: DecksStoreProtocol = MemoryDecksStore()
-//    lazy var defaultDecksStore: DecksStoreProtocol9 = DefaultDecksStore9()
 }
 
 extension DependencyContainer: DecksWorkerFactory {
@@ -25,10 +25,24 @@ extension DependencyContainer: DecksWorkerFactory {
 
 extension DependencyContainer: DecksStoreFactory {
     func makeDecksStore() -> DecksStoreProtocol {
-         return memoryDecksStore
-//        return defaultDecksStore
+        // TODO: switch from testDecksStore to memoryDecksStore when core data
+        // saving is implemented
+         return testDecksStore
+//        return memoryDecksStore
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // MARK: Start skeleton - Ignore
 /*

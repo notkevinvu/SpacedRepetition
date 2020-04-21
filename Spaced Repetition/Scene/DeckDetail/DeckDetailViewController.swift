@@ -12,12 +12,14 @@
 
 import UIKit
 
+// MARK: Display Logic protocol
 protocol DeckDetailDisplayLogic: class
 {
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel)
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
     
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
+    func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
 }
 
 
@@ -58,8 +60,7 @@ extension AlertDisplayableViewController where Self: UIViewController {
 }
 
 
-
-
+// MARK: - DeckDetailVC
 class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertDisplayableViewController
 {
     
@@ -106,12 +107,26 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     
     private func configureNavBar() {
         navigationItem.largeTitleDisplayMode = .automatic
-        let plusImage = UIImage(systemName: "plus.rectangle")
-        let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
-        navigationItem.rightBarButtonItem = addCardBarButton
         // replace title with a barbuttonitem to edit deck name
         navigationItem.title = "Untitled Deck"
+        
+        
+        let plusImage = UIImage(systemName: "plus.rectangle")
+        let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
+//        let editImage = UIImage(systemName: "pencil.circle.fill")
+//        let editDeckTitleButton = UIBarButtonItem(image: editImage, style: .done, target: self, action: #selector(didTapEditTitleButton))
+        let editDeckTitleButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(didTapEditTitleButton))
+        
+        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
+        
+        // to be used for converting the title view into a tappable view for
+        // editing deck title?
+//        navigationItem.titleView?.addGestureRecognizer(navBarTitleTapRecognizer)
+//        navigationItem.titleView?.layer.borderWidth = 1.0
+//        navigationItem.titleView?.layer.borderColor = UIColor.black.cgColor
     }
+    
+    
     
     private func configureCollectionDataSource() {
         contentView.collectionView.delegate = self
@@ -172,6 +187,10 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
+    func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel) {
+        navigationItem.title = viewModel.newDeckTitle
+    }
+    
     // MARK: Button methods
     
     @objc func handleAddCardButton() {
@@ -179,6 +198,16 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         let request = DeckDetail.ShowCreateCard.Request(displayedDeckID: displayedDeckID)
         
         interactor?.showCreateCard(request: request)
+    }
+    
+    @objc func didTapEditTitleButton() {
+        // TODO: Allow user to change deck title
+        // 1) Display alert controller with one text field,
+        // 2) Submit request with the text from the text field
+        // 3) Change deck title
+        guard let displayedDeckID = displayedDeckID else { return }
+        let request = DeckDetail.ShowEditTitleAlert.Request(deckID: displayedDeckID)
+        interactor?.showEditTitleAlert(request: request)
     }
 
 }

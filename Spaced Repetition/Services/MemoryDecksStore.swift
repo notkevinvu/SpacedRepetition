@@ -19,10 +19,13 @@ protocol DecksStoreProtocol {
     func createDeck() -> Deck
     
     func createCard(forDeckID deckID: UUID, card: Card)
+    
+    func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String)
 }
 
 
-final class MemoryDecksStore: DecksStoreProtocol {
+// MARK: - TestDecksStore
+final class TestDecksStore: DecksStoreProtocol {
     
     // MARK: - Data
     static let kevinCards: [Card] = [
@@ -56,14 +59,53 @@ final class MemoryDecksStore: DecksStoreProtocol {
     
     func createDeck() -> Deck {
         let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [Card(frontSide: "Test front 1", backSide: "Test front 1"), Card(frontSide: "Test front 2", backSide: "Test back 2"), Card(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
-        MemoryDecksStore.decks.append(newDeck)
+        TestDecksStore.decks.append(newDeck)
         return newDeck
     }
     
     func createCard(forDeckID deckID: UUID, card: Card) {
-        guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
-        MemoryDecksStore.decks[indexOfMatchedDeck].cards.append(card)
+        TestDecksStore.decks[indexOfMatchedDeck].cards.append(card)
     }
     
+    
+    func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
+        guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        
+        TestDecksStore.decks[indexOfMatchedDeck].nameOfDeck = title
+    }
+}
+
+
+// MARK: - MemoryDecksStore
+final class MemoryDecksStore: DecksStoreProtocol {
+    
+    // MARK: Properties
+    private var decks: [Deck] = []
+    
+    
+    // MARK: CRUD Operations
+    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
+        completion { return decks}
+    }
+    
+    
+    func createDeck() -> Deck {
+        let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [])
+        return newDeck
+    }
+    
+    
+    func createCard(forDeckID deckID: UUID, card: Card) {
+        guard let indexOfMatchedDeck = decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        decks[indexOfMatchedDeck].cards.append(card)
+    }
+    
+    
+    func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
+        guard let indexOfMatchedDeck = decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        
+        decks[indexOfMatchedDeck].nameOfDeck = title
+    }
 }
