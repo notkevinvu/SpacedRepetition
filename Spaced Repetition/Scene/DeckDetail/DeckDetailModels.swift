@@ -35,7 +35,7 @@ enum DeckDetail
         
     }
     
-    // used to show/present the alert controller to prompt users to enter the card they want
+    
     enum ShowCreateCard {
         struct Request {
             let displayedDeckID: UUID
@@ -91,35 +91,4 @@ enum DeckDetail
     }
 }
 
-public enum AlertDisplayable {
-    public struct ViewModel {
-        let title: String?
-        let message: String?
-        let textFields: [TextField]
-        let actions: [Action]
-        
-        public init(title: String?, message: String, textFields: [TextField], actions: [Action]) {
-            self.title = title
-            self.message = message
-            self.textFields = textFields
-            self.actions = actions
-        }
-    }
-    
-    public struct Action {
-        let title: String?
-        let style: UIAlertAction.Style
-        let handler: ((UIAlertAction, UIAlertController) -> Void)?
-        
-        public init(title: String?, style: UIAlertAction.Style, handler: ((UIAlertAction, UIAlertController) -> Void)?) {
-            self.title = title
-            self.style = style
-            self.handler = handler
-        }
-    }
-    
-    public struct TextField {
-//        let textFieldConfig: ((UITextField) -> Void)?
-        let placeholder: String
-    }
-}
+

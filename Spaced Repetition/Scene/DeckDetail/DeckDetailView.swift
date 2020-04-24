@@ -15,6 +15,8 @@
 
 import UIKit
 
+
+// MARK: DeckDetailDelegate
 protocol DeckDetailViewDelegate: class {
     // class conformance is required for weak variables
     func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request)
@@ -25,12 +27,16 @@ class DeckDetailView: UIView {
     // MARK: Properties
     typealias Delegate = DeckDetailViewDelegate
     weak var delegate: Delegate?
+    var didLongPressCell: (() -> ())?
     
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
         layout.itemSize = CGSize(width: 360, height: 120)
+        // bottom inset allows users to scroll to see last card if there are more
+        // than 4 cards
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(DeckDetailCollectionViewCell.self, forCellWithReuseIdentifier: DeckDetailCollectionViewCell.identifier)
@@ -54,6 +60,7 @@ class DeckDetailView: UIView {
         
         return button
     }()
+    
     
     // MARK: Methods
     
@@ -99,7 +106,7 @@ class DeckDetailView: UIView {
         ])
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-        
+                
     }
     
 }

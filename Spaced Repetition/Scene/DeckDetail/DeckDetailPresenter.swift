@@ -21,18 +21,6 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
     func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response)
 }
 
-protocol AlertDisplayablePresenter {
-    var alertDisplayableViewController: AlertDisplayableViewController? { get }
-    func presentAlert(viewModel: AlertDisplayable.ViewModel)
-}
-
-// MARK: AlertController implementation
-extension AlertDisplayablePresenter {
-    // default implementation of any AlertDisplayablePresenter
-    public func presentAlert(viewModel: AlertDisplayable.ViewModel) {
-        alertDisplayableViewController?.displayAlert(viewModel: viewModel)
-    }
-}
 
 class DeckDetailPresenter: DeckDetailPresentationLogic
 {
@@ -75,4 +63,5 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         let viewModel = DeckDetail.ShowEditTitleAlert.ViewModel(newDeckTitle: response.newDeckTitle)
         viewController?.displayEditedDeckTitle(viewModel: viewModel)
     }
+    
 }

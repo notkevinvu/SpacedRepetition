@@ -119,7 +119,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         
         navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
         
-        // to be used for converting the title view into a tappable view for
+        // TODO: to be used for converting the title view into a tappable view for
         // editing deck title?
 //        navigationItem.titleView?.addGestureRecognizer(navBarTitleTapRecognizer)
 //        navigationItem.titleView?.layer.borderWidth = 1.0
@@ -226,13 +226,36 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         
         guard let displayedDeckCards = displayedDeckCards else { return cell }
         cell.configureWithModel(displayedDeckCards[indexPath.row])
+        cell.delegate = self
+        
+        // use this if you want to use a callback variable instead
+//        cell.didTapDeleteButton = {
+//            print("Test")
+//            return
+//        }
         
         return cell
     }
 
-    // TODO: Remove this (tapping cell may potentialy lead to editing in future)
+    /*
+     TODO: Remove or configure such that tapping allows editing
+     */
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("Tapped collection view cell: \(indexPath.row)")
+
     }
     
+}
+
+
+// MARK: - DeckDetailCollectionCellDelegate
+protocol DeckDetailCollectionCellDelegate: class {
+    func deleteButtonTapped()
+}
+
+extension DeckDetailViewController: DeckDetailCollectionCellDelegate {
+    // TODO: implement delete card
+    func deleteButtonTapped() {
+        print("Delete button tapped")
+    }
 }

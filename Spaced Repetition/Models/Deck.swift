@@ -11,7 +11,6 @@ import Foundation
 // might be better to use a class instead of struct if we change anything
 struct Deck {
     var nameOfDeck: String
-    // deckID should be a uuidString
     let deckID: UUID
     
     var cards: [Card]

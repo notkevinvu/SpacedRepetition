@@ -24,6 +24,9 @@ final class DecksView: UIView {
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
         layout.itemSize = CGSize(width: 360, height: 110)
+        // bottom edge inset added to allow users to scroll up more to see last deck
+        // if there were more than 4 decks
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(DecksCollectionViewCell.self, forCellWithReuseIdentifier: DecksCollectionViewCell.identifier)

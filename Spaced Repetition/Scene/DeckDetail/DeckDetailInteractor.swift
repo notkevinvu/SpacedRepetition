@@ -79,8 +79,8 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         // as long as we pass in a UIAlertAction and UIAlertController
         let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, vc) in
             guard let self = self else { return }
-            guard let frontSideText = vc.textFields?[0].text else { return }
-            guard let backSideText = vc.textFields?[1].text else { return }
+            guard let frontSideText = vc.textFields?[0].text, !frontSideText.isEmpty else { return }
+            guard let backSideText = vc.textFields?[1].text, !backSideText.isEmpty else { return }
             
             // should we abstract this into a separate function? we have one above
             // (the createCard(request:) function, but it is kinda weird to
@@ -126,6 +126,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     
 }
 
+// MARK: - Delegate methods
 extension DeckDetailInteractor: DeckDetailViewDelegate {
     
     func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request) {
