@@ -22,6 +22,8 @@ protocol DeckDetailBusinessLogic
     
     func showEditCard(request: DeckDetail.ShowEditCardAC.Request)
     
+    func deleteCard(request: DeckDetail.DeleteCard.Request)
+    
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
 }
 
@@ -125,6 +127,18 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         presenter?.presentAlert(viewModel: viewModel)
     }
     
+    
+    func deleteCard(request: DeckDetail.DeleteCard.Request) {
+        let deckID = request.deckID
+        let cardIndexToDelete = request.cardID
+        
+        decksWorker.deleteCard(forDeckID: deckID, cardIndexToDelete: cardIndexToDelete)
+        
+        let response = DeckDetail.DeleteCard.Response(cardIndexToRemove: cardIndexToDelete)
+        presenter?.presentDeletedCard(response: response)
+    }
+    
+    
     // MARK: Show Edit Title Alert
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request) {
         let deckTitleTextField = AlertDisplayable.TextField(placeholder: "New Deck Title")
@@ -140,7 +154,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             
             let response = DeckDetail.ShowEditTitleAlert.Response(newDeckTitle: deckTitle)
             self.presenter?.presentEditedDeckTitle(response: response)
-            
         }
         
         let viewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "Please enter new deck title", textFields: [deckTitleTextField], actions: [cancelAction, saveAction])

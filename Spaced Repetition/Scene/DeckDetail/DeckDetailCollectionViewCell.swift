@@ -38,6 +38,14 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     }
     
     
+    let containerView: UIView = {
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    
     let cardFrontSideLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -63,7 +71,7 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 20)
         label.textAlignment = .left
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         
         return label
     }()
@@ -117,12 +125,13 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     // MARK: Setup
     
     private func setupSubviews() {
-        contentView.addSubview(cardFrontAndBackSeparator)
-        contentView.addSubview(cardFrontSideLabel)
-        contentView.addSubview(cardBackSideLabel)
-        contentView.addSubview(deleteButton)
-        contentView.addSubview(editButton)
-        contentView.addGestureRecognizer(tapGestureRecognizer)
+        contentView.addSubview(containerView)
+        containerView.addSubview(cardFrontAndBackSeparator)
+        containerView.addSubview(cardFrontSideLabel)
+        containerView.addSubview(cardBackSideLabel)
+        containerView.addSubview(deleteButton)
+        containerView.addSubview(editButton)
+        containerView.addGestureRecognizer(tapGestureRecognizer)
         
         editButtonWidthAnchor = editButton.widthAnchor.constraint(equalToConstant: 0)
         // activate here so we don't need to unwrap in the .activate() method
@@ -131,42 +140,49 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         deleteButtonWidthAnchor?.isActive = true
         
         NSLayoutConstraint.activate([
-            cardFrontAndBackSeparator.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
+            containerView.rightAnchor.constraint(equalTo: self.rightAnchor),
+            containerView.leftAnchor.constraint(equalTo: self.leftAnchor),
+            containerView.topAnchor.constraint(equalTo: self.topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            
+            cardFrontAndBackSeparator.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 50),
             cardFrontAndBackSeparator.bottomAnchor.constraint(equalTo: cardFrontAndBackSeparator.topAnchor, constant: 0.5),
-            cardFrontAndBackSeparator.leftAnchor.constraint(equalTo: self.leftAnchor),
-            cardFrontAndBackSeparator.rightAnchor.constraint(equalTo: self.rightAnchor),
+            cardFrontAndBackSeparator.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+            cardFrontAndBackSeparator.rightAnchor.constraint(equalTo: containerView.rightAnchor),
             
             
-            cardFrontSideLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15),
-            cardFrontSideLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
-            cardFrontSideLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
+            cardFrontSideLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 15),
+            cardFrontSideLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -15),
+            cardFrontSideLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 5),
             cardFrontSideLabel.bottomAnchor.constraint(equalTo: cardFrontAndBackSeparator.topAnchor, constant: -5),
             
             
-            cardBackSideLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 15),
-            cardBackSideLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
+            cardBackSideLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 15),
+            cardBackSideLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -15),
             cardBackSideLabel.topAnchor.constraint(equalTo: cardFrontAndBackSeparator.bottomAnchor, constant: 5),
-            cardBackSideLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
+            cardBackSideLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -5),
             
-            editButton.rightAnchor.constraint(equalTo: self.rightAnchor),
-            editButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
-            editButton.topAnchor.constraint(equalTo: self.topAnchor),
+            editButton.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            editButton.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.5),
+            editButton.topAnchor.constraint(equalTo: containerView.topAnchor),
             
-            deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor),
-            
-            deleteButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
-            deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            deleteButton.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+            deleteButton.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.5),
+            deleteButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
     }
     
     
     private func configureCellView() {
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .white
         layer.cornerRadius = 10
         layer.shadowRadius = 8
         layer.shadowOffset = .zero
         layer.shadowOpacity = 0.25
+        
     }
     
     

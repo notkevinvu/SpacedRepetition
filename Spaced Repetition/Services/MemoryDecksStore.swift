@@ -22,6 +22,8 @@ protocol DecksStoreProtocol {
     
     func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int)
     
+    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
+    
     func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String)
 }
 
@@ -80,6 +82,12 @@ final class TestDecksStore: DecksStoreProtocol {
         TestDecksStore.decks[indexOfMatchedDeck].cards[cardID] = card
     }
     
+    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
+        guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        TestDecksStore.decks[indexOfMatchedDeck].cards.remove(at: cardIndexToDelete)
+    }
+    
     
     func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
@@ -118,6 +126,12 @@ final class MemoryDecksStore: DecksStoreProtocol {
         guard let indexOfMatchedDeck = decks.firstIndex(where: { $0.deckID == deckID}) else { return }
         
         decks[indexOfMatchedDeck].cards[cardID] = card
+    }
+    
+    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
+        guard let indexOfMatchedDeck = decks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        decks[indexOfMatchedDeck].cards.remove(at: cardIndexToDelete)
     }
     
     

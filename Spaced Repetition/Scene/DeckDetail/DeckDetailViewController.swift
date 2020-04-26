@@ -20,6 +20,8 @@ protocol DeckDetailDisplayLogic: class
     
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel)
+    func displayDeletedCard(viewModel: DeckDetail.DeleteCard.ViewModel)
+    
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
 }
 
@@ -155,6 +157,13 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
+    
+    func displayDeletedCard(viewModel: DeckDetail.DeleteCard.ViewModel) {
+        displayedDeckCards?.remove(at: viewModel.cardIndexToRemove)
+        contentView.collectionView.reloadData()
+    }
+    
+    
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel) {
         navigationItem.title = viewModel.newDeckTitle
     }
@@ -198,16 +207,20 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         
         guard let displayedDeckID = displayedDeckID else { return cell }
         
+        let cardIndexToEditOrDelete = indexPath.row
         
         cell.didTapEditButton = { [weak self] in
             guard let self = self else { return }
-            let request = DeckDetail.ShowEditCardAC.Request(deckID: displayedDeckID, cardID: indexPath.row)
+            let request = DeckDetail.ShowEditCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
             self.interactor?.showEditCard(request: request)
             cell.toggleEditViews()
         }
         
-        cell.didTapDeleteButton = {
-            print("Tapped delete button")
+        cell.didTapDeleteButton = { [weak self] in
+            guard let self = self else { return }
+            let request = DeckDetail.DeleteCard.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
+            self.interactor?.deleteCard(request: request)
+            cell.toggleEditViews()
         }
         
         return cell

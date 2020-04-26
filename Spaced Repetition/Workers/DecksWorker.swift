@@ -18,6 +18,7 @@ protocol DecksWorkerProtocol {
     func createDeck() -> Deck
     func createCard(forDeckID deckID: UUID, card: Card)
     func editCard(forDeckID deckID: UUID, withCard card: Card, forCardID: Int)
+    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
     func editTitle(forDeckID deckID: UUID, withNewTitle newTitle: String)
 }
 
@@ -32,6 +33,7 @@ final class DecksWorker {
     }
 }
 
+// MARK: - DecksWorker protocol methods
 extension DecksWorker: DecksWorkerProtocol {
     func fetchDecks(completion: @escaping ([Deck]) -> Void) {
         decksStore.fetchDecks { (decks: () throws -> [Deck]) -> Void in
@@ -60,6 +62,10 @@ extension DecksWorker: DecksWorkerProtocol {
     
     func editCard(forDeckID deckID: UUID, withCard card: Card, forCardID cardID: Int) {
         decksStore.editCard(forDeckID: deckID, card: card, forCardID: cardID)
+    }
+    
+    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
+        decksStore.deleteCard(forDeckID: deckID, cardIndexToDelete: cardIndexToDelete)
     }
     
     func editTitle(forDeckID deckID: UUID, withNewTitle newTitle: String) {

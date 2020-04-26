@@ -20,6 +20,8 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
     
     func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response)
     
+    func presentDeletedCard(response: DeckDetail.DeleteCard.Response)
+    
     func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response)
 }
 
@@ -67,6 +69,14 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         
         let viewModel = DeckDetail.ShowEditCardAC.ViewModel(displayedCard: editedCard, cardID: cardID)
         viewController?.displayEditedCard(viewModel: viewModel)
+    }
+    
+    
+    func presentDeletedCard(response: DeckDetail.DeleteCard.Response) {
+        let cardIndexToRemove = response.cardIndexToRemove
+        
+        let viewModel = DeckDetail.DeleteCard.ViewModel(cardIndexToRemove: cardIndexToRemove)
+        viewController?.displayDeletedCard(viewModel: viewModel)
     }
     
     

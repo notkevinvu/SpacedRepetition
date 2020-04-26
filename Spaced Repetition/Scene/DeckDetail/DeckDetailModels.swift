@@ -77,10 +77,14 @@ enum DeckDetail
     enum DeleteCard {
         struct Request {
             let deckID: UUID
+            // indexPath.row for card ID
+            let cardID: Int
         }
         struct Response {
+            let cardIndexToRemove: Int
         }
         struct ViewModel {
+            let cardIndexToRemove: Int
         }
     }
     
