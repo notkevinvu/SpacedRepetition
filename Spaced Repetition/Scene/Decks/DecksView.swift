@@ -32,7 +32,9 @@ final class DecksView: UIView {
         collectionView.register(DecksCollectionViewCell.self, forCellWithReuseIdentifier: DecksCollectionViewCell.identifier)
         collectionView.backgroundColor = .systemBackground
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        // give collection view a bit more space at top from the title/nav bar
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
+        collectionView.alwaysBounceVertical = true
         
         collectionView.collectionViewLayout = layout
         

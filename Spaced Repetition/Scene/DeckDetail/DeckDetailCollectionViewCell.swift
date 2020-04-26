@@ -27,11 +27,10 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "DeckDetailCollectionCell"
     
-    var isDeleteButtonVisible: Bool = false
-    // alternatively can use a callback for the deleteButton to tell the VC
-    // that the button was tapped
-//    var didTapDeleteButton: (() -> ())?
-    weak var delegate: DeckDetailCollectionCellDelegate?
+    // callback functions to tell VC that a button was tapped
+    var didTapEditButton: (() -> ())?
+    var didTapDeleteButton: (() -> ())?
+    
     
     struct CardCellModel {
         let frontSide: String
@@ -70,32 +69,48 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     }()
     
     
-    /*
-     lazy var to access self only after self fully initializes
-     */
-    lazy var deleteButton: UIButton = {
+    lazy var editButton: UIButton = {
         let button = UIButton(frame: .zero)
-        button.layer.cornerRadius = 14 // should be half the height/width of the button
-        button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
-        
-        button.layer.borderWidth = 0.5
-        button.backgroundColor = .red
-        button.tintColor = .white
-        
-        button.addTarget(self, action: #selector(handleTapDeleteButton), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.isUserInteractionEnabled = true
-        button.isHidden = true
+        button.backgroundColor = UIColor(hex: "a4dced")
+        button.layer.cornerRadius = self.layer.cornerRadius
+        button.layer.maskedCorners = [.layerMaxXMinYCorner]
+        button.layer.borderWidth = 0.5
+        
+        button.setImage(UIImage(systemName: "pencil.circle"), for: .normal)
+        button.tintColor = .black
+        
+        button.addTarget(self, action: #selector(handleTapEditButton(sender:)), for: .touchUpInside)
         
         return button
     }()
+    // used to animate the button in
+    var editButtonWidthAnchor: NSLayoutConstraint?
     
-    lazy var longPressGestureRecognizer: UILongPressGestureRecognizer = {
-        let longPress = UILongPressGestureRecognizer()
-        longPress.delaysTouchesEnded = true
-        longPress.addTarget(self, action: #selector(displayDeleteButton))
+    
+    lazy var deleteButton: UIButton = {
+        let button = UIButton(frame: .zero)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = UIColor(hex: "eb8888")
+        button.layer.cornerRadius = self.layer.cornerRadius
+        button.layer.maskedCorners = [.layerMaxXMaxYCorner]
+        button.layer.borderWidth = 0.5
         
-        return longPress
+        button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
+        button.tintColor = .black
+        
+        button.addTarget(self, action: #selector(handleTapDeleteButton(sender:)), for: .touchUpInside)
+        
+        return button
+    }()
+    var deleteButtonWidthAnchor: NSLayoutConstraint?
+    
+    
+    lazy var tapGestureRecognizer: UITapGestureRecognizer = {
+        let tap = UITapGestureRecognizer()
+        tap.addTarget(self, action: #selector(toggleEditViews))
+        
+        return tap
     }()
     
     
@@ -106,7 +121,14 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(cardFrontSideLabel)
         contentView.addSubview(cardBackSideLabel)
         contentView.addSubview(deleteButton)
-        contentView.addGestureRecognizer(longPressGestureRecognizer)
+        contentView.addSubview(editButton)
+        contentView.addGestureRecognizer(tapGestureRecognizer)
+        
+        editButtonWidthAnchor = editButton.widthAnchor.constraint(equalToConstant: 0)
+        // activate here so we don't need to unwrap in the .activate() method
+        editButtonWidthAnchor?.isActive = true
+        deleteButtonWidthAnchor = deleteButton.widthAnchor.constraint(equalToConstant: 0)
+        deleteButtonWidthAnchor?.isActive = true
         
         NSLayoutConstraint.activate([
             cardFrontAndBackSeparator.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
@@ -126,10 +148,14 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
             cardBackSideLabel.topAnchor.constraint(equalTo: cardFrontAndBackSeparator.bottomAnchor, constant: 5),
             cardBackSideLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
             
-            deleteButton.heightAnchor.constraint(equalToConstant: deleteButton.layer.cornerRadius * 2),
-            deleteButton.widthAnchor.constraint(equalToConstant: deleteButton.layer.cornerRadius * 2),
-            deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-            deleteButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 0)
+            editButton.rightAnchor.constraint(equalTo: self.rightAnchor),
+            editButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
+            editButton.topAnchor.constraint(equalTo: self.topAnchor),
+            
+            deleteButton.rightAnchor.constraint(equalTo: self.rightAnchor),
+            
+            deleteButton.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.5),
+            deleteButton.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
         
     }
@@ -151,22 +177,30 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         cardBackSideLabel.text = model.backSide
     }
     
-    
-    @objc func displayDeleteButton(sender: UILongPressGestureRecognizer) {
-        if sender.state == .began {
-            if deleteButton.isHidden {
-                deleteButton.isHidden = false
-            } else {
-                deleteButton.isHidden = true
-            }
+    @objc func toggleEditViews() {
+        if editButtonWidthAnchor?.constant == 0 {
+            
+            editButtonWidthAnchor?.constant = 80
+            deleteButtonWidthAnchor?.constant = 80
+        } else {
+            editButtonWidthAnchor?.constant = 0
+            deleteButtonWidthAnchor?.constant = 0
+        }
+        
+        UIView.animate(withDuration: 0.2) {
+            self.contentView.layoutIfNeeded()
         }
     }
     
+    
     // MARK: - Methods
     
-    @objc func handleTapDeleteButton() {
-//        didTapDeleteButton?()
-        delegate?.deleteButtonTapped()
+    @objc func handleTapEditButton(sender: UIButton) {
+        didTapEditButton?()
+    }
+    
+    @objc func handleTapDeleteButton(sender: UIButton) {
+        didTapDeleteButton?()
     }
     
     

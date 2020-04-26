@@ -27,7 +27,7 @@ class DeckDetailView: UIView {
     // MARK: Properties
     typealias Delegate = DeckDetailViewDelegate
     weak var delegate: Delegate?
-    var didLongPressCell: (() -> ())?
+    
     
     let collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
@@ -42,9 +42,11 @@ class DeckDetailView: UIView {
         collectionView.register(DeckDetailCollectionViewCell.self, forCellWithReuseIdentifier: DeckDetailCollectionViewCell.identifier)
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.alwaysBounceVertical = true
         
         return collectionView
     }()
+    
     
     let studyDeckButton: UIButton = {
         let button = UIButton(frame: .zero)

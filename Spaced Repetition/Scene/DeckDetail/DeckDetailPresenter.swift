@@ -18,6 +18,8 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
     
     func presentCard(response: DeckDetail.CreateCard.Response)
     
+    func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response)
+    
     func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response)
 }
 
@@ -56,6 +58,15 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
         let cardViewModel = DeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
         viewController?.displayCreatedCard(viewModel: cardViewModel)
+    }
+    
+    
+    func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response) {
+        let editedCard = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
+        let cardID = response.cardID
+        
+        let viewModel = DeckDetail.ShowEditCardAC.ViewModel(displayedCard: editedCard, cardID: cardID)
+        viewController?.displayEditedCard(viewModel: viewModel)
     }
     
     

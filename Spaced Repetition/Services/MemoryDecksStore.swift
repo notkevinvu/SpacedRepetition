@@ -20,6 +20,8 @@ protocol DecksStoreProtocol {
     
     func createCard(forDeckID deckID: UUID, card: Card)
     
+    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int)
+    
     func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String)
 }
 
@@ -46,16 +48,17 @@ final class TestDecksStore: DecksStoreProtocol {
     ]
     
     
-    // MARK: - CRUD Operations
+    // TODO: When switching to a database (userdefaults/core data), use this function
+    // to pull info from the database and then store it in the decks array
+        func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
+            // decks needs to be a static var in order to return this type
+            // alternatively, we could just do 'return decks' if we want to pull
+            // a non static decks object from this memstore
+    //        completion { return decks }
+            completion { return type(of: self).decks}
+        }
     
-    // this just returns a [Deck] object and passes it to whoever calls this function (i.e. the worker)
-    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
-        // decks needs to be a static var in order to return this type
-        // alternatively, we could just do 'return decks' if we want to pull
-        // a non static decks object from this memstore
-//        completion { return decks }
-        completion { return type(of: self).decks}
-    }
+    // MARK: - CRUD Operations
     
     func createDeck() -> Deck {
         let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [Card(frontSide: "Test front 1", backSide: "Test front 1"), Card(frontSide: "Test front 2", backSide: "Test back 2"), Card(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
@@ -63,10 +66,18 @@ final class TestDecksStore: DecksStoreProtocol {
         return newDeck
     }
     
+    
     func createCard(forDeckID deckID: UUID, card: Card) {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
         TestDecksStore.decks[indexOfMatchedDeck].cards.append(card)
+    }
+    
+    
+    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int) {
+        guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        TestDecksStore.decks[indexOfMatchedDeck].cards[cardID] = card
     }
     
     
@@ -100,6 +111,13 @@ final class MemoryDecksStore: DecksStoreProtocol {
     func createCard(forDeckID deckID: UUID, card: Card) {
         guard let indexOfMatchedDeck = decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         decks[indexOfMatchedDeck].cards.append(card)
+    }
+    
+    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int) {
+        // TODO: IMPLEMENT
+        guard let indexOfMatchedDeck = decks.firstIndex(where: { $0.deckID == deckID}) else { return }
+        
+        decks[indexOfMatchedDeck].cards[cardID] = card
     }
     
     

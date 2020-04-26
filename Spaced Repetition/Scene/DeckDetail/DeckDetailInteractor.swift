@@ -20,6 +20,8 @@ protocol DeckDetailBusinessLogic
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
     
+    func showEditCard(request: DeckDetail.ShowEditCardAC.Request)
+    
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
 }
 
@@ -94,9 +96,32 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             self.presenter?.presentCard(response: response)
         }
         
-        
-        
         let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextField, backTextField], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
+    }
+    
+    // MARK: Show Edit Card Alert
+    func showEditCard(request: DeckDetail.ShowEditCardAC.Request) {
+        let cardFrontText = AlertDisplayable.TextField(placeholder: "Front side of card")
+        let cardBackText = AlertDisplayable.TextField(placeholder: "Back side of card")
+        let displayedDeckID = request.deckID
+        let cardID = request.cardID
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            guard let cardFrontText = ac.textFields?[0].text else { return }
+            guard let cardBackText = ac.textFields?[1].text else { return }
+            
+            let editedCardDetails = Card(frontSide: cardFrontText, backSide: cardBackText)
+            self.decksWorker.editCard(forDeckID: displayedDeckID, withCard: editedCardDetails, forCardID: cardID)
+            
+            let response = DeckDetail.ShowEditCardAC.Response(card: editedCardDetails, cardID: cardID)
+            self.presenter?.presentEditedCard(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Edit Card Details", message: "Please enter card details", textFields: [cardFrontText, cardBackText], actions: [cancelAction, saveAction])
         presenter?.presentAlert(viewModel: viewModel)
     }
     
@@ -117,8 +142,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             self.presenter?.presentEditedDeckTitle(response: response)
             
         }
-        
-        
         
         let viewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "Please enter new deck title", textFields: [deckTitleTextField], actions: [cancelAction, saveAction])
         presenter?.presentAlert(viewModel: viewModel)

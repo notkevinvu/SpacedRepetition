@@ -40,12 +40,6 @@ enum DeckDetail
         struct Request {
             let displayedDeckID: UUID
         }
-        struct Response {
-            
-        }
-        struct ViewModel {
-            
-        }
     }
     
     
@@ -60,6 +54,33 @@ enum DeckDetail
         }
         struct ViewModel {
             let displayedCard: DeckDetailCollectionViewCell.CardCellModel
+        }
+    }
+    
+    enum ShowEditCardAC {
+        struct Request {
+            let deckID: UUID
+            // use the indexPath.row int for the card ID for now, maybe attach a
+            // UUID to each card in the future as well?
+            let cardID: Int
+        }
+        struct Response {
+            let card: Card
+            let cardID: Int
+        }
+        struct ViewModel {
+            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
+            let cardID: Int
+        }
+    }
+    
+    enum DeleteCard {
+        struct Request {
+            let deckID: UUID
+        }
+        struct Response {
+        }
+        struct ViewModel {
         }
     }
     

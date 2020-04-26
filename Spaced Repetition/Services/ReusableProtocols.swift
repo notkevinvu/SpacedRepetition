@@ -55,3 +55,40 @@ extension AlertDisplayablePresenter {
         alertDisplayableViewController?.displayAlert(viewModel: viewModel)
     }
 }
+
+
+// MARK: AlertDisplayableVC
+public protocol AlertDisplayableViewController {
+    func displayAlert(viewModel: AlertDisplayable.ViewModel)
+}
+
+extension AlertDisplayableViewController where Self: UIViewController {
+    public func displayAlert(viewModel: AlertDisplayable.ViewModel) {
+        let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
+        
+        viewModel.textFields.forEach { (alertTextField) in
+            vc.addTextField { (textField) in
+                textField.placeholder = alertTextField.placeholder
+            }
+        }
+        
+        viewModel.actions.forEach { action in
+            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { actionIgnore in
+                guard let handler = action.handler else { return }
+                /*
+                 we call the action's handler here if it has one
+                 
+                 we don't really need the alert action parameter but it requires it
+                 so we pass one in anyway - the important one is the vc/alertcontroller
+                 since we need to access the alert controller's textfields property
+                 
+                 then, we can access the alert controller's textfields property
+                 wherever we declared the handler (i.e. the interactor in this case)
+                 */
+                
+                handler(actionIgnore, vc)
+            }))
+        }
+        present(vc, animated: true, completion: nil)
+    }
+}

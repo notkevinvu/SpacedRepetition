@@ -17,6 +17,6 @@ struct Deck {
 }
 
 struct Card {
-    let frontSide: String
-    let backSide: String
+    var frontSide: String
+    var backSide: String
 }

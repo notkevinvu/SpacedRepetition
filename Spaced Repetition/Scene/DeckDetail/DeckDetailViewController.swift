@@ -19,44 +19,8 @@ protocol DeckDetailDisplayLogic: class
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels)
     
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
+    func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel)
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
-}
-
-
-// MARK: AlertDisplayable protocol
-public protocol AlertDisplayableViewController {
-    func displayAlert(viewModel: AlertDisplayable.ViewModel)
-}
-
-extension AlertDisplayableViewController where Self: UIViewController {
-    public func displayAlert(viewModel: AlertDisplayable.ViewModel) {
-        let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
-        
-        viewModel.textFields.forEach { (alertTextField) in
-            vc.addTextField { (textField) in
-                textField.placeholder = alertTextField.placeholder
-            }
-        }
-        
-        viewModel.actions.forEach { action in
-            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { actionIgnore in
-                guard let handler = action.handler else { return }
-                /*
-                 we call the action's handler here if it has one
-                 
-                 we don't really need the alert action parameter but it requires it
-                 so we pass one in anyway - the important one is the vc/alertcontroller
-                 since we need to access the alert controller's textfields property
-                 
-                 then, we can access the alert controller's textfields property
-                 wherever we declared the handler (i.e. the interactor in this case)
-                 */
-                
-                handler(actionIgnore, vc)
-            }))
-        }
-        present(vc, animated: true, completion: nil)
-    }
 }
 
 
@@ -113,8 +77,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
-//        let editImage = UIImage(systemName: "pencil.circle.fill")
-//        let editDeckTitleButton = UIBarButtonItem(image: editImage, style: .done, target: self, action: #selector(didTapEditTitleButton))
         let editDeckTitleButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(didTapEditTitleButton))
         
         navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
@@ -125,7 +87,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
 //        navigationItem.titleView?.layer.borderWidth = 1.0
 //        navigationItem.titleView?.layer.borderColor = UIColor.black.cgColor
     }
-    
     
     
     private func configureCollectionDataSource() {
@@ -187,6 +148,13 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
+    func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel) {
+        // replacing the card model at the given index with the new card model
+        // specified by the user
+        displayedDeckCards?[viewModel.cardID] = viewModel.displayedCard
+        contentView.collectionView.reloadData()
+    }
+    
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel) {
         navigationItem.title = viewModel.newDeckTitle
     }
@@ -220,42 +188,30 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         guard let displayedDeckCards = displayedDeckCards else { return 0 }
         return displayedDeckCards.count
     }
+    
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeckDetailCollectionViewCell.identifier, for: indexPath) as! DeckDetailCollectionViewCell
         
         guard let displayedDeckCards = displayedDeckCards else { return cell }
         cell.configureWithModel(displayedDeckCards[indexPath.row])
-        cell.delegate = self
         
-        // use this if you want to use a callback variable instead
-//        cell.didTapDeleteButton = {
-//            print("Test")
-//            return
-//        }
+        guard let displayedDeckID = displayedDeckID else { return cell }
+        
+        
+        cell.didTapEditButton = { [weak self] in
+            guard let self = self else { return }
+            let request = DeckDetail.ShowEditCardAC.Request(deckID: displayedDeckID, cardID: indexPath.row)
+            self.interactor?.showEditCard(request: request)
+            cell.toggleEditViews()
+        }
+        
+        cell.didTapDeleteButton = {
+            print("Tapped delete button")
+        }
         
         return cell
-    }
-
-    /*
-     TODO: Remove or configure such that tapping allows editing
-     */
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Tapped collection view cell: \(indexPath.row)")
-
     }
     
 }
 
-
-// MARK: - DeckDetailCollectionCellDelegate
-protocol DeckDetailCollectionCellDelegate: class {
-    func deleteButtonTapped()
-}
-
-extension DeckDetailViewController: DeckDetailCollectionCellDelegate {
-    // TODO: implement delete card
-    func deleteButtonTapped() {
-        print("Delete button tapped")
-    }
-}
