@@ -102,13 +102,12 @@ class DeckDetailView: UIView {
             // study deck button
             studyDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 35),
             studyDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -35),
-            studyDeckButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            studyDeckButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
             studyDeckButton.heightAnchor.constraint(equalToConstant: 60)
-            
         ])
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
-                
+        
     }
     
 }

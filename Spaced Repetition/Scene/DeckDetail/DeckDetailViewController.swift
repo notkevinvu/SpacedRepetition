@@ -20,7 +20,7 @@ protocol DeckDetailDisplayLogic: class
     
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel)
-    func displayDeletedCard(viewModel: DeckDetail.DeleteCard.ViewModel)
+    func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel)
     
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
 }
@@ -79,7 +79,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
-        let editDeckTitleButton = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(didTapEditTitleButton))
+        let editDeckTitleButton = UIBarButtonItem(title: "Edit title", style: .done, target: self, action: #selector(didTapEditTitleButton))
         
         navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
         
@@ -158,7 +158,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     }
     
     
-    func displayDeletedCard(viewModel: DeckDetail.DeleteCard.ViewModel) {
+    func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel) {
         displayedDeckCards?.remove(at: viewModel.cardIndexToRemove)
         contentView.collectionView.reloadData()
     }
@@ -218,8 +218,8 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         
         cell.didTapDeleteButton = { [weak self] in
             guard let self = self else { return }
-            let request = DeckDetail.DeleteCard.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
-            self.interactor?.deleteCard(request: request)
+            let request = DeckDetail.ShowDeleteCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
+            self.interactor?.showDeleteCardAC(request: request)
             cell.toggleEditViews()
         }
         

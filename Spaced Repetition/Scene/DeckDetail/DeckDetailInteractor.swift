@@ -22,7 +22,7 @@ protocol DeckDetailBusinessLogic
     
     func showEditCard(request: DeckDetail.ShowEditCardAC.Request)
     
-    func deleteCard(request: DeckDetail.DeleteCard.Request)
+    func showDeleteCardAC(request: DeckDetail.ShowDeleteCardAC.Request)
     
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
 }
@@ -128,14 +128,23 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     
-    func deleteCard(request: DeckDetail.DeleteCard.Request) {
+    func showDeleteCardAC(request: DeckDetail.ShowDeleteCardAC.Request) {
         let deckID = request.deckID
         let cardIndexToDelete = request.cardID
         
-        decksWorker.deleteCard(forDeckID: deckID, cardIndexToDelete: cardIndexToDelete)
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Delete", style: .destructive) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            
+            self.decksWorker.deleteCard(forDeckID: deckID, cardIndexToDelete: cardIndexToDelete)
+            
+            let response = DeckDetail.ShowDeleteCardAC.Response(cardIndexToRemove: cardIndexToDelete)
+            self.presenter?.presentDeletedCard(response: response)
+        }
         
-        let response = DeckDetail.DeleteCard.Response(cardIndexToRemove: cardIndexToDelete)
-        presenter?.presentDeletedCard(response: response)
+        let viewModel = AlertDisplayable.ViewModel(title: "Please confirm", message: "Are you sure you want to delete this card?", textFields: [], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
     }
     
     

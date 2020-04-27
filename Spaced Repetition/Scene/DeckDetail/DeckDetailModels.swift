@@ -74,7 +74,7 @@ enum DeckDetail
         }
     }
     
-    enum DeleteCard {
+    enum ShowDeleteCardAC {
         struct Request {
             let deckID: UUID
             // indexPath.row for card ID
