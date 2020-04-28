@@ -10,8 +10,6 @@ import UIKit
 
 @objc protocol DecksRoutingLogic {
     func routeToDeckDetail()
-    
-    func routeToDeckDetailFromCollection(indexPath: IndexPath)
 }
 
 protocol DecksDataPassing {
@@ -43,13 +41,6 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
         var destinationDS = destinationVC.router!.dataStore
         passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
         viewController?.navigationController?.pushViewController(destinationVC, animated: true)
-    }
-    
-    func routeToDeckDetailFromCollection(indexPath: IndexPath) {
-//        let destinationVC = DeckDetailViewController()
-//        var destinationDS = destinationVC.router!.dataStore
-//        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
-//        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
     // MARK: Navigation

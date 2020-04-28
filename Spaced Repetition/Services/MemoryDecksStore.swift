@@ -101,43 +101,49 @@ final class TestDecksStore: DecksStoreProtocol {
 final class MemoryDecksStore: DecksStoreProtocol {
     
     // MARK: Properties
-    private var decks: [Deck] = []
+    // singleton decks variable to access the same decks array from any scene
+    // otherwise, the decks worker's decks store would be different from scene
+    // to scene 
+    static var decks: [Deck] = []
     
     
     // MARK: CRUD Operations
     func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
-        completion { return decks}
+        completion { return MemoryDecksStore.decks}
     }
     
     
     func createDeck() -> Deck {
         let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [])
+        
+        MemoryDecksStore.decks.append(newDeck)
         return newDeck
     }
     
     
     func createCard(forDeckID deckID: UUID, card: Card) {
-        guard let indexOfMatchedDeck = decks.firstIndex(where: {$0.deckID == deckID}) else { return }
-        decks[indexOfMatchedDeck].cards.append(card)
+        guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        MemoryDecksStore.decks[indexOfMatchedDeck].cards.append(card)
+        print("added card")
     }
     
     func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int) {
         // TODO: IMPLEMENT
-        guard let indexOfMatchedDeck = decks.firstIndex(where: { $0.deckID == deckID}) else { return }
+        guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: { $0.deckID == deckID}) else { return }
         
-        decks[indexOfMatchedDeck].cards[cardID] = card
+        MemoryDecksStore.decks[indexOfMatchedDeck].cards[cardID] = card
     }
     
     func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
-        guard let indexOfMatchedDeck = decks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: { $0.deckID == deckID }) else { return }
         
-        decks[indexOfMatchedDeck].cards.remove(at: cardIndexToDelete)
+        MemoryDecksStore.decks[indexOfMatchedDeck].cards.remove(at: cardIndexToDelete)
     }
     
     
     func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
-        guard let indexOfMatchedDeck = decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
-        decks[indexOfMatchedDeck].nameOfDeck = title
+        MemoryDecksStore.decks[indexOfMatchedDeck].nameOfDeck = title
     }
 }
