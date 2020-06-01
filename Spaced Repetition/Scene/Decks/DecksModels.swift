@@ -9,11 +9,11 @@
 import UIKit
 
 protocol DeckResponse {
-    var deckInfoToPass: Deck { get }
+    var deckInfoToPass: NaiveDeck { get }
 }
 
 protocol DeckInfoModel {
-    var deckInfoToPass: Deck { get }
+    var deckInfoToPass: NaiveDeck { get }
 }
 
 enum Decks {
@@ -23,7 +23,7 @@ enum Decks {
             
         }
         struct Response {
-            let decks: [Deck]
+            let decks: [NaiveDeck]
         }
         struct ViewModel {
             /*
@@ -49,10 +49,10 @@ enum Decks {
             // since once we tap the add deck button, it should make a default empty deck
         }
         struct Response: DeckResponse {
-            let deckInfoToPass: Deck
+            let deckInfoToPass: NaiveDeck
         }
         struct DeckModel: DeckInfoModel {
-            let deckInfoToPass: Deck
+            let deckInfoToPass: NaiveDeck
         }
     }
     
@@ -64,10 +64,10 @@ enum Decks {
             let indexPathRow: Int
         }
         struct Response: DeckResponse {
-            let deckInfoToPass: Deck
+            let deckInfoToPass: NaiveDeck
         }
         struct DeckModel: DeckInfoModel {
-            let deckInfoToPass: Deck
+            let deckInfoToPass: NaiveDeck
         }
         
     }

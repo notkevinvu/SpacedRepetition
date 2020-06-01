@@ -96,6 +96,7 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     var editButtonWidthAnchor: NSLayoutConstraint?
     
     
+    // same code as in decks view cell, create extension to place all this code in?
     lazy var deleteButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false

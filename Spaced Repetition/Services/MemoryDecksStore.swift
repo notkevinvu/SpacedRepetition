@@ -14,13 +14,15 @@ protocol DecksStoreFactory {
 
 
 protocol DecksStoreProtocol {
-    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void)
+    func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void)
     
-    func createDeck() -> Deck
+    func createDeck() -> NaiveDeck
     
-    func createCard(forDeckID deckID: UUID, card: Card)
+    func deleteDeck(forDeckID deckID: UUID)
     
-    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int)
+    func createCard(forDeckID deckID: UUID, card: NaiveCard)
+    
+    func editCard(forDeckID deckID: UUID, card: NaiveCard, forCardID cardID: Int)
     
     func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
     
@@ -32,60 +34,96 @@ protocol DecksStoreProtocol {
 final class TestDecksStore: DecksStoreProtocol {
     
     // MARK: - Data
-    static let kevinCards: [Card] = [
-    Card(frontSide: "Kevin's Birthday", backSide: "Sep 22"),
-    Card(frontSide: "Kevin's Height", backSide: "68 in."),
-    Card(frontSide: "Kevin's Age", backSide: "23")
+    static let kevinCards: [NaiveCard] = [
+    NaiveCard(frontSide: "Kevin's Birthday", backSide: "Sep 22"),
+    NaiveCard(frontSide: "Kevin's Height", backSide: "68 in."),
+    NaiveCard(frontSide: "Kevin's Age", backSide: "23")
     ]
     
-    static let scienceCards: [Card] = [
-    Card(frontSide: "Chemical formula of glucose", backSide: "C6H12O6"),
-    Card(frontSide: "Derivative of Position", backSide: "Velocity"),
-    Card(frontSide: "Derivative of Velocity", backSide: "Acceleration")
+    static let scienceCards: [NaiveCard] = [
+    NaiveCard(frontSide: "Chemical formula of glucose", backSide: "C6H12O6"),
+    NaiveCard(frontSide: "Derivative of Position", backSide: "Velocity"),
+    NaiveCard(frontSide: "Derivative of Velocity", backSide: "Acceleration")
     ]
     
-    static var decks = [
-        Deck(nameOfDeck: "Kevin", deckID: UUID(), cards: kevinCards),
-        Deck(nameOfDeck: "Science", deckID: UUID(), cards: scienceCards)
-    ]
+    static var decks: [NaiveDeck] = []
+    
+    static let decksStoreIdentifier = "Decks"
     
     
     // TODO: When switching to a database (userdefaults/core data), use this function
     // to pull info from the database and then store it in the decks array
-        func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
-            // decks needs to be a static var in order to return this type
-            // alternatively, we could just do 'return decks' if we want to pull
-            // a non static decks object from this memstore
-    //        completion { return decks }
-            completion { return type(of: self).decks}
+        func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void) {
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                if TestDecksStore.decks.isEmpty {
+                    TestDecksStore.decks = [
+                        NaiveDeck(nameOfDeck: "Kevin", cards: TestDecksStore.kevinCards),
+                        NaiveDeck(nameOfDeck: "Science", cards: TestDecksStore.scienceCards)
+                    ]
+                }
+                
+                let defaults = UserDefaults.standard
+                guard let savedDecks = defaults.object(forKey: TestDecksStore.decksStoreIdentifier) as? Data else { return }
+                
+                let jsonDecoder = JSONDecoder()
+                
+                do {
+                    TestDecksStore.decks = try jsonDecoder.decode([NaiveDeck].self, from: savedDecks)
+                } catch {
+                    print("Error loading data from userdefaults")
+                }
+            }
+            
+            DispatchQueue.main.async {
+                // decks needs to be a static var in order to return this type
+                        // alternatively, we could just do 'return decks' if we want to pull
+                        // a non static decks object from this memstore
+                //        completion { return decks }
+                completion { return type(of: self).decks }
+            }
+            
         }
     
     // MARK: - CRUD Operations
     
-    func createDeck() -> Deck {
-        let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [Card(frontSide: "Test front 1", backSide: "Test front 1"), Card(frontSide: "Test front 2", backSide: "Test back 2"), Card(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
+    func createDeck() -> NaiveDeck {
+        let newDeck = NaiveDeck(nameOfDeck: "Untitled Deck", cards: [NaiveCard(frontSide: "Test front 1", backSide: "Test front 1"), NaiveCard(frontSide: "Test front 2", backSide: "Test back 2"), NaiveCard(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
         TestDecksStore.decks.append(newDeck)
+        saveDecksData()
         return newDeck
     }
     
     
-    func createCard(forDeckID deckID: UUID, card: Card) {
+    func deleteDeck(forDeckID deckID: UUID) {
+        guard let indexOfMatchedDeck = type(of: self).decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        
+        type(of: self).decks.remove(at: indexOfMatchedDeck)
+        saveDecksData()
+    }
+    
+    
+    func createCard(forDeckID deckID: UUID, card: NaiveCard) {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
         TestDecksStore.decks[indexOfMatchedDeck].cards.append(card)
+        saveDecksData()
     }
     
     
-    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int) {
+    func editCard(forDeckID deckID: UUID, card: NaiveCard, forCardID cardID: Int) {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: { $0.deckID == deckID }) else { return }
         
         TestDecksStore.decks[indexOfMatchedDeck].cards[cardID] = card
+        saveDecksData()
     }
+    
     
     func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: { $0.deckID == deckID }) else { return }
         
         TestDecksStore.decks[indexOfMatchedDeck].cards.remove(at: cardIndexToDelete)
+        saveDecksData()
     }
     
     
@@ -93,6 +131,25 @@ final class TestDecksStore: DecksStoreProtocol {
         guard let indexOfMatchedDeck = TestDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
         TestDecksStore.decks[indexOfMatchedDeck].nameOfDeck = title
+        saveDecksData()
+    }
+    
+    
+    // save the current snapshot of the desired encodable value (TestDecksStore.decks in this case)
+    /**
+     Saves the current snapshot of the Decks store's deck array.
+     
+     Call this whenever you update or change any deck object:
+     * Adding a deck
+     * Updating deck title
+     * Adding a card
+     * Updating a card (i.e. editing the card or deleting the card)
+     */
+    func saveDecksData() {
+        let jsonEncoder = JSONEncoder()
+        guard let savedData = try? jsonEncoder.encode(TestDecksStore.decks) else { return }
+        let defaults = UserDefaults.standard
+        defaults.set(savedData, forKey: TestDecksStore.decksStoreIdentifier)
     }
 }
 
@@ -104,30 +161,38 @@ final class MemoryDecksStore: DecksStoreProtocol {
     // singleton decks variable to access the same decks array from any scene
     // otherwise, the decks worker's decks store would be different from scene
     // to scene 
-    static var decks: [Deck] = []
+    static var decks: [NaiveDeck] = []
     
     
     // MARK: CRUD Operations
-    func fetchDecks(completion: @escaping (() throws -> [Deck]) -> Void) {
+    func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void) {
         completion { return MemoryDecksStore.decks}
     }
     
     
-    func createDeck() -> Deck {
-        let newDeck = Deck(nameOfDeck: "Untitled Deck", deckID: UUID(), cards: [])
+    func createDeck() -> NaiveDeck {
+        let newDeck = NaiveDeck(nameOfDeck: "Untitled Deck", cards: [])
         
         MemoryDecksStore.decks.append(newDeck)
         return newDeck
     }
     
     
-    func createCard(forDeckID deckID: UUID, card: Card) {
+    func deleteDeck(forDeckID deckID: UUID) {
+        guard let indexOfMatchedDeck = type(of: self).decks.firstIndex(where: {$0.deckID == deckID}) else { return }
+        
+        type(of: self).decks.remove(at: indexOfMatchedDeck)
+        saveDecksData()
+    }
+    
+    
+    func createCard(forDeckID deckID: UUID, card: NaiveCard) {
         guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         MemoryDecksStore.decks[indexOfMatchedDeck].cards.append(card)
         print("added card")
     }
     
-    func editCard(forDeckID deckID: UUID, card: Card, forCardID cardID: Int) {
+    func editCard(forDeckID deckID: UUID, card: NaiveCard, forCardID cardID: Int) {
         // TODO: IMPLEMENT
         guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: { $0.deckID == deckID}) else { return }
         
@@ -145,5 +210,12 @@ final class MemoryDecksStore: DecksStoreProtocol {
         guard let indexOfMatchedDeck = MemoryDecksStore.decks.firstIndex(where: {$0.deckID == deckID}) else { return }
         
         MemoryDecksStore.decks[indexOfMatchedDeck].nameOfDeck = title
+    }
+    
+    func saveDecksData() {
+        let jsonEncoder = JSONEncoder()
+        guard let savedData = try? jsonEncoder.encode(TestDecksStore.decks) else { return }
+        let defaults = UserDefaults.standard
+        defaults.set(savedData, forKey: TestDecksStore.decksStoreIdentifier)
     }
 }

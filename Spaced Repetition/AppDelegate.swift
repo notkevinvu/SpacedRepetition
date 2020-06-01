@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "SpacedRepetition")
+        let container = NSPersistentContainer(name: "Spaced Repetition")
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error as NSError? {
                 // TODO: add error handling here (initialize empty array of decks?)

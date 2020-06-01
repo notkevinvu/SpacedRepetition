@@ -11,7 +11,7 @@ import UIKit
 protocol DecksDisplayLogic: class {
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     
-    func displayDeckDetail(deckInfoToPass: Deck)
+    func displayDeckDetail(deckInfoToPass: NaiveDeck)
 }
 
 class DecksViewController: UIViewController, DecksDisplayLogic {
@@ -33,7 +33,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         super.init(coder: aDecoder)
         setup()
     }
-  
+    
     // MARK: Setup
   
     private func setup() {
@@ -60,7 +60,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     
     private func configureNavigationbar() {
         navigationController?.navigationBar.prefersLargeTitles = true
-        // why do we use navigationitem.title instead of navigationController.title?
         navigationItem.title = "All Decks"
     }
   
@@ -85,7 +84,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     // MARK: Fetching Decks
     
     func fetchDecksOnLoad() {
-        // starting with VC, make a request to send to the interactor
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
     }
@@ -103,11 +101,12 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
   
     // MARK: Navigation
     
-    func displayDeckDetail(deckInfoToPass: Deck) {
+    func displayDeckDetail(deckInfoToPass: NaiveDeck) {
         router.dataStore?.deckInfoToPass = deckInfoToPass
         router.routeToDeckDetail()
         router.dataStore?.deckInfoToPass = nil
     }
+    
     
 }
 

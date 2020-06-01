@@ -21,9 +21,9 @@ protocol DecksBusinessLogicDelegate: class {
 protocol DecksDataStore {
     var delegate: DecksBusinessLogicDelegate? { get set }
     
-    var deckInfoToPass: Deck? { get set }
+    var deckInfoToPass: NaiveDeck? { get set }
     
-    var decks: [Deck] { get }
+    var decks: [NaiveDeck] { get }
 }
 
 class DecksInteractor: DecksBusinessLogic, DecksDataStore {
@@ -40,9 +40,9 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     weak var delegate: DecksBusinessLogicDelegate?
     let decksWorker: DecksWorkerProtocol
     
-    var decks: [Deck] = []
+    var decks: [NaiveDeck] = []
     
-    var deckInfoToPass: Deck?
+    var deckInfoToPass: NaiveDeck?
   
     // MARK: Setup
   

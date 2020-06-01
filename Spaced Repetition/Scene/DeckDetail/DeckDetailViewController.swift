@@ -80,8 +80,9 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
         let editDeckTitleButton = UIBarButtonItem(title: "Edit title", style: .done, target: self, action: #selector(didTapEditTitleButton))
+        let deleteDeckButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(didTapDeleteDeckButton))
         
-        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
+        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton, deleteDeckButton]
         
         // TODO: to be used for converting the title view into a tappable view for
         // editing deck title?
@@ -178,13 +179,15 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     }
     
     @objc func didTapEditTitleButton() {
-        // TODO: Allow user to change deck title
-        // 1) Display alert controller with one text field,
-        // 2) Submit request with the text from the text field
-        // 3) Change deck title
         guard let displayedDeckID = displayedDeckID else { return }
         let request = DeckDetail.ShowEditTitleAlert.Request(deckID: displayedDeckID)
         interactor?.showEditTitleAlert(request: request)
+    }
+    
+    @objc func didTapDeleteDeckButton() {
+        guard let displayedDeckID = displayedDeckID else { return }
+        let request = DeckDetail.ShowDeleteDeckAC.Request(displayedDeckID: displayedDeckID)
+        interactor?.showDeleteDeckAlert(request: request)
     }
 
 }

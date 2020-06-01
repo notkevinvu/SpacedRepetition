@@ -69,7 +69,6 @@ class DecksCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .left
         label.text = "Needs Review"
         label.translatesAutoresizingMaskIntoConstraints = false
-        // TODO: Need to provide insets, may have to subclass UILabel and override the drawText(in:) method
         
         return label
     }()
@@ -107,39 +106,34 @@ class DecksCollectionViewCell: UICollectionViewCell {
         reviewNotificationView.addSubview(reviewNotificationLabel)
         reviewNotificationView.addSubview(reviewNotificationImageView)
         
-        // configuring autolayout constraints
+        
         NSLayoutConstraint.activate([
-            // title label
+            
             deckTitleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20),
             deckTitleLabel.rightAnchor.constraint(equalTo: deckOptionsButton.leftAnchor, constant: -10),
             deckTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             deckTitleLabel.heightAnchor.constraint(equalToConstant: 30),
-                
-            // options button
+            
             deckOptionsButton.widthAnchor.constraint(equalToConstant: 25),
             deckOptionsButton.heightAnchor.constraint(equalToConstant: 25),
             deckOptionsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 18),
             deckOptionsButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
-                
-            // number of cards label
+            
             numOfCardsLabel.leftAnchor.constraint(equalTo: deckTitleLabel.leftAnchor),
             numOfCardsLabel.widthAnchor.constraint(equalToConstant: 100),
             numOfCardsLabel.topAnchor.constraint(equalTo: deckTitleLabel.bottomAnchor),
             numOfCardsLabel.heightAnchor.constraint(equalToConstant: 25),
             
-            // review notification view
             reviewNotificationView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 10),
             reviewNotificationView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10),
             reviewNotificationView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             reviewNotificationView.heightAnchor.constraint(equalToConstant: 30),
-                
-            // review label
+            
             reviewNotificationLabel.leftAnchor.constraint(equalTo: reviewNotificationView.leftAnchor, constant: 10),
             reviewNotificationLabel.rightAnchor.constraint(equalTo: reviewNotificationView.rightAnchor, constant: -30),
             reviewNotificationLabel.topAnchor.constraint(equalTo: reviewNotificationView.topAnchor),
             reviewNotificationLabel.bottomAnchor.constraint(equalTo: reviewNotificationView.bottomAnchor),
             
-            // review image notifier
             reviewNotificationImageView.leftAnchor.constraint(equalTo: reviewNotificationLabel.rightAnchor, constant: 5),
             reviewNotificationImageView.rightAnchor.constraint(equalTo: reviewNotificationView.rightAnchor, constant: -5),
             reviewNotificationImageView.topAnchor.constraint(equalTo: reviewNotificationView.topAnchor, constant: 2.5),

@@ -25,11 +25,13 @@ protocol DeckDetailBusinessLogic
     func showDeleteCardAC(request: DeckDetail.ShowDeleteCardAC.Request)
     
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
+    
+    func showDeleteDeckAlert(request: DeckDetail.ShowDeleteDeckAC.Request)
 }
 
 protocol DeckDetailDataStore
 {
-    var deckInfo: Deck? { get set }
+    var deckInfo: NaiveDeck? { get set }
 }
 
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
@@ -39,7 +41,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     var presenter: DeckDetailPresentationLogic?
     var decksWorker: DecksWorkerProtocol
     
-    var deckInfo: Deck?
+    var deckInfo: NaiveDeck?
     
     // MARK: Initialization
     
@@ -89,7 +91,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             // should we abstract this into a separate function? we have one above
             // (the createCard(request:) function, but it is kinda weird to
             // call an interactor function within the interactor
-            let cardToCreate = Card(frontSide: frontSideText, backSide: backSideText)
+            let cardToCreate = NaiveCard(frontSide: frontSideText, backSide: backSideText)
             self.decksWorker.createCard(forDeckID: displayedDeckID, card: cardToCreate)
             
             // TODO: Save card
@@ -116,7 +118,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
             guard let cardFrontText = ac.textFields?[0].text else { return }
             guard let cardBackText = ac.textFields?[1].text else { return }
             
-            let editedCardDetails = Card(frontSide: cardFrontText, backSide: cardBackText)
+            let editedCardDetails = NaiveCard(frontSide: cardFrontText, backSide: cardBackText)
             self.decksWorker.editCard(forDeckID: displayedDeckID, withCard: editedCardDetails, forCardID: cardID)
             
             let response = DeckDetail.ShowEditCardAC.Response(card: editedCardDetails, cardID: cardID)
@@ -167,6 +169,23 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         let viewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "Please enter new deck title", textFields: [deckTitleTextField], actions: [cancelAction, saveAction])
         presenter?.presentAlert(viewModel: viewModel)
+    }
+    
+    
+    // MARK: - Show Delete Deck Alert
+    func showDeleteDeckAlert(request: DeckDetail.ShowDeleteDeckAC.Request) {
+        let deckID = request.displayedDeckID
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let deleteAction = AlertDisplayable.Action(title: "Delete", style: .destructive) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            
+            self.decksWorker.deleteDeck(forDeckID: deckID)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Confirm Delete", message: "Are you sure you want to delete this deck?", textFields: [], actions: [cancelAction, deleteAction])
+        presenter?.presentAlert(viewModel: viewModel, popViewController: true)
     }
     
 }

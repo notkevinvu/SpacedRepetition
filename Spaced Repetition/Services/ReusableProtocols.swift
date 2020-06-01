@@ -45,25 +45,26 @@ public enum AlertDisplayable {
 // MARK: - AlertDisplayablePresenter
 protocol AlertDisplayablePresenter {
     var alertDisplayableViewController: AlertDisplayableViewController? { get }
-    func presentAlert(viewModel: AlertDisplayable.ViewModel)
+    func presentAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool)
 }
 
 
 extension AlertDisplayablePresenter {
-    // default implementation of any AlertDisplayablePresenter
-    public func presentAlert(viewModel: AlertDisplayable.ViewModel) {
-        alertDisplayableViewController?.displayAlert(viewModel: viewModel)
+    // default implementation of any AlertDisplayablePresenter - popViewController is false
+    // until we specify otherwise (in case of deleting deck from the deck detail screen)
+    public func presentAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool = false) {
+        alertDisplayableViewController?.displayAlert(viewModel: viewModel, popViewController: popViewController)
     }
 }
 
 
 // MARK: AlertDisplayableVC
 public protocol AlertDisplayableViewController {
-    func displayAlert(viewModel: AlertDisplayable.ViewModel)
+    func displayAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool)
 }
 
 extension AlertDisplayableViewController where Self: UIViewController {
-    public func displayAlert(viewModel: AlertDisplayable.ViewModel) {
+    public func displayAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool) {
         let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
         
         viewModel.textFields.forEach { (alertTextField) in
@@ -73,7 +74,8 @@ extension AlertDisplayableViewController where Self: UIViewController {
         }
         
         viewModel.actions.forEach { action in
-            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { actionIgnore in
+            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { [weak self] actionIgnore in
+                guard let self = self else { return }
                 guard let handler = action.handler else { return }
                 /*
                  we call the action's handler here if it has one
@@ -87,6 +89,9 @@ extension AlertDisplayableViewController where Self: UIViewController {
                  */
                 
                 handler(actionIgnore, vc)
+                if popViewController {
+                    self.navigationController?.popViewController(animated: true)
+                }
             }))
         }
         present(vc, animated: true, completion: nil)

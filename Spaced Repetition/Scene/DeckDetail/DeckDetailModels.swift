@@ -21,7 +21,7 @@ enum DeckDetail
             
         }
         struct Response {
-            let deck: Deck
+            let deck: NaiveDeck
         }
         enum ViewModel {
             struct DeckInfoModel {
@@ -32,7 +32,22 @@ enum DeckDetail
                 let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
             }
         }
-        
+    }
+    
+    
+    enum ShowDeleteDeckAC {
+        struct Request {
+            let displayedDeckID: UUID
+        }
+    }
+    
+    
+    enum DeleteDeck {
+        struct Response {
+        }
+        struct viewModel {
+            
+        }
     }
     
     
@@ -50,7 +65,7 @@ enum DeckDetail
             let backSideText: String
         }
         struct Response {
-            let card: Card
+            let card: NaiveCard
         }
         struct ViewModel {
             let displayedCard: DeckDetailCollectionViewCell.CardCellModel
@@ -65,7 +80,7 @@ enum DeckDetail
             let cardID: Int
         }
         struct Response {
-            let card: Card
+            let card: NaiveCard
             let cardID: Int
         }
         struct ViewModel {
