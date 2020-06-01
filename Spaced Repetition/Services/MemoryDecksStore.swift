@@ -7,13 +7,20 @@
 //
 
 import Foundation
+import CoreData
 
 protocol DecksStoreFactory {
     func makeDecksStore() -> DecksStoreProtocol
 }
 
+protocol CoreDataManagedContextFactory {
+    func makeManagedContext() -> NSManagedObjectContext
+}
+
 
 protocol DecksStoreProtocol {
+    var managedContext: NSManagedObjectContext! { get set }
+    
     func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void)
     
     func createDeck() -> NaiveDeck
@@ -32,6 +39,14 @@ protocol DecksStoreProtocol {
 
 // MARK: - TestDecksStore
 final class TestDecksStore: DecksStoreProtocol {
+    
+    typealias Factory = CoreDataManagedContextFactory
+    
+    var managedContext: NSManagedObjectContext!
+    
+    init(factory: Factory) {
+        self.managedContext = factory.makeManagedContext()
+    }
     
     // MARK: - Data
     static let kevinCards: [NaiveCard] = [
@@ -53,37 +68,37 @@ final class TestDecksStore: DecksStoreProtocol {
     
     // TODO: When switching to a database (userdefaults/core data), use this function
     // to pull info from the database and then store it in the decks array
-        func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void) {
-            
-            DispatchQueue.global(qos: .userInitiated).async {
-                if TestDecksStore.decks.isEmpty {
-                    TestDecksStore.decks = [
-                        NaiveDeck(nameOfDeck: "Kevin", cards: TestDecksStore.kevinCards),
-                        NaiveDeck(nameOfDeck: "Science", cards: TestDecksStore.scienceCards)
-                    ]
-                }
-                
-                let defaults = UserDefaults.standard
-                guard let savedDecks = defaults.object(forKey: TestDecksStore.decksStoreIdentifier) as? Data else { return }
-                
-                let jsonDecoder = JSONDecoder()
-                
-                do {
-                    TestDecksStore.decks = try jsonDecoder.decode([NaiveDeck].self, from: savedDecks)
-                } catch {
-                    print("Error loading data from userdefaults")
-                }
+    func fetchDecks(completion: @escaping (() throws -> [NaiveDeck]) -> Void) {
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            if TestDecksStore.decks.isEmpty {
+                TestDecksStore.decks = [
+                    NaiveDeck(nameOfDeck: "Kevin", cards: TestDecksStore.kevinCards),
+                    NaiveDeck(nameOfDeck: "Science", cards: TestDecksStore.scienceCards)
+                ]
             }
             
-            DispatchQueue.main.async {
-                // decks needs to be a static var in order to return this type
-                        // alternatively, we could just do 'return decks' if we want to pull
-                        // a non static decks object from this memstore
-                //        completion { return decks }
-                completion { return type(of: self).decks }
-            }
+            let defaults = UserDefaults.standard
+            guard let savedDecks = defaults.object(forKey: TestDecksStore.decksStoreIdentifier) as? Data else { return }
             
+            let jsonDecoder = JSONDecoder()
+            
+            do {
+                TestDecksStore.decks = try jsonDecoder.decode([NaiveDeck].self, from: savedDecks)
+            } catch {
+                print("Error loading data from userdefaults")
+            }
         }
+        
+        DispatchQueue.main.async {
+            // decks needs to be a static var in order to return this type
+                    // alternatively, we could just do 'return decks' if we want to pull
+                    // a non static decks object from this memstore
+            //        completion { return decks }
+            completion { return type(of: self).decks }
+        }
+        
+    }
     
     // MARK: - CRUD Operations
     
@@ -156,6 +171,14 @@ final class TestDecksStore: DecksStoreProtocol {
 
 // MARK: - MemoryDecksStore
 final class MemoryDecksStore: DecksStoreProtocol {
+    
+    typealias Factory = CoreDataManagedContextFactory
+    
+    var managedContext: NSManagedObjectContext!
+    
+    init(factory: Factory) {
+        self.managedContext = factory.makeManagedContext()
+    }
     
     // MARK: Properties
     // singleton decks variable to access the same decks array from any scene

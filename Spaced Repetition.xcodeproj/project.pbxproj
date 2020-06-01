@@ -21,6 +21,7 @@
 		255D750724536B49005D7DD4 /* StudyDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750124536B49005D7DD4 /* StudyDeckViewController.swift */; };
 		255D750824536B49005D7DD4 /* StudyDeckInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750224536B49005D7DD4 /* StudyDeckInteractor.swift */; };
 		255D750C2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */; };
+		255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75B424849A18005D7DD4 /* CoreDataStack.swift */; };
 		259806EF244F60E600151168 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259806EE244F60E600151168 /* Extensions.swift */; };
 		25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */; };
 		25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */; };
@@ -53,6 +54,7 @@
 		255D750124536B49005D7DD4 /* StudyDeckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyDeckViewController.swift; sourceTree = "<group>"; };
 		255D750224536B49005D7DD4 /* StudyDeckInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyDeckInteractor.swift; sourceTree = "<group>"; };
 		255D750B2458B155005D7DD4 /* DataModels.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModels.xcdatamodel; sourceTree = "<group>"; };
+		255D75B424849A18005D7DD4 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		259806EE244F60E600151168 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryDecksStore.swift; sourceTree = "<group>"; };
 		25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				2555528A244B7D790059D420 /* DependencyContainer.swift */,
 				259806EE244F60E600151168 /* Extensions.swift */,
 				255D74BF2450B08A005D7DD4 /* ReusableProtocols.swift */,
+				255D75B424849A18005D7DD4 /* CoreDataStack.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				25DABD4A243BD53300037E7E /* DeckDetailView.swift in Sources */,
 				25BF792F2436916500CE0E7A /* NaiveDeck.swift in Sources */,
 				2555528B244B7D790059D420 /* DependencyContainer.swift in Sources */,
+				255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */,
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
 				255D74C02450B08A005D7DD4 /* ReusableProtocols.swift in Sources */,
 				250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */,

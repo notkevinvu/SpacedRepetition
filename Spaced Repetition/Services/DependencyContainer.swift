@@ -7,14 +7,20 @@
 //
 
 import Foundation
+import UIKit
+import CoreData
 
 // MARK: Dependency Container
 final class DependencyContainer {
     // when we initialize the decksWorker here, we activate the init, which also
     // creates a decksStore for the decksWorker
     lazy var decksWorker: DecksWorkerProtocol = DecksWorker(factory: self)
-    lazy var testDecksStore: DecksStoreProtocol = TestDecksStore()
-    lazy var memoryDecksStore: DecksStoreProtocol = MemoryDecksStore()
+    
+    // these factories will create and return a managed context for the data stores
+    lazy var testDecksStore: DecksStoreProtocol = TestDecksStore(factory: self)
+    lazy var memoryDecksStore: DecksStoreProtocol = MemoryDecksStore(factory: self)
+    
+    lazy var coreDataStack = CoreDataStack(modelName: "Spaced Repetition")
 }
 
 extension DependencyContainer: DecksWorkerFactory {
@@ -31,6 +37,13 @@ extension DependencyContainer: DecksStoreFactory {
 //        return memoryDecksStore
     }
 }
+
+extension DependencyContainer: CoreDataManagedContextFactory {
+    func makeManagedContext() -> NSManagedObjectContext {
+        return coreDataStack.managedContext
+    }
+}
+
 
 
 

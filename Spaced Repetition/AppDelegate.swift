@@ -13,6 +13,8 @@ import CoreData
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    lazy var coreDataStack = CoreDataStack(modelName: "Spaced Repetition")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
@@ -29,35 +31,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    
-    lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "Spaced Repetition")
-        container.loadPersistentStores { (storeDescription, error) in
-            if let error = error as NSError? {
-                // TODO: add error handling here (initialize empty array of decks?)
-                print("Unresolved error \(error), \(error.userInfo)")
-                assertionFailure()
-            }
-        }
-        
-        return container
-    }()
-    
-    // MARK: - Core Data saving support
-    
-    func saveContext() {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // TODO: add error handling in saving
-                let nsError = error as NSError
-                print("Error saving data - error: \(nsError), \(nsError.userInfo)")
-            }
-        }
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        coreDataStack.saveContext()
     }
     
+    func applicationWillTerminate(_ application: UIApplication) {
+        coreDataStack.saveContext()
+    }
     
 }
 
