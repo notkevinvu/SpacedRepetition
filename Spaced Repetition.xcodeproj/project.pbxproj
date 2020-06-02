@@ -22,6 +22,10 @@
 		255D750824536B49005D7DD4 /* StudyDeckInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750224536B49005D7DD4 /* StudyDeckInteractor.swift */; };
 		255D750C2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */; };
 		255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75B424849A18005D7DD4 /* CoreDataStack.swift */; };
+		255D75C224858B0C005D7DD4 /* Deck+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */; };
+		255D75C324858B0C005D7DD4 /* Deck+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */; };
+		255D75C424858B0C005D7DD4 /* Card+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */; };
+		255D75C524858B0C005D7DD4 /* Card+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */; };
 		259806EF244F60E600151168 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259806EE244F60E600151168 /* Extensions.swift */; };
 		25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */; };
 		25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */; };
@@ -55,6 +59,10 @@
 		255D750224536B49005D7DD4 /* StudyDeckInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyDeckInteractor.swift; sourceTree = "<group>"; };
 		255D750B2458B155005D7DD4 /* DataModels.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModels.xcdatamodel; sourceTree = "<group>"; };
 		255D75B424849A18005D7DD4 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Deck+CoreDataClass.swift"; sourceTree = "<group>"; };
+		255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Deck+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataClass.swift"; sourceTree = "<group>"; };
+		255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		259806EE244F60E600151168 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryDecksStore.swift; sourceTree = "<group>"; };
 		25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -114,6 +122,10 @@
 		25BF7921243454F900CE0E7A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */,
+				255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */,
+				255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */,
+				255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */,
 				25BF792E2436916500CE0E7A /* NaiveDeck.swift */,
 				255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */,
 			);
@@ -265,9 +277,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				255D75C224858B0C005D7DD4 /* Deck+CoreDataClass.swift in Sources */,
 				8E02E975242AF4590023992C /* DecksModels.swift in Sources */,
 				8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */,
 				2534395724379DB700EA34D0 /* DeckDetailInteractor.swift in Sources */,
+				255D75C424858B0C005D7DD4 /* Card+CoreDataClass.swift in Sources */,
 				2534395624379DB700EA34D0 /* DeckDetailViewController.swift in Sources */,
 				25DABD4A243BD53300037E7E /* DeckDetailView.swift in Sources */,
 				25BF792F2436916500CE0E7A /* NaiveDeck.swift in Sources */,
@@ -276,6 +290,7 @@
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
 				255D74C02450B08A005D7DD4 /* ReusableProtocols.swift in Sources */,
 				250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */,
+				255D75C524858B0C005D7DD4 /* Card+CoreDataProperties.swift in Sources */,
 				25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */,
 				25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */,
 				8E02E973242AF4590023992C /* DecksPresenter.swift in Sources */,
@@ -286,6 +301,7 @@
 				255D750524536B49005D7DD4 /* StudyDeckRouter.swift in Sources */,
 				2534395524379DB700EA34D0 /* DeckDetailModels.swift in Sources */,
 				255D750C2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld in Sources */,
+				255D75C324858B0C005D7DD4 /* Deck+CoreDataProperties.swift in Sources */,
 				25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */,
 				255D750624536B49005D7DD4 /* StudyDeckModels.swift in Sources */,
 				8E02E974242AF4590023992C /* DecksRouter.swift in Sources */,
