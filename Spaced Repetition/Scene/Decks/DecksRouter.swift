@@ -43,7 +43,7 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     
     
     func passCDDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
-        toDataStore.cdDeckInfo = fromDataStore.deckInfoToPass
+        toDataStore.deckInfo = fromDataStore.deckInfoToPass
     }
     
 }

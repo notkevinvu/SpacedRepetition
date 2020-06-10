@@ -2,7 +2,7 @@
 //  Deck+CoreDataProperties.swift
 //  Spaced Repetition
 //
-//  Created by Kevin Vu on 6/2/20.
+//  Created by Kevin Vu on 6/9/20.
 //  Copyright © 2020 An Nguyen. All rights reserved.
 //
 //
@@ -13,13 +13,14 @@ import CoreData
 
 extension Deck {
 
-    @nonobjc public class func deckFetchRequest() -> NSFetchRequest<Deck> {
+    @nonobjc public class func deckfetchRequest() -> NSFetchRequest<Deck> {
         return NSFetchRequest<Deck>(entityName: "Deck")
     }
 
+    @NSManaged public var dateCreated: Date
     @NSManaged public var deckID: UUID
     @NSManaged public var name: String
-    @NSManaged public var dateCreated: Date
+    @NSManaged public var deckIndex: Int32
     @NSManaged public var cards: NSOrderedSet
 
 }

@@ -64,7 +64,7 @@ final class TestDecksStore: DecksStoreProtocol {
     static var cdDecks: [Deck] = []
     
     func fetchCDDecks() -> [Deck] {
-        let deckFetchReq = Deck.deckFetchRequest()
+        let deckFetchReq = Deck.deckfetchRequest()
         
         // MARK: TODO: add the date sort desc if needed
         /*
@@ -76,6 +76,16 @@ final class TestDecksStore: DecksStoreProtocol {
         
 //        let dateSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.dateCreated), ascending: true)
 //        deckFetchReq.sortDescriptors = [dateSortDescriptor]
+        
+        /*
+         a sort descriptor for sorting by "index" - as we add decks, we set the added
+         deck's deckIndex to the count of the current store (i.e. if there are currently
+         0 decks fetched, when we add the first deck, its index will be 0 - the
+         second deck will check the fetched decks array and find 1 deck, thus the
+         index of the second deck will become 1)
+         */
+        let deckIndexSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.deckIndex), ascending: true)
+        deckFetchReq.sortDescriptors = [deckIndexSortDescriptor]
         
         let asyncFetchReq = NSAsynchronousFetchRequest<Deck>(fetchRequest: deckFetchReq) { (result: NSAsynchronousFetchResult) in
             guard let decks = result.finalResult else { return }
@@ -109,7 +119,7 @@ final class TestDecksStore: DecksStoreProtocol {
         
         
         let newDeck = Deck(context: managedContext)
-        newDeck.initializeDeckWithValues(name: "Untitled Deck", deckID: UUID(), dateCreated: Date(), cards: [card1, card2, card3])
+        newDeck.initializeDeckWithValues(name: "Untitled Deck", deckID: UUID(), dateCreated: Date(), deckIndex: TestDecksStore.cdDecks.count, cards: [card1, card2, card3])
         
         
         TestDecksStore.cdDecks.append(newDeck)
@@ -376,7 +386,7 @@ final class MemoryDecksStore: DecksStoreProtocol {
     
     func createCDDeck() -> Deck? {
         let deck = Deck(context: managedContext)
-        deck.initializeDeckWithValues(name: "Test1", deckID: UUID(), dateCreated: Date(), cards: [])
+        deck.initializeDeckWithValues(name: "Test1", deckID: UUID(), dateCreated: Date(), deckIndex: MemoryDecksStore.cdDecks.count, cards: [])
         
         return deck
     }

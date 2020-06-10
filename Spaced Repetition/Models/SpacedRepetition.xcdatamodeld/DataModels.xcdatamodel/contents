@@ -10,11 +10,12 @@
     <entity name="Deck" representedClassName="Deck" syncable="YES">
         <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="deckID" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="deckIndex" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="cards" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Card" inverseName="deck" inverseEntity="Card"/>
     </entity>
     <elements>
         <element name="Card" positionX="-54" positionY="9" width="128" height="118"/>
-        <element name="Deck" positionX="-299.2734375" positionY="-119.26171875" width="128" height="103"/>
+        <element name="Deck" positionX="-299.2734375" positionY="-119.26171875" width="128" height="118"/>
     </elements>
 </model>

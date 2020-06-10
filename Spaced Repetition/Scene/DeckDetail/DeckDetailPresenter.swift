@@ -18,24 +18,11 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
     
     func presentCard(response: DeckDetail.CreateCard.Response)
     
+    func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response)
+    
     func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response)
     
     func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response)
-    
-    func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response)
-    
-    
-    
-    
-    func presentCDDeck(response: CDDeckDetail.ShowDeck.Response)
-    
-    func presentCDCard(response: CDDeckDetail.CreateCard.Response)
-    
-    func presentEditedCDDeckTitle(response: CDDeckDetail.ShowEditTitleAlert.Response)
-    
-    func presentEditedCDCard(response: CDDeckDetail.ShowEditCardAC.Response)
-    
-    func presentDeletedCDCard(response: CDDeckDetail.ShowDeleteCardAC.Response)
 }
 
 
@@ -48,20 +35,15 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     var alertDisplayableViewController: AlertDisplayableViewController?
     
     
-    
-    
-    
-    // MARK: CORE DATA
-    
-    func presentCDDeck(response: CDDeckDetail.ShowDeck.Response) {
+    // MARK: Present Deck
+    func presentDeck(response: DeckDetail.ShowDeck.Response) {
         let deck = response.deck
         
         // name formatting for viewmodel
         let nameOfDeck = deck.name
-        let deckNameModel = CDDeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck, displayedDeckID: deck.deckID)
+        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck, displayedDeckID: deck.deckID)
         
-        viewController?.displayCDDeckName(viewModel: deckNameModel)
-        
+        viewController?.displayDeckName(viewModel: deckNameModel)
         
         // card formatting for viewmodel
         var cards: [DeckDetailCollectionViewCell.CardCellModel] = []
@@ -73,98 +55,45 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
             cards.append(cellModel)
         }
         
-        let cardViewModel = CDDeckDetail.ShowDeck.ViewModel.DeckCardModels(displayedCards: cards)
-        
-        viewController?.displayCDDeckCards(viewModel: cardViewModel)
-    }
-    
-    
-    func presentCDCard(response: CDDeckDetail.CreateCard.Response) {
-        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
-        
-        let cardViewModel = CDDeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
-        viewController?.displayCreatedCDCard(viewModel: cardViewModel)
-    }
-    
-    
-    func presentEditedCDDeckTitle(response: CDDeckDetail.ShowEditTitleAlert.Response) {
-        let viewModel = CDDeckDetail.ShowEditTitleAlert.ViewModel(newDeckTitle: response.newDeckTitle)
-        viewController?.displayEditedCDDeckTitle(viewModel: viewModel)
-    }
-    
-    
-    func presentEditedCDCard(response: CDDeckDetail.ShowEditCardAC.Response) {
-        let updatedCardModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
-        let cardIndex = response.cardIndex
-        
-        let viewModel = CDDeckDetail.ShowEditCardAC.ViewModel(displayedCard: updatedCardModel, cardIndex: cardIndex)
-        viewController?.displayEditedCDCard(viewModel: viewModel)
-    }
-    
-    
-    func presentDeletedCDCard(response: CDDeckDetail.ShowDeleteCardAC.Response) {
-        let cardIndexToDelete = response.cardIndexToDelete
-        
-        let viewModel = CDDeckDetail.ShowDeleteCardAC.ViewModel(cardIndexToDelete: cardIndexToDelete)
-        viewController?.displayDeletedCDCard(viewModel: viewModel)
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    // MARK: Present something
-    
-    func presentDeck(response: DeckDetail.ShowDeck.Response) {
-        let deck = response.deck
-        
-        // name formatting for viewmodel
-        let nameOfDeck = deck.nameOfDeck
-        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck, displayedDeckID: deck.deckID)
-        viewController?.displayDeckName(viewModel: deckNameModel)
-        
-        // card formatting for viewmodel
-        var cards: [DeckDetailCollectionViewCell.CardCellModel] = []
-        
-        for card in deck.cards {
-            let cellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: card.frontSide, backSide: card.backSide)
-            cards.append(cellModel)
-        }
-        
         let cardViewModel = DeckDetail.ShowDeck.ViewModel.DeckCardModels(displayedCards: cards)
+        
         viewController?.displayDeckCards(viewModel: cardViewModel)
     }
     
+    
+    // MARK: Present new card
     func presentCard(response: DeckDetail.CreateCard.Response) {
-        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
+        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
+        
         let cardViewModel = DeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
         viewController?.displayCreatedCard(viewModel: cardViewModel)
     }
     
     
-    func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response) {
-        let editedCard = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSide, backSide: response.card.backSide)
-        let cardID = response.cardID
-        
-        let viewModel = DeckDetail.ShowEditCardAC.ViewModel(displayedCard: editedCard, cardID: cardID)
-        viewController?.displayEditedCard(viewModel: viewModel)
-    }
-    
-    
-    func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response) {
-        let cardIndexToRemove = response.cardIndexToRemove
-        
-        let viewModel = DeckDetail.ShowDeleteCardAC.ViewModel(cardIndexToRemove: cardIndexToRemove)
-        viewController?.displayDeletedCard(viewModel: viewModel)
-    }
-    
-    
+    // MARK: Present new deck title
     func presentEditedDeckTitle(response: DeckDetail.ShowEditTitleAlert.Response) {
         let viewModel = DeckDetail.ShowEditTitleAlert.ViewModel(newDeckTitle: response.newDeckTitle)
         viewController?.displayEditedDeckTitle(viewModel: viewModel)
     }
+    
+    
+    // MARK: Present edited card
+    func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response) {
+        let updatedCardModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
+        let cardIndex = response.cardIndex
+        
+        let viewModel = DeckDetail.ShowEditCardAC.ViewModel(displayedCard: updatedCardModel, cardIndex: cardIndex)
+        viewController?.displayEditedCard(viewModel: viewModel)
+    }
+    
+    
+    // MARK: Present deleted card (aka update)
+    func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response) {
+        let cardIndexToDelete = response.cardIndexToDelete
+        
+        let viewModel = DeckDetail.ShowDeleteCardAC.ViewModel(cardIndexToDelete: cardIndexToDelete)
+        viewController?.displayDeletedCard(viewModel: viewModel)
+    }
+    
     
 }

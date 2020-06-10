@@ -12,130 +12,10 @@
 
 import UIKit
 
-enum DeckDetail
-{
-    // MARK: Use cases
-    
-    enum ShowDeck {
-        struct Request {
-            
-        }
-        struct Response {
-            let deck: NaiveDeck
-        }
-        enum ViewModel {
-            struct DeckInfoModel {
-                let displayedDeckName: String
-                let displayedDeckID: UUID
-            }
-            struct DeckCardModels {
-                let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
-            }
-        }
-    }
-    
-    
-    enum ShowDeleteDeckAC {
-        struct Request {
-            let displayedDeckID: UUID
-        }
-    }
-    
-    
-    enum DeleteDeck {
-        struct Response {
-        }
-        struct viewModel {
-            
-        }
-    }
-    
-    
-    enum ShowCreateCard {
-        struct Request {
-            let displayedDeckID: UUID
-        }
-    }
-    
-    
-    enum CreateCard {
-        struct Request {
-            let deckID: UUID
-            let frontSideText: String
-            let backSideText: String
-        }
-        struct Response {
-            let card: NaiveCard
-        }
-        struct ViewModel {
-            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
-        }
-    }
-    
-    enum ShowEditCardAC {
-        struct Request {
-            let deckID: UUID
-            // use the indexPath.row int for the card ID for now, maybe attach a
-            // UUID to each card in the future as well?
-            let cardID: Int
-        }
-        struct Response {
-            let card: NaiveCard
-            let cardID: Int
-        }
-        struct ViewModel {
-            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
-            let cardID: Int
-        }
-    }
-    
-    enum ShowDeleteCardAC {
-        struct Request {
-            let deckID: UUID
-            // indexPath.row for card ID
-            let cardID: Int
-        }
-        struct Response {
-            let cardIndexToRemove: Int
-        }
-        struct ViewModel {
-            let cardIndexToRemove: Int
-        }
-    }
-    
-    enum ShowEditTitleAlert {
-        struct Request {
-            let deckID: UUID
-        }
-        
-        struct Response {
-            let newDeckTitle: String
-        }
-        
-        struct ViewModel {
-            let newDeckTitle: String
-        }
-    }
-    
-    
-    enum StudyDeck {
-        struct Request {
-            
-        }
-        struct Response {
-            
-        }
-        struct ViewModel {
-            
-        }
-    }
-}
 
-
-// MARK: - Core Data
-
-enum CDDeckDetail {
+enum DeckDetail {
     
+    // MARK: ShowDeck
     enum ShowDeck {
         struct Request {
             
@@ -157,6 +37,7 @@ enum CDDeckDetail {
     }
     
     
+    // MARK: (Show) Create Card
     enum ShowCreateCard {
         struct Request {
         }
@@ -186,6 +67,7 @@ enum CDDeckDetail {
     }
     
     
+    // MARK: Edit title
     enum ShowEditTitleAlert {
         struct Request {
             
@@ -199,6 +81,7 @@ enum CDDeckDetail {
     }
     
     
+    // MARK: Edit card
     enum ShowEditCardAC {
         struct Request {
             let cardIndex: Int
@@ -214,6 +97,7 @@ enum CDDeckDetail {
     }
     
     
+    // MARK: Delete card
     enum ShowDeleteCardAC {
         struct Request {
             let cardIndexToDelete: Int
@@ -223,6 +107,20 @@ enum CDDeckDetail {
         }
         struct ViewModel {
             let cardIndexToDelete: Int
+        }
+    }
+    
+    
+    // MARK: Study deck
+    enum StudyDeck {
+        struct Request {
+            
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
         }
     }
     
