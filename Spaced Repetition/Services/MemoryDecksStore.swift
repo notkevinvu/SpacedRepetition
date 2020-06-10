@@ -63,19 +63,9 @@ final class TestDecksStore: DecksStoreProtocol {
     
     static var cdDecks: [Deck] = []
     
+    // MARK: Fetch decks
     func fetchCDDecks() -> [Deck] {
         let deckFetchReq = Deck.deckfetchRequest()
-        
-        // MARK: TODO: add the date sort desc if needed
-        /*
-         Possibly might not need the date sort, we just need to keep track of
-         the order in which we add decks to core data - is it possible to wrap
-         all the deck entities into an overarching Decks entity that has no
-         attributes and only a single to-many relationship to numerous decks?
-         */
-        
-//        let dateSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.dateCreated), ascending: true)
-//        deckFetchReq.sortDescriptors = [dateSortDescriptor]
         
         /*
          a sort descriptor for sorting by "index" - as we add decks, we set the added
@@ -104,6 +94,7 @@ final class TestDecksStore: DecksStoreProtocol {
     }
     
     
+    // MARK: Create deck
     // create deck for test store makes a pre-populated deck
     func createCDDeck() -> Deck? {
         let card1 = Card(context: managedContext)
@@ -136,6 +127,7 @@ final class TestDecksStore: DecksStoreProtocol {
     }
     
     
+    // MARK: Delete deck
     func deleteCDDeck(withDeckID deckID: UUID) {
         guard let indexOfDeckToRemove = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
         
@@ -152,6 +144,8 @@ final class TestDecksStore: DecksStoreProtocol {
         }
     }
     
+    
+    // MARK: Create Card
     func createCDCard(forDeckID deckID: UUID, card: CardModel) {
         guard let indexOfMatchedDeck = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
         
@@ -170,6 +164,7 @@ final class TestDecksStore: DecksStoreProtocol {
     }
     
     
+    // MARK: Edit card
     func editCard(_ card: CardModel) {
         let cardFetchReq = Card.cardFetchRequest()
         cardFetchReq.predicate = NSPredicate(format: "%K == %@", #keyPath(Card.cardID), "\(card.cardID)")
@@ -192,6 +187,7 @@ final class TestDecksStore: DecksStoreProtocol {
     }
     
     
+    // MARK: Delete card
     func deleteCDCard(forCardID cardID: UUID) {
         let cardToDeleteFetchReq = Card.cardFetchRequest()
         
@@ -211,6 +207,7 @@ final class TestDecksStore: DecksStoreProtocol {
     }
     
     
+    // MARK: Edit deck title
     func editCDDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
         
         guard let indexOfMatchedDeck = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
