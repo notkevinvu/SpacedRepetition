@@ -34,6 +34,16 @@ protocol DecksStoreProtocol {
     func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
     
     func editDeckTitle(forDeckID deckID: UUID, withNewTitle title: String)
+    
+    
+    
+    // MARK: CD Methods
+    
+    func fetchCDDecks() -> [Deck]
+    
+    func createCDDeck() -> Deck?
+    
+    
 }
 
 
@@ -47,6 +57,168 @@ final class TestDecksStore: DecksStoreProtocol {
     init(factory: Factory) {
         self.managedContext = factory.makeManagedContext()
     }
+    
+    
+    // MARK: - Core Data methods
+    
+    static var cdDecks: [Deck] = []
+    
+    func fetchCDDecks() -> [Deck] {
+        let deckFetchReq = Deck.deckFetchRequest()
+        
+        // MARK: TODO: add the date sort desc if needed
+//        let dateSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.dateCreated), ascending: true)
+//        deckFetchReq.sortDescriptors = [dateSortDescriptor]
+        
+        let asyncFetchReq = NSAsynchronousFetchRequest<Deck>(fetchRequest: deckFetchReq) { (result: NSAsynchronousFetchResult) in
+            guard let decks = result.finalResult else { return }
+            
+            TestDecksStore.cdDecks = decks
+        }
+        
+        do {
+            try managedContext.execute(asyncFetchReq)
+        } catch let error as NSError {
+            assertionFailure("Failed to fetch decks \(#line), \(#file) - error: \(error) with desc \(error.userInfo)")
+            return []
+        }
+        
+        return TestDecksStore.cdDecks
+    }
+    
+    
+    // create deck for test store makes a pre-populated deck
+    func createCDDeck() -> Deck? {
+        let card1 = Card(context: managedContext)
+        card1.initializeCardWith(frontSideText: "Test front 1 CD", backSideText: "Test back 1 CD", cardID: UUID(), dateCreated: Date())
+        
+        
+        let card2 = Card(context: managedContext)
+        card2.initializeCardWith(frontSideText: "Test front 2 CORE DATA", backSideText: "Test back 2 CORE DATA", cardID: UUID(), dateCreated: Date())
+        
+        
+        let card3 = Card(context: managedContext)
+        card3.initializeCardWith(frontSideText: "Lorem ipsum", backSideText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", cardID: UUID(), dateCreated: Date())
+        
+        
+        let newDeck = Deck(context: managedContext)
+        newDeck.initializeDeckWithValues(name: "Untitled Deck", deckID: UUID(), dateCreated: Date(), cards: [card1, card2, card3])
+        
+        
+        TestDecksStore.cdDecks.append(newDeck)
+        
+        do {
+            guard managedContext.hasChanges else { return nil }
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Error saving new deck \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return nil
+        }
+        
+        return newDeck
+    }
+    
+    
+    func deleteCDDeck(withDeckID deckID: UUID) {
+        guard let indexOfDeckToRemove = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        TestDecksStore.cdDecks.remove(at: indexOfDeckToRemove)
+        managedContext.delete(TestDecksStore.cdDecks[indexOfDeckToRemove])
+        
+        do {
+            guard managedContext.hasChanges else { return }
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            assertionFailure("Failed to delete deck \(#line) - \(#file), error: \(error) - \(error.userInfo)")
+            return
+        }
+    }
+    
+    func createCDCard(forDeckID deckID: UUID, card: CardModel) {
+        guard let indexOfMatchedDeck = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        let cardToAdd = Card(context: managedContext)
+        cardToAdd.initializeCardWith(frontSideText: card.frontSideText, backSideText: card.backSideText, cardID: card.cardID, dateCreated: card.dateCreated)
+        TestDecksStore.cdDecks[indexOfMatchedDeck].addToCards(cardToAdd)
+        
+        do {
+            guard managedContext.hasChanges else { return }
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            assertionFailure("Failed to create card \(#line) - \(#file), error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func editCard(_ card: CardModel) {
+        let cardFetchReq = Card.cardFetchRequest()
+        cardFetchReq.predicate = NSPredicate(format: "%K == %@", #keyPath(Card.cardID), "\(card.cardID)")
+        
+        do {
+            guard let cardToEdit = try managedContext.fetch(cardFetchReq).first else {
+                return
+            }
+            
+            cardToEdit.frontSideText = card.frontSideText
+            cardToEdit.backSideText = card.backSideText
+            
+            guard managedContext.hasChanges else { return }
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            assertionFailure("Failed to edit card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func deleteCDCard(forCardID cardID: UUID) {
+        let cardToDeleteFetchReq = Card.cardFetchRequest()
+        
+        cardToDeleteFetchReq.predicate = NSPredicate(format: "%K == %@", #keyPath(Card.cardID), "\(cardID)")
+        
+        do {
+            guard let cardToDelete = try managedContext.fetch(cardToDeleteFetchReq).first else { return }
+            
+            managedContext.delete(cardToDelete)
+            
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            assertionFailure("Failed to delete card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func editCDDeckTitle(forDeckID deckID: UUID, withNewTitle title: String) {
+        
+        guard let indexOfMatchedDeck = TestDecksStore.cdDecks.firstIndex(where: { $0.deckID == deckID }) else { return }
+        
+        TestDecksStore.cdDecks[indexOfMatchedDeck].name = title
+        
+        do {
+            guard managedContext.hasChanges else { return }
+            
+            try managedContext.save()
+            
+        } catch let error as NSError {
+            assertionFailure("Failed to edit deck title \(#line), \(#file) - error \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     // MARK: - Data
     static let kevinCards: [NaiveCard] = [
@@ -103,7 +275,7 @@ final class TestDecksStore: DecksStoreProtocol {
     // MARK: - CRUD Operations
     
     func createDeck() -> NaiveDeck {
-        let newDeck = NaiveDeck(nameOfDeck: "Untitled Deck", cards: [NaiveCard(frontSide: "Test front 1", backSide: "Test front 1"), NaiveCard(frontSide: "Test front 2", backSide: "Test back 2"), NaiveCard(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
+        let newDeck = NaiveDeck(nameOfDeck: "Untitled Deck", cards: [NaiveCard(frontSide: "Test front 1", backSide: "Test back 1"), NaiveCard(frontSide: "Test front 2", backSide: "Test back 2"), NaiveCard(frontSide: "Lorem ipsum", backSide: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")])
         TestDecksStore.decks.append(newDeck)
         saveDecksData()
         return newDeck
@@ -169,7 +341,11 @@ final class TestDecksStore: DecksStoreProtocol {
 }
 
 
+
+
+
 // MARK: - MemoryDecksStore
+
 final class MemoryDecksStore: DecksStoreProtocol {
     
     typealias Factory = CoreDataManagedContextFactory
@@ -179,6 +355,33 @@ final class MemoryDecksStore: DecksStoreProtocol {
     init(factory: Factory) {
         self.managedContext = factory.makeManagedContext()
     }
+    
+    
+    // MARK: - Core Data Methods
+    
+    static var cdDecks: [Deck] = []
+    
+    func fetchCDDecks() -> [Deck] {
+        
+        
+        return MemoryDecksStore.cdDecks
+    }
+    
+    func createCDDeck() -> Deck? {
+        let deck = Deck(context: managedContext)
+        deck.initializeDeckWithValues(name: "Test1", deckID: UUID(), dateCreated: Date(), cards: [])
+        
+        return deck
+    }
+    
+    
+    func deleteCDDecks() {
+        
+    }
+    
+    
+    
+    
     
     // MARK: Properties
     // singleton decks variable to access the same decks array from any scene

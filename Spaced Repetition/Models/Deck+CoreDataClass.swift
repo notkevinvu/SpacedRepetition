@@ -12,5 +12,15 @@ import CoreData
 
 @objc(Deck)
 public class Deck: NSManagedObject {
+    
+    public func initializeDeckWithValues(name: String, deckID: UUID, dateCreated: Date, cards: [Card]) {
+        self.name = name
+        self.deckID = deckID
+        self.dateCreated = dateCreated
+        
+        for card in cards {
+            self.addToCards(card)
+        }
+    }
 
 }

@@ -27,11 +27,28 @@ protocol DeckDetailBusinessLogic
     func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
     
     func showDeleteDeckAlert(request: DeckDetail.ShowDeleteDeckAC.Request)
+    
+    
+    
+    
+    // CORE DATA
+    
+    func getCDDeck(request: CDDeckDetail.ShowDeck.Request)
+    
+    func showCreateCDCard(request: CDDeckDetail.ShowCreateCard.Request)
+    
+    func showEditTitleAlert(request: CDDeckDetail.ShowEditTitleAlert.Request)
+    
+    func showEditCDCardAlert(request: CDDeckDetail.ShowEditCardAC.Request)
+    
+    func showDeleteCDCardAlert(request: CDDeckDetail.ShowDeleteCardAC.Request)
 }
 
 protocol DeckDetailDataStore
 {
     var deckInfo: NaiveDeck? { get set }
+    
+    var cdDeckInfo: Deck? { get set }
 }
 
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
@@ -40,6 +57,12 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     typealias Factory = DecksWorkerFactory
     var presenter: DeckDetailPresentationLogic?
     var decksWorker: DecksWorkerProtocol
+    
+    
+    
+    
+    
+    
     
     var deckInfo: NaiveDeck?
     
@@ -55,7 +78,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     // MARK: Get Deck
     func getDeck(request: DeckDetail.ShowDeck.Request) {
         guard let deckInfo = deckInfo else {
-            assertionFailure("No deck info available")
+            print("No deck info available")
             return
         }
         
@@ -64,14 +87,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     
-    // MARK: Create Card
-//    func createCard(request: DeckDetail.CreateCard.Request) {
-//        let cardToCreate = Card(frontSide: request.frontSideText, backSide: request.backSideText)
-//        decksWorker.createCard(forDeckID: request.deckID, card: cardToCreate)
-//        
-//        let response = DeckDetail.CreateCard.Response(card: cardToCreate)
-//        presenter?.presentCard(response: response)
-//    }
     
     
     // MARK: Show Create Card Alert
@@ -186,6 +201,190 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         let viewModel = AlertDisplayable.ViewModel(title: "Confirm Delete", message: "Are you sure you want to delete this deck?", textFields: [], actions: [cancelAction, deleteAction])
         presenter?.presentAlert(viewModel: viewModel, popViewController: true)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - CD Methods/properties
+    
+    var cdDeckInfo: Deck?
+    
+    /*
+     when we need to edit a card, grab the indexpath.row from the collection view,
+     which should correspond to the index of this array, then edit the card from there
+     */
+    var cardsFromDeck: [Card] = []
+    
+    
+    /*
+     TODO: refactor methods below (mostly save actions) to call decksworker methods
+     to actually perform business logic rather than doing it here
+     */
+    
+    func getCDDeck(request: CDDeckDetail.ShowDeck.Request) {
+        guard let deckInfo = cdDeckInfo else {
+            assertionFailure("Failed to get deck info \(#line) \(#file)")
+            return
+        }
+        
+        cardsFromDeck = deckInfo.cards.array as! [Card]
+        
+        let response = CDDeckDetail.ShowDeck.Response(deck: deckInfo)
+        presenter?.presentCDDeck(response: response)
+    }
+    
+    
+    // MARK: Show Create Card Alert
+    func showCreateCDCard(request: CDDeckDetail.ShowCreateCard.Request) {
+        let frontTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Front side of card")
+        let backTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Back side of card")
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        
+        // TODO: Abstract all the important stuff into a decksworker method?
+        // i.e. just need to pass in the card and the new card texts
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            guard let self = self else { return }
+            
+            guard let frontSideText = ac.textFields?[0].text, !frontSideText.isEmpty else { return }
+            
+            guard let backSideText = ac.textFields?[1].text, !backSideText.isEmpty else { return }
+            
+            // grab the same context as the current deck (i.e. the deck we want to
+            // insert the card into)
+            let deckContext = self.cdDeckInfo?.managedObjectContext
+            
+            guard let unwrappedDeckContext = deckContext else { return }
+            
+            let cardToCreate = Card(context: unwrappedDeckContext)
+            cardToCreate.initializeCardWith(frontSideText: frontSideText, backSideText: backSideText, cardID: UUID(), dateCreated: Date())
+            
+            // then we can add the card directly to the deck without having to
+            // look up the deck id
+            self.cdDeckInfo?.addToCards(cardToCreate)
+            
+            do {
+                try unwrappedDeckContext.save()
+            } catch let error as NSError {
+                assertionFailure("Failed to save new card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+                return
+            }
+            
+            let response = CDDeckDetail.CreateCard.Response(card: cardToCreate)
+            self.presenter?.presentCDCard(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextFieldPlaceholder, backTextFieldPlaceholder], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
+        
+    }
+    
+    
+    // MARK: Show Edit Deck Title alert
+    func showEditTitleAlert(request: CDDeckDetail.ShowEditTitleAlert.Request) {
+        let deckTitleTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Enter new deck name")
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            // TODO: Abstract all this into a decksworker method?
+            guard
+                let self = self,
+                let deckTitle = ac.textFields?[0].text,
+                let deckToEdit = self.cdDeckInfo else {
+                    return
+            }
+            
+            deckToEdit.name = deckTitle
+            
+            do {
+                try deckToEdit.managedObjectContext?.save()
+            } catch let error as NSError {
+                assertionFailure("Failed to update deck title name - \(#line), \(#file) - error \(error) with desc: \(error.userInfo)")
+                return
+            }
+            
+            let response = CDDeckDetail.ShowEditTitleAlert.Response(newDeckTitle: deckTitle)
+            self.presenter?.presentEditedCDDeckTitle(response: response)
+        }
+        
+        
+        let alertViewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "", textFields: [deckTitleTextFieldPlaceholder], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: alertViewModel)
+    }
+    
+    
+    // MARK: Show Edit Card Alert
+    func showEditCDCardAlert(request: CDDeckDetail.ShowEditCardAC.Request) {
+        let cardFrontTextPlaceholder = AlertDisplayable.TextField(placeholder: "Front side of card")
+        let cardBackTextPlaceholder = AlertDisplayable.TextField(placeholder: "Back side of card")
+        let cardIndex = request.cardIndex
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            
+            guard
+                let self = self,
+                let cardFrontText = ac.textFields?[0].text,
+                let cardBacktext = ac.textFields?[1].text else {
+                    return
+            }
+            
+            let cardToEdit = self.cardsFromDeck[request.cardIndex]
+            cardToEdit.frontSideText = cardFrontText
+            cardToEdit.backSideText = cardBacktext
+            
+            do {
+                try cardToEdit.managedObjectContext?.save()
+            } catch let error as NSError {
+                assertionFailure("Failed to update card with new values \(#line), \(#file) - with error \(error) with desc: \(error.userInfo)")
+                return
+            }
+            
+            let response = CDDeckDetail.ShowEditCardAC.Response(card: cardToEdit, cardIndex: cardIndex)
+            self.presenter?.presentEditedCDCard(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Edit Card", message: "Please enter the new card details", textFields: [cardFrontTextPlaceholder, cardBackTextPlaceholder], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
+    }
+    
+    
+    // MARK: Show delete card alert
+    func showDeleteCDCardAlert(request: CDDeckDetail.ShowDeleteCardAC.Request) {
+        let cardIndexToDelete = request.cardIndexToDelete
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        let saveAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { [weak self] (action, ac) in
+            
+            guard
+                let self = self,
+                let deck = self.cdDeckInfo else { return }
+            
+            deck.removeFromCards(self.cardsFromDeck[cardIndexToDelete])
+            
+            self.cardsFromDeck.remove(at: cardIndexToDelete)
+            
+            do {
+                try deck.managedObjectContext?.save()
+            } catch let error as NSError {
+                assertionFailure("Failed to delete card and save \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+                return
+            }
+            
+            let response = CDDeckDetail.ShowDeleteCardAC.Response(cardIndexToDelete: cardIndexToDelete)
+            self.presenter?.presentDeletedCDCard(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Confirm delete", message: "Are you sure you want to delete this card?", textFields: [], actions: [cancelAction, saveAction])
+        presenter?.presentAlert(viewModel: viewModel)
+        
+        
     }
     
 }

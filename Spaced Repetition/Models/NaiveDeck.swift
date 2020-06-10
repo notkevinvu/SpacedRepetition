@@ -41,3 +41,18 @@ class NaiveCard: Codable {
         self.backSide = backSide
     }
 }
+
+
+class CardModel {
+    var frontSideText: String
+    var backSideText: String
+    var cardID: UUID
+    var dateCreated: Date
+    
+    init(frontSideText: String, backSideText: String, cardID: UUID, dateCreated: Date) {
+        self.frontSideText = frontSideText
+        self.backSideText = backSideText
+        self.cardID = cardID
+        self.dateCreated = dateCreated
+    }
+}

@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
-    lazy var coreDataStack = CoreDataStack(modelName: "Spaced Repetition")
+    lazy var coreDataStack = CoreDataStack(modelName: "SpacedRepetition")
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         

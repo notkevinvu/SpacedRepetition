@@ -132,3 +132,100 @@ enum DeckDetail
 }
 
 
+// MARK: - Core Data
+
+enum CDDeckDetail {
+    
+    enum ShowDeck {
+        struct Request {
+            
+        }
+        struct Response {
+            let deck: Deck
+        }
+        enum ViewModel {
+            struct DeckInfoModel {
+                let displayedDeckName: String
+                let displayedDeckID: UUID
+            }
+            
+            // might need card UUID for this?
+            struct DeckCardModels {
+                let displayedCards: [DeckDetailCollectionViewCell.CardCellModel]
+            }
+        }
+    }
+    
+    
+    enum ShowCreateCard {
+        struct Request {
+        }
+    }
+    
+    
+    enum CreateCard {
+        // prob don't need a deckID for the request since modifying a core data child entity
+        // should automatically modify the correct deck's card (since every Card has its own deck parent)
+        
+        /*
+         also might not need the request anyway?
+         frontSideText and backSideText are both handled
+         within the interactor via the alertdisplayable
+         action handler
+         */
+//        struct Request {
+//            let frontSideText: String
+//            let backSideText: String
+//        }
+        struct Response {
+            let card: Card
+        }
+        struct ViewModel {
+            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
+        }
+    }
+    
+    
+    enum ShowEditTitleAlert {
+        struct Request {
+            
+        }
+        struct Response {
+            let newDeckTitle: String
+        }
+        struct ViewModel {
+            let newDeckTitle: String
+        }
+    }
+    
+    
+    enum ShowEditCardAC {
+        struct Request {
+            let cardIndex: Int
+        }
+        struct Response {
+            let card: Card
+            let cardIndex: Int
+        }
+        struct ViewModel {
+            let displayedCard: DeckDetailCollectionViewCell.CardCellModel
+            let cardIndex: Int
+        }
+    }
+    
+    
+    enum ShowDeleteCardAC {
+        struct Request {
+            let cardIndexToDelete: Int
+        }
+        struct Response {
+            let cardIndexToDelete: Int
+        }
+        struct ViewModel {
+            let cardIndexToDelete: Int
+        }
+    }
+    
+}
+
+

@@ -13,6 +13,12 @@ protocol DecksPresentationLogic {
     func presentFetchedDecks(response: Decks.FetchDecks.Response)
     
     func presentDeckDetail(response: DeckResponse)
+    
+    
+    
+    // MARK: CD Methods
+    func presentFetchedDecks(response: CDDecks.FetchDecks.Response)
+    func presentCDDeckDetail(response: CDDecks.ShowDeck.Response)
 }
 
 class DecksPresenter: DecksPresentationLogic {
@@ -23,6 +29,7 @@ class DecksPresenter: DecksPresentationLogic {
   
     // MARK: Presentation
     
+    // TODO: REMOVE AFTER PORTING TO CORE DATA
     func presentFetchedDecks(response: Decks.FetchDecks.Response) {
         var displayedDecksCells: [DecksCollectionViewCell.DeckCellModel] = []
         
@@ -46,6 +53,34 @@ class DecksPresenter: DecksPresentationLogic {
         // does it matter if it passes the same type of data anyway?
         let deckModel = Decks.CreateDeck.DeckModel(deckInfoToPass: deckInfoToPass)
         viewController?.displayDeckDetail(deckInfoToPass: deckModel.deckInfoToPass)
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    // MARK: - CD Methods
+    
+    func presentFetchedDecks(response: CDDecks.FetchDecks.Response) {
+        var displayedDeckCells: [DecksCollectionViewCell.DeckCellModel] = []
+        
+        for deck in response.decks {
+            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count)
+            displayedDeckCells.append(cellModel)
+        }
+        
+        let viewModel = CDDecks.FetchDecks.ViewModel(displayedDecks: displayedDeckCells)
+        viewController?.displayFetchedCDDecks(viewModel: viewModel)
+    }
+    
+    func presentCDDeckDetail(response: CDDecks.ShowDeck.Response) {
+        let deckInfoToPass = response.deckInfoToPass
+        
+        let deckModel = CDDecks.ShowDeck.DeckModel(deckInfoToPass: deckInfoToPass)
+        viewController?.displayCDDeckDetail(deckInfoToPass: deckModel.deckInfoToPass)
     }
   
 }

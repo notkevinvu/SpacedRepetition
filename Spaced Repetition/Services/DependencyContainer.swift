@@ -20,7 +20,7 @@ final class DependencyContainer {
     lazy var testDecksStore: DecksStoreProtocol = TestDecksStore(factory: self)
     lazy var memoryDecksStore: DecksStoreProtocol = MemoryDecksStore(factory: self)
     
-    lazy var coreDataStack = CoreDataStack(modelName: "Spaced Repetition")
+    lazy var coreDataStack = CoreDataStack(modelName: "SpacedRepetition")
 }
 
 extension DependencyContainer: DecksWorkerFactory {
@@ -31,8 +31,8 @@ extension DependencyContainer: DecksWorkerFactory {
 
 extension DependencyContainer: DecksStoreFactory {
     func makeDecksStore() -> DecksStoreProtocol {
-        // TODO: switch from testDecksStore to memoryDecksStore when core data
-        // saving is implemented
+        
+        // MARK: TODO: Switch to memoryDecksStore for final
          return testDecksStore
 //        return memoryDecksStore
     }

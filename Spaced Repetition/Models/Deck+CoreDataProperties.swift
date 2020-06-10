@@ -17,10 +17,10 @@ extension Deck {
         return NSFetchRequest<Deck>(entityName: "Deck")
     }
 
-    @NSManaged public var deckID: UUID?
-    @NSManaged public var name: String?
-    @NSManaged public var dateCreated: Date?
-    @NSManaged public var cards: NSOrderedSet?
+    @NSManaged public var deckID: UUID
+    @NSManaged public var name: String
+    @NSManaged public var dateCreated: Date
+    @NSManaged public var cards: NSOrderedSet
 
 }
 

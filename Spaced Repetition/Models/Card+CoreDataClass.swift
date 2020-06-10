@@ -12,5 +12,12 @@ import CoreData
 
 @objc(Card)
 public class Card: NSManagedObject {
+    
+    public func initializeCardWith(frontSideText: String, backSideText: String, cardID: UUID, dateCreated: Date) {
+        self.frontSideText = frontSideText
+        self.backSideText = backSideText
+        self.cardID = cardID
+        self.dateCreated = dateCreated
+    }
 
 }

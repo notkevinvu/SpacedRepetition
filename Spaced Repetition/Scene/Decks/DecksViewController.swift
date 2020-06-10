@@ -9,9 +9,17 @@
 import UIKit
 
 protocol DecksDisplayLogic: class {
+    // TODO: REMOVE
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     
     func displayDeckDetail(deckInfoToPass: NaiveDeck)
+    
+    
+    
+    
+    func displayFetchedCDDecks(viewModel: CDDecks.FetchDecks.ViewModel)
+    
+    func displayCDDeckDetail(deckInfoToPass: Deck)
 }
 
 class DecksViewController: UIViewController, DecksDisplayLogic {
@@ -72,7 +80,22 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchDecksOnLoad()
+        // TODO: REMOVE WHEN FINISHED PORTING ALL METHODS TO CORE DATA
+//        fetchDecksOnLoad()
+        
+        /*
+         move fetch to viewDidLoad to fetch only once and reload data when we come
+         back? how to reload data if it's 'local'? (i.e. since we use a local array
+         cellModels, it needs to get updated if we delete decks; however, because
+         we currently delete decks from the deck detail scene, how should we delete
+         the deck from cellModels from there?)
+         
+         possible solution: create a bar button item to enable editing on all visible
+         cells which includes editing title and deleting deck and this allows
+         us to reload data in viewWillAppear instead of fetching each time
+         */
+        
+        fetchCDDecksOnLoad()
     }
   
     override func viewDidLoad() {
@@ -81,8 +104,42 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         configureNavigationbar()
     }
     
-    // MARK: Fetching Decks
     
+    
+    
+    
+    
+    
+    // MARK: Core Data stuff
+    
+    func fetchCDDecksOnLoad() {
+        let request = CDDecks.FetchDecks.Request()
+        interactor?.fetchCDDecks(request: request)
+    }
+    
+    // MARK: Display
+    
+    func displayFetchedCDDecks(viewModel: CDDecks.FetchDecks.ViewModel) {
+        cellModels = viewModel.displayedDecks
+        contentView.collectionView.reloadData()
+    }
+    
+    // MARK: Navigation
+    
+    func displayCDDeckDetail(deckInfoToPass: Deck) {
+        router.dataStore?.cdDeckInfoTopass = deckInfoToPass
+        router.routeToCDDeckDetail()
+        router.dataStore?.cdDeckInfoTopass = nil
+    }
+    
+    
+    
+    
+    
+    
+    
+    // MARK: Fetching Decks
+
     func fetchDecksOnLoad() {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
@@ -92,6 +149,8 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
     
     var cellModels: [DecksCollectionViewCell.DeckCellModel] = []
     
+    // NOT IN USE
+    // TODO: REMOVE AFTER PORTING ALL METHODS TO CORE DATA
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
         cellModels = viewModel.displayedDecks
         contentView.collectionView.reloadData()
@@ -127,9 +186,12 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let request = Decks.ShowDeck.Request(indexPathRow: indexPath.row)
-        interactor?.decksViewHandleTapDeckCell(request: request)
+        // TODO: REMOVE AFTER PORTING ALL METHODS TO CORE DATA
+//        let request = Decks.ShowDeck.Request(indexPathRow: indexPath.row)
+//        interactor?.decksViewHandleTapDeckCell(request: request)
         
+        let request = CDDecks.ShowDeck.Request(indexPathRow: indexPath.row)
+        interactor?.decksViewHandleTapCDDeckCell(request: request)
     }
     
 }

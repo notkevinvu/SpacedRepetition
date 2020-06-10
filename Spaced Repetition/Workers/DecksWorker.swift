@@ -21,6 +21,12 @@ protocol DecksWorkerProtocol {
     func editCard(forDeckID deckID: UUID, withCard card: NaiveCard, forCardID: Int)
     func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
     func editTitle(forDeckID deckID: UUID, withNewTitle newTitle: String)
+    
+    
+    
+    
+    func fetchCDDecks() -> [Deck]
+    func createCDDeck() -> Deck?
 }
 
 
@@ -36,6 +42,28 @@ final class DecksWorker {
 
 // MARK: - DecksWorker protocol methods
 extension DecksWorker: DecksWorkerProtocol {
+    
+    // MARK: Core Data stuff
+    
+    func fetchCDDecks() -> [Deck] {
+        let decks = decksStore.fetchCDDecks()
+        
+        return decks
+    }
+    
+    func createCDDeck() -> Deck? {
+        guard let deck = decksStore.createCDDeck() else { return nil }
+        
+        return deck
+    }
+    
+    
+    
+    
+    
+    
+    // TODO: REMOVE ALL BELOW
+    
     func fetchDecks(completion: @escaping ([NaiveDeck]) -> Void) {
         decksStore.fetchDecks { (decks: () throws -> [NaiveDeck]) -> Void in
             do {

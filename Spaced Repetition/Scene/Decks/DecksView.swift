@@ -10,6 +10,8 @@ import UIKit
 
 protocol DecksViewDelegate: class {
     func decksViewSelectAddDeck(request: Decks.CreateDeck.Request)
+    
+    func decksViewSelectAddCDDeck(request: CDDecks.CreateDeck.Request)
 }
 
 final class DecksView: UIView {
@@ -104,8 +106,9 @@ final class DecksView: UIView {
     // MARK: Methods
     
     @objc private func handleAddDeck() {
-        let request = Decks.CreateDeck.Request()
-        delegate?.decksViewSelectAddDeck(request: request)
+        let request = CDDecks.CreateDeck.Request()
+//        delegate?.decksViewSelectAddDeck(request: request)
+        delegate?.decksViewSelectAddCDDeck(request: request)
     }
     
 }

@@ -10,6 +10,8 @@ import UIKit
 
 @objc protocol DecksRoutingLogic {
     func routeToDeckDetail()
+    
+    func routeToCDDeckDetail()
 }
 
 protocol DecksDataPassing {
@@ -22,6 +24,7 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     
     // MARK: Routing
     
+    // TODO: REMOVE AFTER PORTING TO CORE DATA
     func routeToDeckDetail() {
         // if indexPath == nil, proceed to navigating after default data passing
         // TODO: review this idea if the current implementation of
@@ -43,13 +46,38 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
         viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
+    
+    
+    
+    func routeToCDDeckDetail() {
+        let destinationVC = DeckDetailViewController()
+        var destinationDS = destinationVC.router!.dataStore
+        passCDDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
+    
+    
+    
+    
+    
     // MARK: Navigation
     
     
     // MARK: Passing data
     
+    // TODO: REMOVE AFTER PORTING TO CORE DATA
     func passDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
         toDataStore.deckInfo = fromDataStore.deckInfoToPass
+    }
+    
+    
+    
+    
+    
+    
+    func passCDDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
+        toDataStore.cdDeckInfo = fromDataStore.cdDeckInfoTopass
     }
     
 }

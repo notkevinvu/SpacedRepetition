@@ -23,6 +23,19 @@ protocol DeckDetailDisplayLogic: class
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel)
     
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
+    
+    
+    
+    // CORE DATA
+    
+    func displayCDDeckName(viewModel: CDDeckDetail.ShowDeck.ViewModel.DeckInfoModel)
+    func displayCDDeckCards(viewModel: CDDeckDetail.ShowDeck.ViewModel.DeckCardModels)
+    
+    func displayCreatedCDCard(viewModel: CDDeckDetail.CreateCard.ViewModel)
+    func displayEditedCDCard(viewModel: CDDeckDetail.ShowEditCardAC.ViewModel)
+    func displayDeletedCDCard(viewModel: CDDeckDetail.ShowDeleteCardAC.ViewModel)
+    
+    func displayEditedCDDeckTitle(viewModel: CDDeckDetail.ShowEditTitleAlert.ViewModel)
 }
 
 
@@ -80,9 +93,11 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         let plusImage = UIImage(systemName: "plus.rectangle")
         let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
         let editDeckTitleButton = UIBarButtonItem(title: "Edit title", style: .done, target: self, action: #selector(didTapEditTitleButton))
+        // TODO: Remove and implement this on the DecksView scene - there's no easy way
+        // to
         let deleteDeckButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(didTapDeleteDeckButton))
         
-        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton, deleteDeckButton]
+        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
         
         // TODO: to be used for converting the title view into a tappable view for
         // editing deck title?
@@ -117,7 +132,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getDeck()
+//        getDeck()
+        getCDDeck()
     }
     
     // MARK: Get Deck
@@ -158,37 +174,91 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
-    
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel) {
         displayedDeckCards?.remove(at: viewModel.cardIndexToRemove)
         contentView.collectionView.reloadData()
     }
     
-    
     func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel) {
         navigationItem.title = viewModel.newDeckTitle
     }
     
+    
     // MARK: Button methods
     
     @objc func handleAddCardButton() {
-        guard let displayedDeckID = displayedDeckID else { return }
-        let request = DeckDetail.ShowCreateCard.Request(displayedDeckID: displayedDeckID)
+//        guard let displayedDeckID = displayedDeckID else { return }
         
-        interactor?.showCreateCard(request: request)
+//        let request = DeckDetail.ShowCreateCard.Request(displayedDeckID: displayedDeckID)
+//        interactor?.showCreateCard(request: request)
+        
+        let request = CDDeckDetail.ShowCreateCard.Request()
+        interactor?.showCreateCDCard(request: request)
     }
     
+    
     @objc func didTapEditTitleButton() {
-        guard let displayedDeckID = displayedDeckID else { return }
-        let request = DeckDetail.ShowEditTitleAlert.Request(deckID: displayedDeckID)
+//        guard let displayedDeckID = displayedDeckID else { return }
+        
+//        let request = DeckDetail.ShowEditTitleAlert.Request(deckID: displayedDeckID)
+//        interactor?.showEditTitleAlert(request: request)
+        
+        let request = CDDeckDetail.ShowEditTitleAlert.Request()
         interactor?.showEditTitleAlert(request: request)
     }
+    
     
     @objc func didTapDeleteDeckButton() {
         guard let displayedDeckID = displayedDeckID else { return }
         let request = DeckDetail.ShowDeleteDeckAC.Request(displayedDeckID: displayedDeckID)
         interactor?.showDeleteDeckAlert(request: request)
     }
+    
+    
+    
+    
+    
+    
+    // MARK: CORE DATA
+    
+    func getCDDeck() {
+        let request = CDDeckDetail.ShowDeck.Request()
+        interactor?.getCDDeck(request: request)
+    }
+    
+    // MARK: Core Data Display Logic
+    
+    func displayCDDeckName(viewModel: CDDeckDetail.ShowDeck.ViewModel.DeckInfoModel) {
+        navigationItem.title = viewModel.displayedDeckName
+        displayedDeckID = viewModel.displayedDeckID
+    }
+    
+    func displayCDDeckCards(viewModel: CDDeckDetail.ShowDeck.ViewModel.DeckCardModels) {
+        displayedDeckCards = viewModel.displayedCards
+        contentView.collectionView.reloadData()
+    }
+    
+    func displayCreatedCDCard(viewModel: CDDeckDetail.CreateCard.ViewModel) {
+        displayedDeckCards?.append(viewModel.displayedCard)
+        contentView.collectionView.reloadData()
+    }
+    
+    func displayEditedCDDeckTitle(viewModel: CDDeckDetail.ShowEditTitleAlert.ViewModel) {
+        navigationItem.title = viewModel.newDeckTitle
+    }
+    
+    func displayEditedCDCard(viewModel: CDDeckDetail.ShowEditCardAC.ViewModel) {
+        // replacing the card model at the given index with the new card model
+        // specified by the user
+        displayedDeckCards?[viewModel.cardIndex] = viewModel.displayedCard
+        contentView.collectionView.reloadData()
+    }
+    
+    func displayDeletedCDCard(viewModel: CDDeckDetail.ShowDeleteCardAC.ViewModel) {
+        displayedDeckCards?.remove(at: viewModel.cardIndexToDelete)
+        contentView.collectionView.reloadData()
+    }
+    
 
 }
 
@@ -208,21 +278,36 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         guard let displayedDeckCards = displayedDeckCards else { return cell }
         cell.configureWithModel(displayedDeckCards[indexPath.row])
         
-        guard let displayedDeckID = displayedDeckID else { return cell }
+        // TODO: REMOVE AFTER PORTING TO CD METHODS
+        // note: don't need this anymore since we can edit/delete cards directly
+        // from interactor (cards are inherently linked to decks in core data)
+//        guard let displayedDeckID = displayedDeckID else { return cell }
         
         let cardIndexToEditOrDelete = indexPath.row
         
         cell.didTapEditButton = { [weak self] in
             guard let self = self else { return }
-            let request = DeckDetail.ShowEditCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
-            self.interactor?.showEditCard(request: request)
+            
+            // TODO: REMOVE AFTER PORTING ALL METHODS TO CORE DATA
+//            let request = DeckDetail.ShowEditCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
+//            self.interactor?.showEditCard(request: request)
+            
+            let request = CDDeckDetail.ShowEditCardAC.Request(cardIndex: cardIndexToEditOrDelete)
+            self.interactor?.showEditCDCardAlert(request: request)
+            
             cell.toggleEditViews()
         }
         
         cell.didTapDeleteButton = { [weak self] in
             guard let self = self else { return }
-            let request = DeckDetail.ShowDeleteCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
-            self.interactor?.showDeleteCardAC(request: request)
+            
+            // TODO: REMOVE AFTER PORTING TO CD
+//            let request = DeckDetail.ShowDeleteCardAC.Request(deckID: displayedDeckID, cardID: cardIndexToEditOrDelete)
+//            self.interactor?.showDeleteCardAC(request: request)
+            
+            let request = CDDeckDetail.ShowDeleteCardAC.Request(cardIndexToDelete: cardIndexToEditOrDelete)
+            self.interactor?.showDeleteCDCardAlert(request: request)
+            
             cell.toggleEditViews()
         }
         
