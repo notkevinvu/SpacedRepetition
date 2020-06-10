@@ -67,6 +67,13 @@ final class TestDecksStore: DecksStoreProtocol {
         let deckFetchReq = Deck.deckFetchRequest()
         
         // MARK: TODO: add the date sort desc if needed
+        /*
+         Possibly might not need the date sort, we just need to keep track of
+         the order in which we add decks to core data - is it possible to wrap
+         all the deck entities into an overarching Decks entity that has no
+         attributes and only a single to-many relationship to numerous decks?
+         */
+        
 //        let dateSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.dateCreated), ascending: true)
 //        deckFetchReq.sortDescriptors = [dateSortDescriptor]
         

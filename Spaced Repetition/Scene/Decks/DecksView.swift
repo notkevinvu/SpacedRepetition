@@ -9,9 +9,7 @@
 import UIKit
 
 protocol DecksViewDelegate: class {
-    func decksViewSelectAddDeck(request: Decks.CreateDeck.Request)
-    
-    func decksViewSelectAddCDDeck(request: CDDecks.CreateDeck.Request)
+    func decksViewHandleTapAddDeckButton(request: Decks.CreateDeck.Request)
 }
 
 final class DecksView: UIView {
@@ -27,7 +25,7 @@ final class DecksView: UIView {
         layout.minimumLineSpacing = 30
         layout.itemSize = CGSize(width: 360, height: 110)
         // bottom edge inset added to allow users to scroll up more to see last deck
-        // if there were more than 4 decks
+        // if there are more than 4 decks
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -106,9 +104,9 @@ final class DecksView: UIView {
     // MARK: Methods
     
     @objc private func handleAddDeck() {
-        let request = CDDecks.CreateDeck.Request()
+        let request = Decks.CreateDeck.Request()
 //        delegate?.decksViewSelectAddDeck(request: request)
-        delegate?.decksViewSelectAddCDDeck(request: request)
+        delegate?.decksViewHandleTapAddDeckButton(request: request)
     }
     
 }

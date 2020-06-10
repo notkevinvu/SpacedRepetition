@@ -9,8 +9,6 @@
 import UIKit
 
 @objc protocol DecksRoutingLogic {
-    func routeToDeckDetail()
-    
     func routeToCDDeckDetail()
 }
 
@@ -24,32 +22,13 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     
     // MARK: Routing
     
-    // TODO: REMOVE AFTER PORTING TO CORE DATA
-    func routeToDeckDetail() {
+    func routeToCDDeckDetail() {
         // if indexPath == nil, proceed to navigating after default data passing
         // TODO: review this idea if the current implementation of
         // handling deck cell tap is not logical (i.e. conforming two
         // model Responses to one protocol and the presenter function
         // takes in any object that conforms to that protocol
         
-        /*
-         this code currently not working - I think using indexPath.row to
-         get the corresponding deck is correct, just need to figure out
-         how to get the list of decks from the router
-         
-         maybe we can pass both the cell model and the deck itself
-         from presenter to the VC so that we can have the deck as reference
-         */
-        let destinationVC = DeckDetailViewController()
-        var destinationDS = destinationVC.router!.dataStore
-        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
-        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
-    }
-    
-    
-    
-    
-    func routeToCDDeckDetail() {
         let destinationVC = DeckDetailViewController()
         var destinationDS = destinationVC.router!.dataStore
         passCDDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
@@ -57,27 +36,14 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     }
     
     
-    
-    
-    
-    
     // MARK: Navigation
     
     
     // MARK: Passing data
     
-    // TODO: REMOVE AFTER PORTING TO CORE DATA
-    func passDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
-        toDataStore.deckInfo = fromDataStore.deckInfoToPass
-    }
-    
-    
-    
-    
-    
     
     func passCDDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
-        toDataStore.cdDeckInfo = fromDataStore.cdDeckInfoTopass
+        toDataStore.cdDeckInfo = fromDataStore.deckInfoToPass
     }
     
 }
