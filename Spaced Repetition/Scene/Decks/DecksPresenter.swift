@@ -11,6 +11,9 @@ import UIKit
 protocol DecksPresentationLogic: AlertDisplayablePresenter {
     func presentFetchedDecks(response: Decks.FetchDecks.Response)
     func presentDeckDetail(response: Decks.ShowDeck.Response)
+    
+    func presentEditedDecktitle(response: Decks.EditDeckTitle.Response)
+    func presentDeletedDeck(response: Decks.DeleteDeck.Response)
 }
 
 class DecksPresenter: DecksPresentationLogic {
@@ -44,6 +47,18 @@ class DecksPresenter: DecksPresentationLogic {
         // does it matter if it passes the same type of data anyway?
         let deckModel = Decks.ShowDeck.DeckModel(deckInfoToPass: deckInfoToPass)
         viewController?.displayDeckDetail(deckInfoToPass: deckModel.deckInfoToPass)
+    }
+    
+    
+    func presentEditedDecktitle(response: Decks.EditDeckTitle.Response) {
+        let viewModel = Decks.EditDeckTitle.ViewModel(newDeckTitle: response.newDeckTitle, deckIndexToUpdate: response.deckIndexToUpdate)
+        viewController?.displayEditedDeckTitle(viewModel: viewModel)
+    }
+    
+    
+    func presentDeletedDeck(response: Decks.DeleteDeck.Response) {
+        let viewModel = Decks.DeleteDeck.ViewModel(indexOfDeckToRemove: response.indexOfDeckToRemove)
+        viewController?.displayDeletedDeck(viewModel: viewModel)
     }
   
 }

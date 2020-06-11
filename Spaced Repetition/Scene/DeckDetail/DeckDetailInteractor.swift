@@ -20,8 +20,6 @@ protocol DeckDetailBusinessLogic
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
     
-    func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request)
-    
     func showEditCardAlert(request: DeckDetail.ShowEditCardAC.Request)
     
     func showDeleteCardAlert(request: DeckDetail.ShowDeleteCardAC.Request)
@@ -61,7 +59,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
      TODO: refactor methods below (mostly save actions) to call decksworker methods
      to actually perform business logic rather than doing it here
      */
-    // MARK: Get deck when DeckDetail initialized
+    // MARK: Get deck on scene init
     func getDeck(request: DeckDetail.ShowDeck.Request) {
         guard let deckInfo = deckInfo else {
             assertionFailure("Failed to get deck info \(#line) \(#file)")
@@ -118,39 +116,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextFieldPlaceholder, backTextFieldPlaceholder], actions: [cancelAction, saveAction])
         presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
         
-    }
-    
-    
-    // MARK: Show Edit Deck Title alert
-    func showEditTitleAlert(request: DeckDetail.ShowEditTitleAlert.Request) {
-        let deckTitleTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Enter new deck name")
-        
-        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
-        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
-            // TODO: Abstract all this into a decksworker method?
-            guard
-                let self = self,
-                let deckTitle = ac.textFields?[0].text,
-                let deckToEdit = self.deckInfo else {
-                    return
-            }
-            
-            deckToEdit.name = deckTitle
-            
-            do {
-                try deckToEdit.managedObjectContext?.save()
-            } catch let error as NSError {
-                assertionFailure("Failed to update deck title name - \(#line), \(#file) - error \(error) with desc: \(error.userInfo)")
-                return
-            }
-            
-            let response = DeckDetail.ShowEditTitleAlert.Response(newDeckTitle: deckTitle)
-            self.presenter?.presentEditedDeckTitle(response: response)
-        }
-        
-        
-        let alertViewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "", textFields: [deckTitleTextFieldPlaceholder], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: alertViewModel, alertStyle: .alert)
     }
     
     

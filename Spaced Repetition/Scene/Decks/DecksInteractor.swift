@@ -67,27 +67,86 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     }
     
     
+    // MARK: Show Deck Options
+    // TODO: Refactor action handlers to call worker methods to free up space in interactor
     func showDeckOptions(request: Decks.ShowDeckOptions.Request) {
+        let indexOfDeckToEditOrDelete = request.indexOfDeckToEditOrDelete
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
         
-        let editDeckTitleAction = AlertDisplayable.Action(title: "Edit deck title", style: .default) { [weak self] (action, ac) in
+        // MARK: Edit deck title
+        let editDeckTitleAction = AlertDisplayable.Action(title: "Edit deck title", style: .default) { [weak self] (action1, ac1) in
             
+            // selecting this action on the alertsheet presents another alert,
+            // for which we create new actions for here
             guard let self = self else { return }
             
-            print("Editing deck title")
+            let deckTitleTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "New deck name...")
+            
+            let cancelNewDeckTitleAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+            
+            // TODO: very highly recommend refactoring this to call decksworker method
+            // so this isn't eye cancer to look at
+            let saveNewDeckTitleAction = AlertDisplayable.Action(title: "Done", style: .default) { (action2, ac2) in
+                
+                guard
+                    let newDeckTitle = ac2.textFields?[0].text,
+                    !newDeckTitle.isEmpty
+                    else { return }
+                
+                self.decks[indexOfDeckToEditOrDelete].name = newDeckTitle
+                
+                do {
+                    try self.decks[indexOfDeckToEditOrDelete].managedObjectContext?.save()
+                } catch let error as NSError {
+                    assertionFailure("Failed to edit deck name \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+                }
+                
+                let response = Decks.EditDeckTitle.Response(newDeckTitle: newDeckTitle, deckIndexToUpdate: indexOfDeckToEditOrDelete)
+                self.presenter.presentEditedDecktitle(response: response)
+                
+            }
+            
+            let viewModel = AlertDisplayable.ViewModel(title: "Edit deck name", message: "Please enter a new name for the deck", textFields: [deckTitleTextFieldPlaceholder], actions: [cancelNewDeckTitleAction, saveNewDeckTitleAction])
+            self.presenter.presentAlert(viewModel: viewModel, alertStyle: .alert)
         }
         
+        
+        // MARK: Delete deck
         let deleteDeckAction = AlertDisplayable.Action(title: "Delete deck", style: .destructive) { [weak self] (action, ac) in
             
-            guard let self = self else { return }
+            guard
+                let self = self,
+                let managedContext = self.decks[indexOfDeckToEditOrDelete].managedObjectContext
+                else { return }
             
-            print("Deleting deck")
+            let cancelDeleteDeckAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+            
+            let saveDeleteDeckAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { (action, ac) in
+                
+                managedContext.delete(self.decks[indexOfDeckToEditOrDelete])
+                
+                do {
+                    try managedContext.save()
+                } catch let error as NSError {
+                    assertionFailure("Failed to delete deck \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+                }
+                
+                let response = Decks.DeleteDeck.Response(indexOfDeckToRemove: indexOfDeckToEditOrDelete)
+                self.presenter.presentDeletedDeck(response: response)
+                
+            }
+            
+            let viewModel = AlertDisplayable.ViewModel(title: "Confirm delete", message: "Are you sure you want to delete this deck?", textFields: [], actions: [cancelDeleteDeckAction, saveDeleteDeckAction])
+            self.presenter.presentAlert(viewModel: viewModel, alertStyle: .alert)
         }
+        
         
         let viewModel = AlertDisplayable.ViewModel(title: nil, message: nil, textFields: [], actions: [cancelAction, editDeckTitleAction, deleteDeckAction])
         presenter.presentAlert(viewModel: viewModel, alertStyle: .actionSheet)
     }
+    
+    
     
 }
 

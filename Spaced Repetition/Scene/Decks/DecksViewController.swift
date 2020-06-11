@@ -12,6 +12,10 @@ protocol DecksDisplayLogic: class {
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     
     func displayDeckDetail(deckInfoToPass: Deck)
+    
+    func displayEditedDeckTitle(viewModel: Decks.EditDeckTitle.ViewModel)
+    
+    func displayDeletedDeck(viewModel: Decks.DeleteDeck.ViewModel)
 }
 
 class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayableViewController {
@@ -85,7 +89,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
          us to reload data in viewWillAppear instead of fetching each time
          */
         
-        fetchCDDecksOnLoad()
+        fetchDecks()
     }
   
     override func viewDidLoad() {
@@ -96,7 +100,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     
     
     // MARK: Fetching decks
-    func fetchCDDecksOnLoad() {
+    func fetchDecks() {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
     }
@@ -107,6 +111,16 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel) {
         cellModels = viewModel.displayedDecks
+        contentView.collectionView.reloadData()
+    }
+    
+    func displayEditedDeckTitle(viewModel: Decks.EditDeckTitle.ViewModel) {
+        cellModels[viewModel.deckIndexToUpdate].deckTitle = viewModel.newDeckTitle
+        contentView.collectionView.reloadData()
+    }
+    
+    func displayDeletedDeck(viewModel: Decks.DeleteDeck.ViewModel) {
+        cellModels.remove(at: viewModel.indexOfDeckToRemove)
         contentView.collectionView.reloadData()
     }
     
@@ -137,7 +151,7 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
         cell.handleTapDeckOptionsButton = { [weak self] in
             guard let self = self else { return }
             
-            let request = Decks.ShowDeckOptions.Request()
+            let request = Decks.ShowDeckOptions.Request(indexOfDeckToEditOrDelete: indexPath.row)
             self.interactor?.showDeckOptions(request: request)
         }
         

@@ -21,8 +21,6 @@ protocol DeckDetailDisplayLogic: class
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel)
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel)
-    
-    func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel)
 }
 
 
@@ -78,13 +76,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         
         
         let plusImage = UIImage(systemName: "plus.rectangle")
-        let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
-        let editDeckTitleButton = UIBarButtonItem(title: "Edit title", style: .done, target: self, action: #selector(didTapEditTitleButton))
-        // TODO: Remove and implement this on the DecksView scene - there's no easy way
-        // to do this within the DeckDetail scene
-        let deleteDeckButton = UIBarButtonItem(title: "Delete", style: .done, target: self, action: #selector(didTapDeleteDeckButton))
         
-        navigationItem.rightBarButtonItems = [addCardBarButton, editDeckTitleButton]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
         
         // TODO: to be used for converting the title view into a tappable view for
         // editing deck title?
@@ -153,10 +146,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.reloadData()
     }
     
-    func displayEditedDeckTitle(viewModel: DeckDetail.ShowEditTitleAlert.ViewModel) {
-        navigationItem.title = viewModel.newDeckTitle
-    }
-    
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel) {
         // replacing the card model at the given index with the new card model
         // specified by the user
@@ -174,19 +163,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     @objc func handleAddCardButton() {
         let request = DeckDetail.ShowCreateCard.Request()
         interactor?.showCreateCard(request: request)
-    }
-    
-    
-    @objc func didTapEditTitleButton() {
-        let request = DeckDetail.ShowEditTitleAlert.Request()
-        interactor?.showEditTitleAlert(request: request)
-    }
-    
-    
-    // TODO: Remove (likely will implement this in the DecksView scene instead)
-    @objc func didTapDeleteDeckButton() {
-//        let request = DeckDetail.ShowDeleteDeckAC.Request(displayedDeckID: displayedDeckID)
-//        interactor?.showDeleteDeckAlert(request: request)
     }
     
 

@@ -50,14 +50,32 @@ enum Decks {
     
     
     enum ShowDeckOptions {
+        // only need request - response and viewmodel handled by alertdisplayable
         struct Request {
-            
+            let indexOfDeckToEditOrDelete: Int
         }
+    }
+    
+    
+    enum EditDeckTitle {
+        // no need for request - starts from interactor
         struct Response {
-            
+            let newDeckTitle: String
+            let deckIndexToUpdate: Int
         }
         struct ViewModel {
-            
+            let newDeckTitle: String
+            let deckIndexToUpdate: Int
+        }
+    }
+    
+    
+    enum DeleteDeck {
+        struct Response {
+            let indexOfDeckToRemove: Int
+        }
+        struct ViewModel {
+            let indexOfDeckToRemove: Int
         }
     }
 }

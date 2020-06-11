@@ -24,7 +24,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
     var handleTapDeckOptionsButton: (() -> ())?
     
     struct DeckCellModel {
-        let deckTitle: String
+        var deckTitle: String
         let numberOfCards: Int
     }
     
