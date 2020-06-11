@@ -12,6 +12,8 @@ protocol DecksBusinessLogic: DecksViewDelegate {
     func fetchDecks(request: Decks.FetchDecks.Request)
     
     func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request)
+    
+    func showDeckOptions(request: Decks.ShowDeckOptions.Request)
 }
 
 protocol DecksBusinessLogicDelegate: class {
@@ -58,9 +60,33 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
         presenter.presentFetchedDecks(response: response)
     }
     
+    
     func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request) {
         let response = Decks.ShowDeck.Response(deckInfoToPass: decks[request.indexPathRow])
         presenter.presentDeckDetail(response: response)
+    }
+    
+    
+    func showDeckOptions(request: Decks.ShowDeckOptions.Request) {
+        
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        
+        let editDeckTitleAction = AlertDisplayable.Action(title: "Edit deck title", style: .default) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            
+            print("Editing deck title")
+        }
+        
+        let deleteDeckAction = AlertDisplayable.Action(title: "Delete deck", style: .destructive) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            
+            print("Deleting deck")
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: nil, message: nil, textFields: [], actions: [cancelAction, editDeckTitleAction, deleteDeckAction])
+        presenter.presentAlert(viewModel: viewModel, alertStyle: .actionSheet)
     }
     
 }

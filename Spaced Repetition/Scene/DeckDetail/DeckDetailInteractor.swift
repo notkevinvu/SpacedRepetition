@@ -116,7 +116,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         }
         
         let viewModel = AlertDisplayable.ViewModel(title: "New Card", message: "Please enter card details", textFields: [frontTextFieldPlaceholder, backTextFieldPlaceholder], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: viewModel)
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
         
     }
     
@@ -150,7 +150,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         
         let alertViewModel = AlertDisplayable.ViewModel(title: "Edit Deck title", message: "", textFields: [deckTitleTextFieldPlaceholder], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: alertViewModel)
+        presenter?.presentAlert(viewModel: alertViewModel, alertStyle: .alert)
     }
     
     
@@ -186,7 +186,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         }
         
         let viewModel = AlertDisplayable.ViewModel(title: "Edit Card", message: "Please enter the new card details", textFields: [cardFrontTextPlaceholder, cardBackTextPlaceholder], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: viewModel)
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
     }
     
     
@@ -217,7 +217,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         }
         
         let viewModel = AlertDisplayable.ViewModel(title: "Confirm delete", message: "Are you sure you want to delete this card?", textFields: [], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: viewModel)
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
         
         
     }

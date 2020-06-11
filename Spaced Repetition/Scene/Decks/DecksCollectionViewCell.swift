@@ -21,6 +21,8 @@ class DecksCollectionViewCell: UICollectionViewCell {
      */
     static let identifier = "DeckCollectionCell"
     
+    var handleTapDeckOptionsButton: (() -> ())?
+    
     struct DeckCellModel {
         let deckTitle: String
         let numberOfCards: Int
@@ -35,11 +37,15 @@ class DecksCollectionViewCell: UICollectionViewCell {
         return deckTitleLabel
     }()
     
-    let deckOptionsButton: UIButton = {
+    lazy var deckOptionsButton: UIButton = {
         let deckOptionsButton = UIButton()
         deckOptionsButton.setImage(UIImage(systemName: "gear"), for: .normal)
         deckOptionsButton.tintColor = .black
+        deckOptionsButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+        deckOptionsButton.layer.cornerRadius = 5
         deckOptionsButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        deckOptionsButton.addTarget(self, action: #selector(didTapDeckOptionsButton), for: .touchUpInside)
         
         return deckOptionsButton
     }()
@@ -57,7 +63,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
     let reviewNotificationView: UIView = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.layer.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2).cgColor
+        label.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
         label.layer.cornerRadius = 5
         
         return label
@@ -114,8 +120,8 @@ class DecksCollectionViewCell: UICollectionViewCell {
             deckTitleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             deckTitleLabel.heightAnchor.constraint(equalToConstant: 30),
             
-            deckOptionsButton.widthAnchor.constraint(equalToConstant: 25),
-            deckOptionsButton.heightAnchor.constraint(equalToConstant: 25),
+            deckOptionsButton.widthAnchor.constraint(equalToConstant: 35),
+            deckOptionsButton.heightAnchor.constraint(equalToConstant: 35),
             deckOptionsButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 18),
             deckOptionsButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -15),
             
@@ -153,6 +159,13 @@ class DecksCollectionViewCell: UICollectionViewCell {
     func configureWithModel(_ model: DeckCellModel) {
         deckTitleLabel.text = model.deckTitle
         numOfCardsLabel.text = "\(model.numberOfCards) Cards"
+    }
+    
+    
+    // MARK: Button methods
+    
+    @objc func didTapDeckOptionsButton() {
+        handleTapDeckOptionsButton?()
     }
 
 }

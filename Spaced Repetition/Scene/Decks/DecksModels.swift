@@ -47,4 +47,17 @@ enum Decks {
             let deckInfoToPass: Deck
         }
     }
+    
+    
+    enum ShowDeckOptions {
+        struct Request {
+            
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
 }

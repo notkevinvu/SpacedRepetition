@@ -212,6 +212,14 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Methods
     
+    /*
+     when the buttons are tapped, this method is called
+     this method then calls the didTapEditButton callback variable, which is
+     defined in the view controller's collection view delegate methods
+     
+     when the didTap...Button variable methods get called, it calls whatever code
+     we set in the collection view (in the view controller)
+     */
     @objc func handleTapEditButton(sender: UIButton) {
         didTapEditButton?()
     }

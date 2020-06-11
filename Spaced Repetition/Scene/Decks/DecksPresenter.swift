@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DecksPresentationLogic {
+protocol DecksPresentationLogic: AlertDisplayablePresenter {
     func presentFetchedDecks(response: Decks.FetchDecks.Response)
     func presentDeckDetail(response: Decks.ShowDeck.Response)
 }
@@ -18,6 +18,7 @@ class DecksPresenter: DecksPresentationLogic {
     // MARK: Properties
   
     weak var viewController: DecksDisplayLogic?
+    var alertDisplayableViewController: AlertDisplayableViewController?
   
     // MARK: Presentation
     

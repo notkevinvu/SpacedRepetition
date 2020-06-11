@@ -16,7 +16,7 @@ public enum AlertDisplayable {
         let textFields: [TextField]
         let actions: [Action]
         
-        public init(title: String?, message: String, textFields: [TextField], actions: [Action]) {
+        public init(title: String?, message: String?, textFields: [TextField], actions: [Action]) {
             self.title = title
             self.message = message
             self.textFields = textFields
@@ -44,38 +44,49 @@ public enum AlertDisplayable {
 
 // MARK: - AlertDisplayablePresenter
 protocol AlertDisplayablePresenter {
+    
     var alertDisplayableViewController: AlertDisplayableViewController? { get }
-    func presentAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool)
+    
+    func presentAlert(viewModel: AlertDisplayable.ViewModel, alertStyle: UIAlertController.Style)
+    
 }
 
 
 extension AlertDisplayablePresenter {
+    
     // default implementation of any AlertDisplayablePresenter - popViewController is false
     // until we specify otherwise (in case of deleting deck from the deck detail screen)
-    public func presentAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool = false) {
-        alertDisplayableViewController?.displayAlert(viewModel: viewModel, popViewController: popViewController)
+    public func presentAlert(viewModel: AlertDisplayable.ViewModel, alertStyle: UIAlertController.Style) {
+        alertDisplayableViewController?.displayAlert(viewModel: viewModel, alertStyle: alertStyle)
     }
+    
 }
 
 
 // MARK: AlertDisplayableVC
 public protocol AlertDisplayableViewController {
-    func displayAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool)
+    
+    func displayAlert(viewModel: AlertDisplayable.ViewModel, alertStyle: UIAlertController.Style)
+    
 }
 
 extension AlertDisplayableViewController where Self: UIViewController {
-    public func displayAlert(viewModel: AlertDisplayable.ViewModel, popViewController: Bool) {
-        let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: .alert)
+    
+    public func displayAlert(viewModel: AlertDisplayable.ViewModel, alertStyle: UIAlertController.Style) {
+        let vc = UIAlertController(title: viewModel.title, message: viewModel.message, preferredStyle: alertStyle)
         
-        viewModel.textFields.forEach { (alertTextField) in
-            vc.addTextField { (textField) in
-                textField.placeholder = alertTextField.placeholder
+        if alertStyle == .alert {
+            viewModel.textFields.forEach { (alertTextField) in
+                vc.addTextField { (textField) in
+                    textField.placeholder = alertTextField.placeholder
+                }
             }
         }
         
         viewModel.actions.forEach { action in
+            
             vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { [weak self] actionIgnore in
-                guard let self = self else { return }
+                
                 guard let handler = action.handler else { return }
                 /*
                  we call the action's handler here if it has one
@@ -89,11 +100,10 @@ extension AlertDisplayableViewController where Self: UIViewController {
                  */
                 
                 handler(actionIgnore, vc)
-                if popViewController {
-                    self.navigationController?.popViewController(animated: true)
-                }
+                
             }))
         }
+        
         present(vc, animated: true, completion: nil)
     }
 }

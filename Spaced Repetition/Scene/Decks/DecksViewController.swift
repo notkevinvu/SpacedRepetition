@@ -14,7 +14,7 @@ protocol DecksDisplayLogic: class {
     func displayDeckDetail(deckInfoToPass: Deck)
 }
 
-class DecksViewController: UIViewController, DecksDisplayLogic {
+class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayableViewController {
     
     // MARK: Properties
     
@@ -48,6 +48,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic {
         viewController.contentView = view
         interactor.presenter = presenter
         presenter.viewController = viewController
+        presenter.alertDisplayableViewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
         view.delegate = interactor
@@ -132,6 +133,13 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DecksCollectionViewCell.identifier, for: indexPath) as! DecksCollectionViewCell
         
         cell.configureWithModel(cellModels[indexPath.row])
+        
+        cell.handleTapDeckOptionsButton = { [weak self] in
+            guard let self = self else { return }
+            
+            let request = Decks.ShowDeckOptions.Request()
+            self.interactor?.showDeckOptions(request: request)
+        }
         
         return cell
     }

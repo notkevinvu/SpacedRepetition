@@ -41,6 +41,7 @@ final class DecksView: UIView {
         return collectionView
     }()
     
+    
     private lazy var addDeckButton: UIButton = {
         let addDeckButton = UIButton(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
         // TODO: Style it to designs
@@ -81,14 +82,7 @@ final class DecksView: UIView {
         NSLayoutConstraint.activate([
             collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
             collectionView.rightAnchor.constraint(equalTo: self.rightAnchor),
-             /*
-             TODO: adjust bottomanchor or collection view properties to
-             still see decks 'underneath' the add deck button, but still
-             be able to scroll up enough to tap the bottom deck
-             
-             Currently the bottom deck is 'underneath' the add deck button
-             and we can't scroll up enough to tap the deck comfortably
-            */
+            
             collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
             
@@ -105,7 +99,6 @@ final class DecksView: UIView {
     
     @objc private func handleAddDeck() {
         let request = Decks.CreateDeck.Request()
-//        delegate?.decksViewSelectAddDeck(request: request)
         delegate?.decksViewHandleTapAddDeckButton(request: request)
     }
     
