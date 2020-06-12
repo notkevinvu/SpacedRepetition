@@ -37,7 +37,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     var presenter: DeckDetailPresentationLogic?
     var decksWorker: DecksWorkerProtocol
     
-    
     var deckInfo: Deck?
     
     // MARK: Initialization
@@ -48,17 +47,10 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         self.decksWorker = factory.makeDecksWorker()
     }
     
-    
-    /*
-     when we need to edit a card, grab the indexpath.row from the collection view,
-     which should correspond to the index of this array, then edit the card from there
-     */
+    // we can edit cards directly here, rather than in the memory store
     var cardsFromDeck: [Card] = []
     
-    /*
-     TODO: refactor methods below (mostly save actions) to call decksworker methods
-     to actually perform business logic rather than doing it here
-     */
+    
     // MARK: Get deck on scene init
     func getDeck(request: DeckDetail.ShowDeck.Request) {
         guard let deckInfo = deckInfo else {
@@ -80,36 +72,22 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
         
-        // TODO: Abstract all the important stuff into a decksworker method?
-        // i.e. just need to pass in the card and the new card texts
         let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
-            guard let self = self else { return }
-            
-            guard let frontSideText = ac.textFields?[0].text, !frontSideText.isEmpty else { return }
-            
-            guard let backSideText = ac.textFields?[1].text, !backSideText.isEmpty else { return }
-            
-            // grab the same context as the current deck (i.e. the deck we want to
-            // insert the card into)
-            let deckContext = self.deckInfo?.managedObjectContext
-            
-            guard let unwrappedDeckContext = deckContext else { return }
-            
-            let cardToCreate = Card(context: unwrappedDeckContext)
-            cardToCreate.initializeCardWith(frontSideText: frontSideText, backSideText: backSideText, cardID: UUID(), dateCreated: Date())
-            
-            // then we can add the card directly to the deck without having to
-            // look up the deck id
-            self.deckInfo?.addToCards(cardToCreate)
-            
-            do {
-                try unwrappedDeckContext.save()
-            } catch let error as NSError {
-                assertionFailure("Failed to save new card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
-                return
+            guard
+                let self = self,
+                let deckToAddCardTo = self.deckInfo,
+                let frontSideText = ac.textFields?[0].text,
+                !frontSideText.isEmpty,
+                let backSideText = ac.textFields?[1].text, !backSideText.isEmpty
+                else {
+                    return
             }
             
-            let response = DeckDetail.CreateCard.Response(card: cardToCreate)
+            let cardModel = CardModel(frontSideText: frontSideText, backSideText: backSideText, cardID: UUID(), dateCreated: Date())
+            
+            self.decksWorker.createCard(withCardModel: cardModel, forDeck: deckToAddCardTo)
+            
+            let response = DeckDetail.CreateCard.Response(cardModel: cardModel)
             self.presenter?.presentCard(response: response)
         }
         
@@ -124,8 +102,10 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         let cardFrontTextPlaceholder = AlertDisplayable.TextField(placeholder: "Front side of card")
         let cardBackTextPlaceholder = AlertDisplayable.TextField(placeholder: "Back side of card")
         let cardIndex = request.cardIndex
+        let cardToEdit = self.cardsFromDeck[cardIndex]
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        
         let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
             
             guard
@@ -135,16 +115,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
                     return
             }
             
-            let cardToEdit = self.cardsFromDeck[request.cardIndex]
-            cardToEdit.frontSideText = cardFrontText
-            cardToEdit.backSideText = cardBacktext
-            
-            do {
-                try cardToEdit.managedObjectContext?.save()
-            } catch let error as NSError {
-                assertionFailure("Failed to update card with new values \(#line), \(#file) - with error \(error) with desc: \(error.userInfo)")
-                return
-            }
+            self.decksWorker.editCard(cardToEdit: cardToEdit, newFrontText: cardFrontText, newBackText: cardBacktext)
             
             let response = DeckDetail.ShowEditCardAC.Response(card: cardToEdit, cardIndex: cardIndex)
             self.presenter?.presentEditedCard(response: response)
@@ -158,24 +129,19 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     // MARK: Show delete card alert
     func showDeleteCardAlert(request: DeckDetail.ShowDeleteCardAC.Request) {
         let cardIndexToDelete = request.cardIndexToDelete
+        let cardToRemove = cardsFromDeck[cardIndexToDelete]
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        
         let saveAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { [weak self] (action, ac) in
             
             guard
                 let self = self,
                 let deck = self.deckInfo else { return }
             
-            deck.removeFromCards(self.cardsFromDeck[cardIndexToDelete])
+            self.decksWorker.deleteCard(card: cardToRemove, fromDeck: deck)
             
             self.cardsFromDeck.remove(at: cardIndexToDelete)
-            
-            do {
-                try deck.managedObjectContext?.save()
-            } catch let error as NSError {
-                assertionFailure("Failed to delete card and save \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
-                return
-            }
             
             let response = DeckDetail.ShowDeleteCardAC.Response(cardIndexToDelete: cardIndexToDelete)
             self.presenter?.presentDeletedCard(response: response)

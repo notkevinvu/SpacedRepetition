@@ -59,7 +59,7 @@ enum DeckDetail {
 //            let backSideText: String
 //        }
         struct Response {
-            let card: Card
+            let cardModel: CardModel
         }
         struct ViewModel {
             let displayedCard: DeckDetailCollectionViewCell.CardCellModel

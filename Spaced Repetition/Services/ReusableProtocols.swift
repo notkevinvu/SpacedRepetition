@@ -64,7 +64,7 @@ extension AlertDisplayablePresenter {
 
 
 // MARK: AlertDisplayableVC
-public protocol AlertDisplayableViewController {
+public protocol AlertDisplayableViewController: class {
     
     func displayAlert(viewModel: AlertDisplayable.ViewModel, alertStyle: UIAlertController.Style)
     
@@ -85,7 +85,7 @@ extension AlertDisplayableViewController where Self: UIViewController {
         
         viewModel.actions.forEach { action in
             
-            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { [weak self] actionIgnore in
+            vc.addAction(UIAlertAction(title: action.title, style: action.style, handler: { actionIgnore in
                 
                 guard let handler = action.handler else { return }
                 /*

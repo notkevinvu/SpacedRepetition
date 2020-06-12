@@ -29,6 +29,9 @@ protocol DecksWorkerProtocol {
     func createCDDeck() -> Deck?
     func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String)
     func deleteDeck(deck: Deck)
+    func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck)
+    func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String)
+    func deleteCard(card: Card, fromDeck deck: Deck)
 }
 
 
@@ -91,6 +94,48 @@ extension DecksWorker: DecksWorkerProtocol {
             try managedContext.save()
         } catch let error as NSError {
             assertionFailure("Failed to delete deck and save - \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck) {
+        guard let managedContext = deck.managedObjectContext else { return }
+        
+        let cardToCreate = Card(context: managedContext)
+        cardToCreate.initializeCardWith(frontSideText: cardModel.frontSideText, backSideText: cardModel.backSideText, cardID: cardModel.cardID, dateCreated: cardModel.dateCreated)
+        
+        deck.addToCards(cardToCreate)
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to create and save new card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String) {
+        card.frontSideText = newFrontText
+        card.backSideText = newBackText
+        
+        do {
+            try card.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to edit and save card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func deleteCard(card: Card, fromDeck deck: Deck) {
+        deck.removeFromCards(card)
+        
+        do {
+            try deck.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to delete card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
             return
         }
     }

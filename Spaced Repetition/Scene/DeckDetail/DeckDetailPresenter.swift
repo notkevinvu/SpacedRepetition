@@ -30,7 +30,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     // MARK: Properties
     
     weak var viewController: DeckDetailDisplayLogic?
-    var alertDisplayableViewController: AlertDisplayableViewController?
+    weak var alertDisplayableViewController: AlertDisplayableViewController?
     
     
     // MARK: Present Deck
@@ -61,7 +61,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     
     // MARK: Present new card
     func presentCard(response: DeckDetail.CreateCard.Response) {
-        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
+        let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.cardModel.frontSideText, backSide: response.cardModel.backSideText)
         
         let cardViewModel = DeckDetail.CreateCard.ViewModel(displayedCard: cardCellModel)
         viewController?.displayCreatedCard(viewModel: cardViewModel)

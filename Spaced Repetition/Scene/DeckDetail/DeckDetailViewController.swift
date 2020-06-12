@@ -41,15 +41,15 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setup()
     }
-  
+    
     required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder)
         setup()
     }
-  
+    
     // MARK: Setup
-  
+    
     private func setup()
     {
         let viewController = self
@@ -71,13 +71,13 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     
     private func configureNavBar() {
         navigationItem.largeTitleDisplayMode = .automatic
-        // replace title with a barbuttonitem to edit deck name
         navigationItem.title = "Untitled Deck"
-        
         
         let plusImage = UIImage(systemName: "plus.rectangle")
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
+        let addCardBarButton = UIBarButtonItem(image: plusImage, style: .done, target: self, action: #selector(handleAddCardButton))
+        
+        navigationItem.rightBarButtonItems = [addCardBarButton]
         
         // TODO: to be used for converting the title view into a tappable view for
         // editing deck title?
