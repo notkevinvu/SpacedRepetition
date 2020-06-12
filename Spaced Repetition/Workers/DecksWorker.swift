@@ -27,6 +27,8 @@ protocol DecksWorkerProtocol {
     
     func fetchCDDecks() -> [Deck]
     func createCDDeck() -> Deck?
+    func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String)
+    func deleteDeck(deck: Deck)
 }
 
 
@@ -43,6 +45,7 @@ final class DecksWorker {
 // MARK: - DecksWorker protocol methods
 extension DecksWorker: DecksWorkerProtocol {
     
+    
     // MARK: Core Data stuff
     
     func fetchCDDecks() -> [Deck] {
@@ -55,6 +58,41 @@ extension DecksWorker: DecksWorkerProtocol {
         guard let deck = decksStore.createCDDeck() else { return nil }
         
         return deck
+    }
+    
+    
+    func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String) {
+        deck.name = newTitle
+        
+        guard let managedContext = deck.managedObjectContext else {
+            assertionFailure("Failed to get managed context \(#line), \(#file)")
+            return
+        }
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to save new deck title - \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+    }
+    
+    
+    func deleteDeck(deck: Deck) {
+        
+        guard let managedContext = deck.managedObjectContext else {
+            assertionFailure("Failed to get managed context \(#line), \(#file)")
+            return
+        }
+        
+        managedContext.delete(deck)
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to delete deck and save - \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
     }
     
     
