@@ -128,7 +128,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     
     func displayDeckDetail(deckInfoToPass: Deck) {
         router.dataStore?.deckInfoToPass = deckInfoToPass
-        router.routeToCDDeckDetail()
+        router.routeToDeckDetail()
         router.dataStore?.deckInfoToPass = nil
     }
     

@@ -21,6 +21,8 @@ protocol DeckDetailDisplayLogic: class
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel)
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel)
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel)
+    
+    func displayReviewDeck(deckModel: DeckDetail.ShowReviewDeck.DeckModel)
 }
 
 
@@ -92,11 +94,16 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         contentView.collectionView.dataSource = self
     }
   
-  // MARK: Routing
-  
+    // MARK: Routing/Navigation
+    
+    func displayReviewDeck(deckModel: DeckDetail.ShowReviewDeck.DeckModel) {
+        router?.dataStore?.deckInfo = deckModel.deckInfoToPass
+        router?.routeToReviewDeck()
+    }
     
     
-  // MARK: View lifecycle
+    
+    // MARK: View lifecycle
     
     override func loadView() {
         super.loadView()

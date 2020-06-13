@@ -42,9 +42,8 @@ class DecksPresenter: DecksPresentationLogic {
     func presentDeckDetail(response: Decks.ShowDeck.Response) {
         let deckInfoToPass = response.deckInfoToPass
         
-        // this deckModel is created via a CreateDeck.DeckModel, but it can
-        // be either from the CreateDeck use case or the ShowDeck use case
-        // does it matter if it passes the same type of data anyway?
+        // we pass the deckinfo directly instead of through an enum struct 'ViewModel'
+        // since this deck can come from either the showdeck or create deck use case
         let deckModel = Decks.ShowDeck.DeckModel(deckInfoToPass: deckInfoToPass)
         viewController?.displayDeckDetail(deckInfoToPass: deckModel.deckInfoToPass)
     }

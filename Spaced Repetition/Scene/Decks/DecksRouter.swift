@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol DecksRoutingLogic {
-    func routeToCDDeckDetail()
+    func routeToDeckDetail()
 }
 
 protocol DecksDataPassing {
@@ -22,16 +22,10 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     
     // MARK: Routing
     
-    func routeToCDDeckDetail() {
-        // if indexPath == nil, proceed to navigating after default data passing
-        // TODO: review this idea if the current implementation of
-        // handling deck cell tap is not logical (i.e. conforming two
-        // model Responses to one protocol and the presenter function
-        // takes in any object that conforms to that protocol
-        
+    func routeToDeckDetail() {
         let destinationVC = DeckDetailViewController()
         var destinationDS = destinationVC.router!.dataStore
-        passCDDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+        passDataToDeckDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
         viewController?.navigationController?.pushViewController(destinationVC, animated: true)
     }
     
@@ -42,7 +36,7 @@ class DecksRouter: NSObject, DecksRoutingLogic, DecksDataPassing {
     // MARK: Passing data
     
     
-    func passCDDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
+    func passDataToDeckDetail(fromDataStore: DecksDataStore, toDataStore: inout DeckDetailDataStore) {
         toDataStore.deckInfo = fromDataStore.deckInfoToPass
     }
     

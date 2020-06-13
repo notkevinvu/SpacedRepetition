@@ -158,8 +158,13 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 // MARK: - Delegate methods
 extension DeckDetailInteractor: DeckDetailViewDelegate {
     
-    func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request) {
-        print("tapped study deck button")
+    func deckDetailViewSelectReviewDeck(request: DeckDetail.ShowReviewDeck.Request) {
+        print("tapped review deck button")
+        
+        guard let deckInfoToPass = deckInfo else { return }
+        
+        let response = DeckDetail.ShowReviewDeck.Response(deckInfoToPass: deckInfoToPass)
+        presenter?.presentReviewDeck(response: response)
     }
     
 }

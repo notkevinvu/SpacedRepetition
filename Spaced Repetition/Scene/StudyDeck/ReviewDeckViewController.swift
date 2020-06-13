@@ -19,8 +19,8 @@ protocol ReviewDeckDisplayLogic: class
 
 class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
 {
-    var interactor: StudyDeckBusinessLogic?
-    var router: (NSObjectProtocol & StudyDeckRoutingLogic & StudyDeckDataPassing)?
+    var interactor: ReviewDeckBusinessLogic?
+    var router: (NSObjectProtocol & ReviewDeckRoutingLogic & ReviewDeckDataPassing)?
 
     // MARK: Object lifecycle
   
@@ -41,9 +41,9 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
     private func setup()
     {
         let viewController = self
-        let interactor = StudyDeckInteractor()
-        let presenter = StudyDeckPresenter()
-        let router = StudyDeckRouter()
+        let interactor = ReviewDeckInteractor()
+        let presenter = ReviewDeckPresenter()
+        let router = ReviewDeckRouter()
         viewController.interactor = interactor
         viewController.router = router
         interactor.presenter = presenter
@@ -54,15 +54,7 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
   
     // MARK: Routing
   
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-    {
-        if let scene = segue.identifier {
-            let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-            if let router = router, router.responds(to: selector) {
-                router.perform(selector, with: segue)
-            }
-        }
-    }
+    
   
     // MARK: View lifecycle
   
@@ -70,6 +62,7 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
     {
         super.viewDidLoad()
     
+        view.backgroundColor = .white
     }
   
     // MARK: Do something

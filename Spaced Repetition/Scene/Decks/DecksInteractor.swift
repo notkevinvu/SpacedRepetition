@@ -138,7 +138,7 @@ extension DecksInteractor: DecksViewDelegate {
     
     func decksViewHandleTapAddDeckButton(request: Decks.CreateDeck.Request) {
         guard let newDeck = decksWorker.createDeck() else {
-            print("Error adding deck \(#line) \(#file)")
+            assertionFailure("Error adding deck \(#line), \(#file)")
             return
         }
         

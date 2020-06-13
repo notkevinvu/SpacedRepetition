@@ -19,7 +19,7 @@ import UIKit
 // MARK: DeckDetailDelegate
 protocol DeckDetailViewDelegate: class {
     // class conformance is required for weak variables
-    func deckDetailViewSelectStudyDeck(request: DeckDetail.StudyDeck.Request)
+    func deckDetailViewSelectReviewDeck(request: DeckDetail.ShowReviewDeck.Request)
 }
 
 class DeckDetailView: UIView {
@@ -64,11 +64,11 @@ class DeckDetailView: UIView {
     }()
     
     
-    // MARK: Methods
+    // MARK: Delegate Methods
     
     @objc func handleTapStudyDeckButton() {
-        let request = DeckDetail.StudyDeck.Request()
-        delegate?.deckDetailViewSelectStudyDeck(request: request)
+        let request = DeckDetail.ShowReviewDeck.Request()
+        delegate?.deckDetailViewSelectReviewDeck(request: request)
     }
     
     

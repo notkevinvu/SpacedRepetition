@@ -15,12 +15,11 @@ import UIKit
 protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
 {
     func presentDeck(response: DeckDetail.ShowDeck.Response)
-    
     func presentCard(response: DeckDetail.CreateCard.Response)
-    
     func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response)
-    
     func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response)
+    
+    func presentReviewDeck(response: DeckDetail.ShowReviewDeck.Response)
 }
 
 
@@ -32,8 +31,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     weak var viewController: DeckDetailDisplayLogic?
     weak var alertDisplayableViewController: AlertDisplayableViewController?
     
-    
-    // MARK: Present Deck
+    // MARK: - Present Deck
     func presentDeck(response: DeckDetail.ShowDeck.Response) {
         let deck = response.deck
         
@@ -58,8 +56,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         viewController?.displayDeckCards(viewModel: cardViewModel)
     }
     
-    
-    // MARK: Present new card
+    // MARK: - Present new card
     func presentCard(response: DeckDetail.CreateCard.Response) {
         let cardCellModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.cardModel.frontSideText, backSide: response.cardModel.backSideText)
         
@@ -67,8 +64,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         viewController?.displayCreatedCard(viewModel: cardViewModel)
     }
     
-    
-    // MARK: Present edited card
+    // MARK: - Present edited card
     func presentEditedCard(response: DeckDetail.ShowEditCardAC.Response) {
         let updatedCardModel = DeckDetailCollectionViewCell.CardCellModel(frontSide: response.card.frontSideText, backSide: response.card.backSideText)
         let cardIndex = response.cardIndex
@@ -77,8 +73,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         viewController?.displayEditedCard(viewModel: viewModel)
     }
     
-    
-    // MARK: Present deleted card (aka update)
+    // MARK: - Present deleted card (aka update)
     func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response) {
         let cardIndexToDelete = response.cardIndexToDelete
         
@@ -86,5 +81,10 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         viewController?.displayDeletedCard(viewModel: viewModel)
     }
     
+    // MARK: - Show review deck
+    func presentReviewDeck(response: DeckDetail.ShowReviewDeck.Response) {
+        let deckModel = DeckDetail.ShowReviewDeck.DeckModel(deckInfoToPass: response.deckInfoToPass)
+        viewController?.displayReviewDeck(deckModel: deckModel)
+    }
     
 }

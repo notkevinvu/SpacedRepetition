@@ -12,12 +12,12 @@
 
 import UIKit
 
-protocol StudyDeckPresentationLogic
+protocol ReviewDeckPresentationLogic
 {
     
 }
 
-class ReviewDeckPresenter: StudyDeckPresentationLogic
+class ReviewDeckPresenter: ReviewDeckPresentationLogic
 {
     weak var viewController: ReviewDeckDisplayLogic?
   

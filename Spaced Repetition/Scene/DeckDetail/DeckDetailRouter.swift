@@ -14,12 +14,12 @@ import UIKit
 
 @objc protocol DeckDetailRoutingLogic
 {
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
+    func routeToReviewDeck()
 }
 
 protocol DeckDetailDataPassing
 {
-  var dataStore: DeckDetailDataStore? { get }
+  var dataStore: DeckDetailDataStore? { get set }
 }
 
 class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
@@ -29,11 +29,22 @@ class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
   
     // MARK: Routing
     
+    func routeToReviewDeck() {
+        let destinationVC = ReviewDeckViewController()
+        var destinationDS = destinationVC.router!.dataStore
+        passDataToReviewDeck(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+    }
+    
     
     // MARK: Navigation
     
     
     // MARK: Passing data
+    
+    func passDataToReviewDeck(fromDataStore: DeckDetailDataStore, toDataStore: inout ReviewDeckDataStore) {
+        toDataStore.deckInfo = fromDataStore.deckInfo
+    }
     
     
 }

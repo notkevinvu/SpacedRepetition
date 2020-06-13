@@ -111,18 +111,19 @@ enum DeckDetail {
     }
     
     
-    // MARK: Study deck
-    enum StudyDeck {
+    // MARK: Review deck
+    enum ShowReviewDeck {
         struct Request {
             
         }
         struct Response {
-            
+            let deckInfoToPass: Deck
         }
-        struct ViewModel {
-            
+        struct DeckModel {
+            let deckInfoToPass: Deck
         }
     }
+    
     
 }
 

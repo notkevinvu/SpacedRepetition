@@ -10,6 +10,7 @@ import UIKit
 
 enum Decks {
     
+    // MARK: Fetch decks
     enum FetchDecks {
         struct Request {
             
@@ -24,6 +25,7 @@ enum Decks {
         }
     }
     
+    // MARK: Create deck
     enum CreateDeck {
         /*
          only need a request here - after the request is sent to the worker/store,
@@ -34,6 +36,7 @@ enum Decks {
         }
     }
     
+    // MARK: Show deck
     enum ShowDeck {
         struct Request {
             let indexPathRow: Int
@@ -48,7 +51,7 @@ enum Decks {
         }
     }
     
-    
+    // MARK: Show deck options
     enum ShowDeckOptions {
         // only need request - response and viewmodel handled by alertdisplayable
         struct Request {
@@ -56,7 +59,7 @@ enum Decks {
         }
     }
     
-    
+    // MARK: Edit deck title
     enum EditDeckTitle {
         // no need for request - starts from interactor
         struct Response {
@@ -69,7 +72,7 @@ enum Decks {
         }
     }
     
-    
+    // MARK: Delete deck
     enum DeleteDeck {
         struct Response {
             let indexOfDeckToRemove: Int

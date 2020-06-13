@@ -12,21 +12,23 @@
 
 import UIKit
 
-protocol StudyDeckBusinessLogic
+protocol ReviewDeckBusinessLogic
 {
     
 }
 
-protocol StudyDeckDataStore
+protocol ReviewDeckDataStore
 {
-  //var name: String { get set }
+    var deckInfo: Deck? { get set }
 }
 
-class ReviewDeckInteractor: StudyDeckBusinessLogic, StudyDeckDataStore
+class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore
 {
-  var presenter: StudyDeckPresentationLogic?
-  
-  
-  // MARK: Do something
-  
+    
+    // MARK: Properties
+    var presenter: ReviewDeckPresentationLogic?
+    var deckInfo: Deck?
+    
+    
+    
 }
