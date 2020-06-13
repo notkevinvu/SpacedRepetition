@@ -12,12 +12,12 @@
 
 import UIKit
 
-protocol StudyDeckDisplayLogic: class
+protocol ReviewDeckDisplayLogic: class
 {
     
 }
 
-class StudyDeckViewController: UIViewController, StudyDeckDisplayLogic
+class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
 {
     var interactor: StudyDeckBusinessLogic?
     var router: (NSObjectProtocol & StudyDeckRoutingLogic & StudyDeckDataPassing)?

@@ -1,5 +1,5 @@
 //
-//  StudyDeckModels.swift
+//  StudyDeckPresenter.swift
 //  Spaced Repetition
 //
 //  Created by Kevin Vu on 4/24/20.
@@ -12,9 +12,16 @@
 
 import UIKit
 
-enum StudyDeck
+protocol StudyDeckPresentationLogic
 {
-    // MARK: Use cases
     
+}
+
+class ReviewDeckPresenter: StudyDeckPresentationLogic
+{
+    weak var viewController: ReviewDeckDisplayLogic?
+  
+    // MARK: Do something
+  
     
 }

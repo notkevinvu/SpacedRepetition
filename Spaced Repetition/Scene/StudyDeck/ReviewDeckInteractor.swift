@@ -22,7 +22,7 @@ protocol StudyDeckDataStore
   //var name: String { get set }
 }
 
-class StudyDeckInteractor: StudyDeckBusinessLogic, StudyDeckDataStore
+class ReviewDeckInteractor: StudyDeckBusinessLogic, StudyDeckDataStore
 {
   var presenter: StudyDeckPresentationLogic?
   

@@ -12,20 +12,20 @@
 
 import UIKit
 
-@objc protocol StudyDeckRoutingLogic
+@objc protocol ReviewDeckRoutingLogic
 {
   //func routeToSomewhere(segue: UIStoryboardSegue?)
 }
 
-protocol StudyDeckDataPassing
+protocol ReviewDeckDataPassing
 {
-  var dataStore: StudyDeckDataStore? { get }
+  var dataStore: ReviewDeckDataStore? { get }
 }
 
-class StudyDeckRouter: NSObject, StudyDeckRoutingLogic, StudyDeckDataPassing
+class ReviewDeckRouter: NSObject, ReviewDeckRoutingLogic, ReviewDeckDataPassing
 {
-  weak var viewController: StudyDeckViewController?
-  var dataStore: StudyDeckDataStore?
+  weak var viewController: ReviewDeckViewController?
+  var dataStore: ReviewDeckDataStore?
   
   // MARK: Routing
   
