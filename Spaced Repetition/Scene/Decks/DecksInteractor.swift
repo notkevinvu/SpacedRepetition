@@ -41,9 +41,7 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     weak var delegate: DecksBusinessLogicDelegate?
     let decksWorker: DecksWorkerProtocol
     
-    
     var decks: [Deck] = []
-       
     var deckInfoToPass: Deck?
   
     // MARK: Setup
@@ -54,7 +52,7 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     // MARK: Fetching decks
     
     func fetchDecks(request: Decks.FetchDecks.Request) {
-        decks = decksWorker.fetchCDDecks()
+        decks = decksWorker.fetchDecks()
         
         let response = Decks.FetchDecks.Response(decks: decks)
         presenter.presentFetchedDecks(response: response)
@@ -139,7 +137,7 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
 extension DecksInteractor: DecksViewDelegate {
     
     func decksViewHandleTapAddDeckButton(request: Decks.CreateDeck.Request) {
-        guard let newDeck = decksWorker.createCDDeck() else {
+        guard let newDeck = decksWorker.createDeck() else {
             print("Error adding deck \(#line) \(#file)")
             return
         }

@@ -14,19 +14,8 @@ protocol DecksWorkerFactory {
 
 
 protocol DecksWorkerProtocol {
-    func fetchDecks(completion: @escaping ([NaiveDeck]) -> Void)
-    func createDeck() -> NaiveDeck
-    func deleteDeck(forDeckID deckID: UUID)
-    func createCard(forDeckID deckID: UUID, card: NaiveCard)
-    func editCard(forDeckID deckID: UUID, withCard card: NaiveCard, forCardID: Int)
-    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int)
-    func editTitle(forDeckID deckID: UUID, withNewTitle newTitle: String)
-    
-    
-    
-    
-    func fetchCDDecks() -> [Deck]
-    func createCDDeck() -> Deck?
+    func fetchDecks() -> [Deck]
+    func createDeck() -> Deck?
     func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String)
     func deleteDeck(deck: Deck)
     func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck)
@@ -49,21 +38,21 @@ final class DecksWorker {
 extension DecksWorker: DecksWorkerProtocol {
     
     
-    // MARK: Core Data stuff
-    
-    func fetchCDDecks() -> [Deck] {
-        let decks = decksStore.fetchCDDecks()
+    // MARK: - Fetch decks
+    func fetchDecks() -> [Deck] {
+        let decks = decksStore.fetchDecks()
         
         return decks
     }
     
-    func createCDDeck() -> Deck? {
-        guard let deck = decksStore.createCDDeck() else { return nil }
+    // MARK: - Create deck
+    func createDeck() -> Deck? {
+        guard let deck = decksStore.createDeck() else { return nil }
         
         return deck
     }
     
-    
+    // MARK: - Edit deck title
     func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String) {
         deck.name = newTitle
         
@@ -80,7 +69,7 @@ extension DecksWorker: DecksWorkerProtocol {
         }
     }
     
-    
+    // MARK: - Delete deck
     func deleteDeck(deck: Deck) {
         
         guard let managedContext = deck.managedObjectContext else {
@@ -98,7 +87,7 @@ extension DecksWorker: DecksWorkerProtocol {
         }
     }
     
-    
+    // MARK: - Create card
     func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck) {
         guard let managedContext = deck.managedObjectContext else { return }
         
@@ -115,7 +104,7 @@ extension DecksWorker: DecksWorkerProtocol {
         }
     }
     
-    
+    // MARK: - Edit card
     func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String) {
         card.frontSideText = newFrontText
         card.backSideText = newBackText
@@ -128,7 +117,7 @@ extension DecksWorker: DecksWorkerProtocol {
         }
     }
     
-    
+    // MARK: - Delete card
     func deleteCard(card: Card, fromDeck deck: Deck) {
         deck.removeFromCards(card)
         
@@ -140,51 +129,4 @@ extension DecksWorker: DecksWorkerProtocol {
         }
     }
     
-    
-    
-    
-    
-    
-    // TODO: REMOVE ALL BELOW
-    
-    func fetchDecks(completion: @escaping ([NaiveDeck]) -> Void) {
-        decksStore.fetchDecks { (decks: () throws -> [NaiveDeck]) -> Void in
-            do {
-                let decks = try decks()
-                DispatchQueue.main.async {
-                    // passes out a [Deck] object as the decks variable
-                    completion(decks)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    completion([])
-                }
-            }
-        }
-    }
-    
-    func createDeck() -> NaiveDeck {
-        let newDeck = decksStore.createDeck()
-        return newDeck
-    }
-    
-    func deleteDeck(forDeckID deckID: UUID) {
-        decksStore.deleteDeck(forDeckID: deckID)
-    }
-    
-    func createCard(forDeckID deckID: UUID, card: NaiveCard) {
-        decksStore.createCard(forDeckID: deckID, card: card)
-    }
-    
-    func editCard(forDeckID deckID: UUID, withCard card: NaiveCard, forCardID cardID: Int) {
-        decksStore.editCard(forDeckID: deckID, card: card, forCardID: cardID)
-    }
-    
-    func deleteCard(forDeckID deckID: UUID, cardIndexToDelete: Int) {
-        decksStore.deleteCard(forDeckID: deckID, cardIndexToDelete: cardIndexToDelete)
-    }
-    
-    func editTitle(forDeckID deckID: UUID, withNewTitle newTitle: String) {
-        decksStore.editDeckTitle(forDeckID: deckID, withNewTitle: newTitle)
-    }
 }
