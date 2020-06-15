@@ -73,22 +73,11 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     override func loadView() {
         super.loadView()
         view = contentView
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        /*
-         move fetch to viewDidLoad to fetch only once and reload data when we come
-         back? how to reload data if it's 'local'? (i.e. since we use a local array
-         cellModels, it needs to get updated if we delete decks; however, because
-         we currently delete decks from the deck detail scene, how should we delete
-         the deck from cellModels from there?)
-         
-         possible solution: create a bar button item to enable editing on all visible
-         cells which includes editing title and deleting deck and this allows
-         us to reload data in viewWillAppear instead of fetching each time
-         */
-        
         fetchDecks()
     }
   
@@ -96,6 +85,12 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         super.viewDidLoad()
         configureCollectionViewSource()
         configureNavigationbar()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Test", style: .done, target: self, action: #selector(didTapTestButton))
+    }
+    
+    @objc func didTapTestButton() {
+        print(cellModels)
     }
     
     
@@ -103,6 +98,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     func fetchDecks() {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
+        print("Fetching decks")
     }
     
     // MARK: Display

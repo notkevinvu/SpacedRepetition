@@ -115,6 +115,7 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
             let saveDeleteDeckAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { (action, ac) in
                 
                 self.decksWorker.deleteDeck(deck: deckToEditOrDelete)
+                self.decks.remove(at: indexOfDeckToEditOrDelete)
                 
                 let response = Decks.DeleteDeck.Response(indexOfDeckToRemove: indexOfDeckToEditOrDelete)
                 self.presenter.presentDeletedDeck(response: response)

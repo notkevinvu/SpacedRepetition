@@ -22,7 +22,7 @@ protocol ReviewDeckDataStore
     var deckInfo: Deck? { get set }
 }
 
-class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore
+class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, ReviewDeckViewDelegate
 {
     
     // MARK: Properties
@@ -30,5 +30,9 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore
     var deckInfo: Deck?
     
     
+    
+    func didTapDoneButton() {
+        print("did tap done button")
+    }
     
 }

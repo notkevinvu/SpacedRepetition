@@ -8,6 +8,15 @@
 
 import UIKit
 
+/*
+ MARK: TODO:
+ Add an options button to every cell (similar to the DecksView option button for
+ editing and deleting cards)
+ 
+ This will allow us to reserve a tap gesture for presenting an expanded card
+ (in case the current cell is not big enough to show all the cell contents)
+ */
+
 
 class DeckDetailCollectionViewCell: UICollectionViewCell {
     

@@ -46,7 +46,7 @@ final class TestDecksStore: DecksStoreProtocol {
     
     // MARK: Fetch decks
     func fetchDecks() -> [Deck] {
-        let deckFetchReq = Deck.deckfetchRequest()
+        let deckFetchReq = Deck.deckFetchRequest()
         
         /*
          a sort descriptor for sorting by "index" - as we add decks, we set the added
@@ -131,7 +131,7 @@ final class MemoryDecksStore: DecksStoreProtocol {
     static var decks: [Deck] = []
     
     func fetchDecks() -> [Deck] {
-        let deckFetchReq = Deck.deckfetchRequest()
+        let deckFetchReq = Deck.deckFetchRequest()
         
         /*
          a sort descriptor for sorting by "index" - as we add decks, we set the added

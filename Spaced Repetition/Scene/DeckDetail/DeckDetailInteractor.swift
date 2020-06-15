@@ -159,8 +159,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
 extension DeckDetailInteractor: DeckDetailViewDelegate {
     
     func deckDetailViewSelectReviewDeck(request: DeckDetail.ShowReviewDeck.Request) {
-        print("tapped review deck button")
-        
         guard let deckInfoToPass = deckInfo else { return }
         
         let response = DeckDetail.ShowReviewDeck.Response(deckInfoToPass: deckInfoToPass)

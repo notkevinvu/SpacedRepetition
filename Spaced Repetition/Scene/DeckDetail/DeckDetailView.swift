@@ -48,17 +48,17 @@ class DeckDetailView: UIView {
     }()
     
     
-    let studyDeckButton: UIButton = {
+    let reviewDeckButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Study Deck", for: .normal)
+        button.setTitle("Review Deck", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
         
-        let studyDeckButtonColor = UIColor(hex: "3399fe")
-        button.backgroundColor = studyDeckButtonColor
+        let reviewDeckButtonColor = UIColor(hex: "3399fe")
+        button.backgroundColor = reviewDeckButtonColor
         button.layer.cornerRadius = 5
-        button.addTarget(self, action: #selector(handleTapStudyDeckButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleTapReviewDeckButton), for: .touchUpInside)
         
         return button
     }()
@@ -66,7 +66,7 @@ class DeckDetailView: UIView {
     
     // MARK: Delegate Methods
     
-    @objc func handleTapStudyDeckButton() {
+    @objc func handleTapReviewDeckButton() {
         let request = DeckDetail.ShowReviewDeck.Request()
         delegate?.deckDetailViewSelectReviewDeck(request: request)
     }
@@ -90,7 +90,7 @@ class DeckDetailView: UIView {
         
         // Adding subviews
         addSubview(collectionView)
-        addSubview(studyDeckButton)
+        addSubview(reviewDeckButton)
         
         NSLayoutConstraint.activate([
             // collection view
@@ -100,10 +100,10 @@ class DeckDetailView: UIView {
             collectionView.topAnchor.constraint(equalTo: self.layoutMarginsGuide.topAnchor),
             
             // study deck button
-            studyDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 35),
-            studyDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -35),
-            studyDeckButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
-            studyDeckButton.heightAnchor.constraint(equalToConstant: 60)
+            reviewDeckButton.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 35),
+            reviewDeckButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -35),
+            reviewDeckButton.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor),
+            reviewDeckButton.heightAnchor.constraint(equalToConstant: 60)
         ])
         
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
