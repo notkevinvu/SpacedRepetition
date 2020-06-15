@@ -33,7 +33,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setup()
-        print("Initializing")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -89,12 +88,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         configureCollectionViewSource()
         configureNavigationbar()
         fetchDecks()
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Test", style: .done, target: self, action: #selector(didTapTestButton))
-    }
-    
-    @objc func didTapTestButton() {
-        print(cellModels)
     }
     
     
@@ -102,7 +95,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     func fetchDecks() {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
-        print("Fetching decks")
     }
     
     // MARK: Display
