@@ -28,16 +28,18 @@ public class Deck: NSManagedObject {
         - deckID: Inject a UUID instance here (`UUID()`)
         - dateCreated: Likewise with `deckID`, inject a Date instance here (`Date()`)
         - deckIndex: Here, we should set the deckIndex by passing in the count of the current # of decks objects.
-     By doing so, we can impose an order on how deck objects will be sorted when we fetch, rather than doing it by date created.
-     This allows us to eventually re-order the decks by moving a deck and then updating the deckIndex of all other decks by matching it to its indexPath.row in the collection view.
-     - Parameter cards: We pass in an array of cards which will then be added to the deck within the initializer.
-     
+                    By doing so, we can impose an order on how deck objects will be sorted when we fetch, rather than doing it by date created.
+                    This allows us to eventually re-order the decks by moving a deck and then updating the deckIndex of all other decks by matching it to its indexPath.row in the collection view.
+        - cards: We pass in an array of cards which will then be added to the deck within the initializer.
+        - needsReview: By default, we initialize as true. This tracks whether or not the user needs to review the deck.
+                        This will be calculated by checking if any of the deck's cards need to be reviewed that day.
      */
-    public func initializeDeckWithValues(name: String, deckID: UUID, dateCreated: Date, deckIndex: Int, cards: [Card]) {
+    public func initializeDeckWithValues(name: String, deckID: UUID, dateCreated: Date, deckIndex: Int, cards: [Card], needsReview: Bool = true) {
         self.name = name
         self.deckID = deckID
         self.dateCreated = dateCreated
         self.deckIndex = Int32(deckIndex)
+        self.needsReview = needsReview
         
         for card in cards {
             self.addToCards(card)

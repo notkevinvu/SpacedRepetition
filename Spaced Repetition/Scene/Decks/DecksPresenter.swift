@@ -12,6 +12,8 @@ protocol DecksPresentationLogic: AlertDisplayablePresenter {
     func presentFetchedDecks(response: Decks.FetchDecks.Response)
     func presentDeckDetail(response: Decks.ShowDeck.Response)
     
+    func presentUpdateDeckCellModels(response: Decks.UpdateDeckCellModels.Response)
+    
     func presentEditedDecktitle(response: Decks.EditDeckTitle.Response)
     func presentDeletedDeck(response: Decks.DeleteDeck.Response)
 }
@@ -37,6 +39,19 @@ class DecksPresenter: DecksPresentationLogic {
         
         let viewModel = Decks.FetchDecks.ViewModel(displayedDecks: displayedDeckCells)
         viewController?.displayFetchedDecks(viewModel: viewModel)
+    }
+    
+    
+    func presentUpdateDeckCellModels(response: Decks.UpdateDeckCellModels.Response) {
+        var displayedDeckCells: [DecksCollectionViewCell.DeckCellModel] = []
+        
+        for deck in response.decks {
+            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count)
+            displayedDeckCells.append(cellModel)
+        }
+        
+        let viewModel = Decks.UpdateDeckCellModels.ViewModel(displayedDecks: displayedDeckCells)
+        viewController?.displayUpdatedDeckCellModels(viewModel: viewModel)
     }
     
     func presentDeckDetail(response: Decks.ShowDeck.Response) {

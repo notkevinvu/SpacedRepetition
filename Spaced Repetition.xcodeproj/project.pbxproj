@@ -26,6 +26,7 @@
 		255D75C324858B0C005D7DD4 /* Deck+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */; };
 		255D75C424858B0C005D7DD4 /* Card+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */; };
 		255D75C524858B0C005D7DD4 /* Card+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */; };
+		257BCD9324959C37003ADB41 /* ReviewDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257BCD9224959C37003ADB41 /* ReviewDeckView.swift */; };
 		259806EF244F60E600151168 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259806EE244F60E600151168 /* Extensions.swift */; };
 		25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */; };
 		25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */; };
@@ -63,6 +64,7 @@
 		255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Deck+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataClass.swift"; sourceTree = "<group>"; };
 		255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		257BCD9224959C37003ADB41 /* ReviewDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckView.swift; sourceTree = "<group>"; };
 		259806EE244F60E600151168 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryDecksStore.swift; sourceTree = "<group>"; };
 		25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -107,16 +109,17 @@
 			path = DeckDetail;
 			sourceTree = "<group>";
 		};
-		255D750924536B4D005D7DD4 /* StudyDeck */ = {
+		255D750924536B4D005D7DD4 /* ReviewDeck */ = {
 			isa = PBXGroup;
 			children = (
+				257BCD9224959C37003ADB41 /* ReviewDeckView.swift */,
 				255D750124536B49005D7DD4 /* ReviewDeckViewController.swift */,
 				255D750224536B49005D7DD4 /* ReviewDeckInteractor.swift */,
 				255D74FD24536B49005D7DD4 /* ReviewDeckPresenter.swift */,
 				255D74FF24536B49005D7DD4 /* ReviewDeckRouter.swift */,
 				255D750024536B49005D7DD4 /* ReviewDeckModels.swift */,
 			);
-			path = StudyDeck;
+			path = ReviewDeck;
 			sourceTree = "<group>";
 		};
 		25BF7921243454F900CE0E7A /* Models */ = {
@@ -202,7 +205,7 @@
 			children = (
 				8E02E978242AF4600023992C /* Decks */,
 				2534394B24379DA700EA34D0 /* DeckDetail */,
-				255D750924536B4D005D7DD4 /* StudyDeck */,
+				255D750924536B4D005D7DD4 /* ReviewDeck */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				25BF792F2436916500CE0E7A /* NaiveDeck.swift in Sources */,
 				2555528B244B7D790059D420 /* DependencyContainer.swift in Sources */,
 				255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */,
+				257BCD9324959C37003ADB41 /* ReviewDeckView.swift in Sources */,
 				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
 				255D74C02450B08A005D7DD4 /* ReusableProtocols.swift in Sources */,
 				250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */,

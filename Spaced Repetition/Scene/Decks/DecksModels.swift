@@ -25,6 +25,18 @@ enum Decks {
         }
     }
     
+    // MARK: Update cell models
+    enum UpdateDeckCellModels {
+        struct Request {
+        }
+        struct Response {
+            let decks: [Deck]
+        }
+        struct ViewModel {
+            let displayedDecks: [DecksCollectionViewCell.DeckCellModel]
+        }
+    }
+    
     // MARK: Create deck
     enum CreateDeck {
         /*

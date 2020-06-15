@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="18G4032" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Card" representedClassName="Card" syncable="YES">
-        <attribute name="backSideText" optional="YES" attributeType="String"/>
-        <attribute name="cardID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="backSideText" attributeType="String"/>
+        <attribute name="cardID" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="frontSideText" optional="YES" attributeType="String"/>
+        <attribute name="dateLastReviewed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="frontSideText" attributeType="String"/>
+        <attribute name="needsReview" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="reviewStatus" attributeType="String"/>
         <relationship name="deck" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Deck" inverseName="cards" inverseEntity="Deck"/>
     </entity>
     <entity name="Deck" representedClassName="Deck" syncable="YES">
@@ -12,10 +15,11 @@
         <attribute name="deckID" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="deckIndex" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
+        <attribute name="needsReview" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="cards" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Card" inverseName="deck" inverseEntity="Card"/>
     </entity>
     <elements>
-        <element name="Card" positionX="-54" positionY="9" width="128" height="118"/>
-        <element name="Deck" positionX="-299.2734375" positionY="-119.26171875" width="128" height="118"/>
+        <element name="Card" positionX="-54" positionY="9" width="128" height="163"/>
+        <element name="Deck" positionX="-299.2734375" positionY="-119.26171875" width="128" height="133"/>
     </elements>
 </model>

@@ -13,6 +13,8 @@ protocol DecksDisplayLogic: class {
     
     func displayDeckDetail(deckInfoToPass: Deck)
     
+    func displayUpdatedDeckCellModels(viewModel: Decks.UpdateDeckCellModels.ViewModel)
+    
     func displayEditedDeckTitle(viewModel: Decks.EditDeckTitle.ViewModel)
     
     func displayDeletedDeck(viewModel: Decks.DeleteDeck.ViewModel)
@@ -31,6 +33,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         setup()
+        print("Initializing")
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -78,13 +81,14 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        fetchDecks()
+        updateDeckCellModels()
     }
   
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionViewSource()
         configureNavigationbar()
+        fetchDecks()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Test", style: .done, target: self, action: #selector(didTapTestButton))
     }
@@ -110,6 +114,11 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         contentView.collectionView.reloadData()
     }
     
+    func displayUpdatedDeckCellModels(viewModel: Decks.UpdateDeckCellModels.ViewModel) {
+        cellModels = viewModel.displayedDecks
+        contentView.collectionView.reloadData()
+    }
+    
     func displayEditedDeckTitle(viewModel: Decks.EditDeckTitle.ViewModel) {
         cellModels[viewModel.deckIndexToUpdate].deckTitle = viewModel.newDeckTitle
         contentView.collectionView.reloadData()
@@ -118,6 +127,11 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     func displayDeletedDeck(viewModel: Decks.DeleteDeck.ViewModel) {
         cellModels.remove(at: viewModel.indexOfDeckToRemove)
         contentView.collectionView.reloadData()
+    }
+    
+    func updateDeckCellModels() {
+        let request = Decks.UpdateDeckCellModels.Request()
+        interactor?.updateDeckCellModels(request: request)
     }
     
     // MARK: Navigation

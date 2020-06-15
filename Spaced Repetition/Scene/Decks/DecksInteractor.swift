@@ -14,6 +14,8 @@ protocol DecksBusinessLogic: DecksViewDelegate {
     func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request)
     
     func showDeckOptions(request: Decks.ShowDeckOptions.Request)
+    
+    func updateDeckCellModels(request: Decks.UpdateDeckCellModels.Request)
 }
 
 protocol DecksBusinessLogicDelegate: class {
@@ -58,7 +60,14 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
         presenter.presentFetchedDecks(response: response)
     }
     
+    // MARK: Update deck cell models
+    func updateDeckCellModels(request: Decks.UpdateDeckCellModels.Request) {
+        let response = Decks.UpdateDeckCellModels.Response(decks: decks)
+        presenter.presentUpdateDeckCellModels(response: response)
+    }
     
+    
+    // MARK: Handle tap deck cell
     func decksViewHandleTapDeckCell(request: Decks.ShowDeck.Request) {
         let response = Decks.ShowDeck.Response(deckInfoToPass: decks[request.indexPathRow])
         presenter.presentDeckDetail(response: response)
@@ -130,8 +139,6 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
         presenter.presentAlert(viewModel: viewModel, alertStyle: .actionSheet)
     }
     
-    
-    
 }
 
 // MARK: - DecksViewDelegate
@@ -142,6 +149,9 @@ extension DecksInteractor: DecksViewDelegate {
             assertionFailure("Error adding deck \(#line), \(#file)")
             return
         }
+        
+        decks.append(newDeck)
+        print(decks)
         
         let response = Decks.ShowDeck.Response(deckInfoToPass: newDeck)
         presenter.presentDeckDetail(response: response)
