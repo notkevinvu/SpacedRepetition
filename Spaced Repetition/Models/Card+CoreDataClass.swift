@@ -13,8 +13,8 @@ import CoreData
 @objc(Card)
 public class Card: NSManagedObject {
     
-    enum ReviewStatus {
-        case everyDay, everyTwoDays, everyThreeDays, onceAWeek
+    enum ReviewStatus: String {
+        case everyDay, everyTwoDays, everyThreeDays, onceAWeek, retired
     }
     
     
@@ -44,6 +44,7 @@ public class Card: NSManagedObject {
      
      // then we save using do { try ...save() etc }
      ```
+     
     
     - Parameters:
        - frontSideText: Should take in a string typically set through user interaction (alert controller text field)
@@ -65,14 +66,35 @@ public class Card: NSManagedObject {
         
         switch reviewStatus {
         case .everyDay:
-            self.reviewStatus = "everyDay"
+            self.reviewStatus = Card.ReviewStatus.everyDay.rawValue
         case .everyTwoDays:
-            self.reviewStatus = "everyTwoDays"
+            self.reviewStatus = Card.ReviewStatus.everyTwoDays.rawValue
         case .everyThreeDays:
-            self.reviewStatus = "everyThreeDays"
+            self.reviewStatus = Card.ReviewStatus.everyThreeDays.rawValue
         case .onceAWeek:
-            self.reviewStatus = "onceAWeek"
+            self.reviewStatus = Card.ReviewStatus.onceAWeek.rawValue
+        case .retired:
+            self.reviewStatus = Card.ReviewStatus.retired.rawValue
         }
+    }
+    
+    
+    func set(newReviewStatus: Card.ReviewStatus, newDateLastReviewed: Date) {
+        
+        switch newReviewStatus {
+        case .everyDay:
+            self.reviewStatus = Card.ReviewStatus.everyDay.rawValue
+        case .everyTwoDays:
+            self.reviewStatus = Card.ReviewStatus.everyTwoDays.rawValue
+        case .everyThreeDays:
+            self.reviewStatus = Card.ReviewStatus.everyThreeDays.rawValue
+        case .onceAWeek:
+            self.reviewStatus = Card.ReviewStatus.onceAWeek.rawValue
+        case .retired:
+            self.reviewStatus = Card.ReviewStatus.retired.rawValue
+        }
+        
+        self.dateLastReviewed = newDateLastReviewed
     }
 
 }

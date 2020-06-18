@@ -12,9 +12,12 @@
 
 import UIKit
 
-protocol ReviewDeckDisplayLogic: class
-{
+protocol ReviewDeckDisplayLogic: class {
+    func displayFirstCardToReview(viewModel: ReviewDeck.ConfigureData.ViewModel)
     
+    func displayNextCardToReview(viewModel: ReviewDeck.MoveToNextCard.ViewModel)
+    
+    func displayFinishedReviewingDeck(viewModel: ReviewDeck.FinishedReviewingDeck.ViewModel)
 }
 
 class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
@@ -56,6 +59,11 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
         router.dataStore = interactor
         view.delegate = interactor
     }
+    
+    private func configureDataAndSceneOnLoad() {
+        let request = ReviewDeck.ConfigureData.Request()
+        interactor?.sortCards(request: request)
+    }
   
     // MARK: Routing
   
@@ -70,11 +78,12 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        setupNavigationBar()
         
+        configureDataAndSceneOnLoad()
+        setupNavigationBar()
     }
     
-    
+    // MARK: Nav bar setup
     private func setupNavigationBar() {
         navigationItem.hidesBackButton = true
         
@@ -87,31 +96,39 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: ourCustomView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDoneButton))
         
-        navigationItem.title = "US Capitals"
         navigationItem.largeTitleDisplayMode = .always
+    }
+    
+    
+    // MARK: Display Logic
+    
+    func displayFirstCardToReview(viewModel: ReviewDeck.ConfigureData.ViewModel) {
+        contentView.configureCardView(cardModel: viewModel.cardToReviewCardModel)
+        navigationItem.title = viewModel.nameOfDeckBeingReviewed
+        
+        guard let numOfCardsToReview = viewModel.numOfCardsToReview else { return }
+        contentView.progress.totalUnitCount = Int64(numOfCardsToReview)
+    }
+    
+    
+    func displayNextCardToReview(viewModel: ReviewDeck.MoveToNextCard.ViewModel) {
+        contentView.configureCardView(cardModel: viewModel.cardModelForNextCard)
+    }
+    
+    
+    func displayFinishedReviewingDeck(viewModel: ReviewDeck.FinishedReviewingDeck.ViewModel) {
+        /*
+         TODO: Add an alert that tells the user that they have finished reviewing
+         the current deck with an "Ok"/"Got it!" button/action. This action will
+         be responsible for popping the view controller off the stack
+         */
+        navigationController?.popViewController(animated: true)
     }
     
     
     // MARK: Button methods
     
-    /*
-     TODO: Add method that will check which cards (if any) have not been reviewed
-     in this session
-     
-     We currently have an enum within the Card subclass `ReviewStatus` that has
-     cases corresponding to their priority (or rather, the 'schedule' that the user
-     should be reviewing the cards with)
-     
-     When a card shows up on screen, the user will answer (to themselves) and
-     mark themselves as right or wrong
-     
-     If they mark themselves as right, the card receives an updated reviewstatus flag,
-     which is one above them (e.g. if we get an everyDay status card right, we move
-     it to everyTwoDays [which is 2 days from that session] - however, if we get a onceAWeek
-     card wrong, we move it all the way back to everyDay)
-     */
     @objc func didTapDoneButton() {
-        print("tapped done button")
         navigationController?.popViewController(animated: true)
     }
   

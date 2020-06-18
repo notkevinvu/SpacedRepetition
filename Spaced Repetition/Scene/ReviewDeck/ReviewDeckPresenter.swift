@@ -12,16 +12,43 @@
 
 import UIKit
 
-protocol ReviewDeckPresentationLogic
-{
+protocol ReviewDeckPresentationLogic {
+    func presentFirstCardAfterConfiguringData(response: ReviewDeck.ConfigureData.Response)
     
+    func presentNextCardToReview(response: ReviewDeck.MoveToNextCard.Response)
+    
+    func presentFinishedReviewingDeck(response: ReviewDeck.FinishedReviewingDeck.Response)
 }
 
 class ReviewDeckPresenter: ReviewDeckPresentationLogic
 {
     weak var viewController: ReviewDeckDisplayLogic?
   
-    // MARK: Do something
+    
+    func presentFirstCardAfterConfiguringData(response: ReviewDeck.ConfigureData.Response) {
+        guard let card = response.firstCardToReview else { return }
+        
+        let reviewCardModel = ReviewDeckView.ReviewCardModel(frontSideText: card.frontSideText, backSideText: card.backSideText)
+        
+        let viewModel = ReviewDeck.ConfigureData.ViewModel(cardToReviewCardModel: reviewCardModel, numOfCardsToReview: response.numOfCardsToReview, nameOfDeckBeingReviewed: response.nameOfDeckBeingReviewed)
+        viewController?.displayFirstCardToReview(viewModel: viewModel)
+    }
+    
+    
+    func presentNextCardToReview(response: ReviewDeck.MoveToNextCard.Response) {
+        guard let card = response.nextCardToReview else { return }
+        
+        let reviewCardModel = ReviewDeckView.ReviewCardModel(frontSideText: card.frontSideText, backSideText: card.backSideText)
+        
+        let viewModel = ReviewDeck.MoveToNextCard.ViewModel(cardModelForNextCard: reviewCardModel)
+        viewController?.displayNextCardToReview(viewModel: viewModel)
+    }
+    
+    
+    func presentFinishedReviewingDeck(response: ReviewDeck.FinishedReviewingDeck.Response) {
+        let viewModel = ReviewDeck.FinishedReviewingDeck.ViewModel()
+        viewController?.displayFinishedReviewingDeck(viewModel: viewModel)
+    }
   
     
 }

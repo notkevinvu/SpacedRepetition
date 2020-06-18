@@ -91,10 +91,15 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     }
     
     
-    // MARK: Fetching decks
+    // MARK: Fetching/updating decks
     func fetchDecks() {
         let request = Decks.FetchDecks.Request()
         interactor?.fetchDecks(request: request)
+    }
+    
+    func updateDeckCellModels() {
+        let request = Decks.UpdateDeckCellModels.Request()
+        interactor?.updateDeckCellModels(request: request)
     }
     
     // MARK: Display
@@ -119,11 +124,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     func displayDeletedDeck(viewModel: Decks.DeleteDeck.ViewModel) {
         cellModels.remove(at: viewModel.indexOfDeckToRemove)
         contentView.collectionView.reloadData()
-    }
-    
-    func updateDeckCellModels() {
-        let request = Decks.UpdateDeckCellModels.Request()
-        interactor?.updateDeckCellModels(request: request)
     }
     
     // MARK: Navigation

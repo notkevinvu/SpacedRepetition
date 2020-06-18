@@ -122,7 +122,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         getCDDeck()
     }
     
-    // MARK: Get Deck
+    // MARK: Get Deck from data store
     
     func getCDDeck() {
         let request = DeckDetail.ShowDeck.Request()

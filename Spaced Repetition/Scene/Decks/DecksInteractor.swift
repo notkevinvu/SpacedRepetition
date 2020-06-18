@@ -151,7 +151,6 @@ extension DecksInteractor: DecksViewDelegate {
         }
         
         decks.append(newDeck)
-        print(decks)
         
         let response = Decks.ShowDeck.Response(deckInfoToPass: newDeck)
         presenter.presentDeckDetail(response: response)

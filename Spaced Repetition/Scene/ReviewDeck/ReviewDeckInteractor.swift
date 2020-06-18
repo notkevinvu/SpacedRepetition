@@ -12,9 +12,8 @@
 
 import UIKit
 
-protocol ReviewDeckBusinessLogic
-{
-    
+protocol ReviewDeckBusinessLogic {
+    func sortCards(request: ReviewDeck.ConfigureData.Request)
 }
 
 protocol ReviewDeckDataStore
@@ -29,10 +28,206 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
     var presenter: ReviewDeckPresentationLogic?
     var deckInfo: Deck?
     
+    var cardBeingReviewed: Card?
+    lazy var cardsToReview: [Card] = []
+    /*
+     TODO: Don't need retired cards here yet - in future, add an option for a
+     'final review' which uses all cards, regardless of review status
+     */
     
     
-    func didTapDoneButton() {
-        print("did tap done button")
+    // MARK: Sorting cards
+    func sortCards(request: ReviewDeck.ConfigureData.Request) {
+        guard let deckToReview = deckInfo else { return }
+        
+        let cardsFromDeck = deckToReview.cards.array as! [Card]
+        
+        for card in cardsFromDeck {
+            /*
+             if card does not have a 'last reviewed' date, it must be
+             a new card that hasn't been reviewed yet. Thus, we should
+             add it to the cardsToReview array. Then, we simply
+             continue onto the next card - we add a dateLastReviewed Date
+             when we actually review it (i.e. when the wrong/correct answer
+             buttons are triggered)
+            */
+            guard let dateLastReviewed = card.dateLastReviewed else {
+                cardsToReview.append(card)
+                continue
+            }
+            
+            let calendar = Calendar.current
+            
+            // we get the date at noon of both dates so we can check differences
+            // in calendar day
+            guard
+                let formattedDateLastReviewed = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: dateLastReviewed),
+                let formattedCurrentDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: Date())
+                else {
+                    continue
+            }
+            
+            // compares the # of days between dateLastReviewed and current date
+            let components = calendar.dateComponents([.day], from: formattedDateLastReviewed, to: formattedCurrentDate)
+            
+            guard let daysSinceLastReviewed = components.day else {
+                assertionFailure("Couldn't get day count from dateComponents \(#line) - \(#file)")
+                continue
+            }
+            
+            
+            switch card.reviewStatus {
+            case Card.ReviewStatus.everyDay.rawValue:
+                
+                /*
+                 Here, we check if the 'everyDay' card we are looking at has been
+                 reviewed yesterday (that is, one calendar day ago). If it hasn't,
+                 we continue to the next card to check its dateLastReviewed property.
+                 If it has been a calendar day since, we pass the precondition check
+                 and add it to the cardsToReview array.
+                 */
+                guard calendar.isDateInYesterday(dateLastReviewed) else { continue }
+                cardsToReview.append(card)
+                
+            case Card.ReviewStatus.everyTwoDays.rawValue:
+                if daysSinceLastReviewed >= 2 {
+                    cardsToReview.append(card)
+                } else {
+                    continue
+                }
+                
+            case Card.ReviewStatus.everyThreeDays.rawValue:
+                if daysSinceLastReviewed >= 3 {
+                    cardsToReview.append(card)
+                } else {
+                    continue
+                }
+                
+            case Card.ReviewStatus.onceAWeek.rawValue:
+                if daysSinceLastReviewed >= 7 {
+                    cardsToReview.append(card)
+                } else {
+                    continue
+                }
+                
+            case Card.ReviewStatus.retired.rawValue:
+                /*
+                 TODO: Eventually we want to add a selection screen (action sheet?)
+                 to ask users if they want to do their regular review (i.e. using
+                 spaced repetition/leitner system) or do a final review for an
+                 upcoming assessment (where all cards are added)
+                 
+                 Most likely still wouldn't do anything in this case/block though
+                 */
+                continue
+            default:
+                assertionFailure("Somehow card has a review status that is not one of the reviewStatus enum strings \(#line) - \(#file)")
+                continue
+            }
+        }
+        
+        cardBeingReviewed = cardsToReview.first
+        
+        let response = ReviewDeck.ConfigureData.Response(firstCardToReview: cardBeingReviewed, numOfCardsToReview: cardsToReview.count, nameOfDeckBeingReviewed: deckToReview.name)
+        presenter?.presentFirstCardAfterConfiguringData(response: response)
+    }
+    
+    
+    
+    // MARK: Delegate methods
+    
+    /*
+     TODO (6/18): configure alert notifying users they have finished reviewing
+     the deck once progress is finished/cardsToReview is empty
+     
+     maybe configure the deckdetail scene such that card cells also show the review
+     status
+     
+     configure the sort cards method to call a different method that configures the
+     current card view to show text that says something along the lines of
+     "No cards to review! Please click done to go back" or to display an alert that
+     has a confirm action to go back
+     
+     Also configure the done button on the review deck screen to have a confirm
+     alert if they are sure they want to leave review
+     
+     In regards to the main decks view, we want to also do calculations to check
+     if any of the cards in that deck need review (loop through cards to check if
+     it needs review; if even one card needs review, the deck also needs to be reviewed)
+     */
+    func didTapWrongAnswerButton() {
+        cardBeingReviewed?.set(newReviewStatus: .everyDay, newDateLastReviewed: Date())
+        
+        do {
+            try cardBeingReviewed?.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to update review status and date last reviewed for card being reviewed - \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+        
+        guard !cardsToReview.isEmpty else {
+            // TODO: create a method to show the user that they are finished
+            // reviewing the deck for this session - pass thru VIP,
+            // when it gets back to VC, pop the view controller
+            return
+        }
+        
+        cardsToReview.removeFirst()
+        cardBeingReviewed = cardsToReview.first
+        
+        let response = ReviewDeck.MoveToNextCard.Response(nextCardToReview: cardBeingReviewed)
+        presenter?.presentNextCardToReview(response: response)
+    }
+    
+    func didTapCorrectAnswerButton() {
+        
+        switch cardBeingReviewed?.reviewStatus {
+            
+        case Card.ReviewStatus.everyDay.rawValue:
+            cardBeingReviewed?.set(newReviewStatus: .everyTwoDays, newDateLastReviewed: Date())
+            
+        case Card.ReviewStatus.everyTwoDays.rawValue:
+            cardBeingReviewed?.set(newReviewStatus: .everyThreeDays, newDateLastReviewed: Date())
+            
+        case Card.ReviewStatus.everyThreeDays.rawValue:
+            cardBeingReviewed?.set(newReviewStatus: .onceAWeek, newDateLastReviewed: Date())
+            
+        case Card.ReviewStatus.onceAWeek.rawValue:
+            cardBeingReviewed?.set(newReviewStatus: .retired, newDateLastReviewed: Date())
+            
+        case Card.ReviewStatus.retired.rawValue:
+            // Don't need to do anything for retired cards
+            break
+        default:
+            assertionFailure("Somehow card had a non enum string \(#line) - \(#file)")
+        }
+        
+        do {
+            try cardBeingReviewed?.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to update review status and date last reviewed for card being reviewed - \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return
+        }
+        
+        guard !cardsToReview.isEmpty else {
+            // TODO: create a method to show the user that they are finished
+            // reviewing the deck for this session - pass thru VIP,
+            // when it gets back to VC, pop the view controller
+            return
+        }
+        
+        cardsToReview.removeFirst()
+        cardBeingReviewed = cardsToReview.first
+        
+        let response = ReviewDeck.MoveToNextCard.Response(nextCardToReview: cardBeingReviewed)
+        presenter?.presentNextCardToReview(response: response)
+    }
+    
+    func didFinishProgressBar() {
+        print("Finished progress bar")
+        
+        let response = ReviewDeck.FinishedReviewingDeck.Response()
+        presenter?.presentFinishedReviewingDeck(response: response)
     }
     
 }

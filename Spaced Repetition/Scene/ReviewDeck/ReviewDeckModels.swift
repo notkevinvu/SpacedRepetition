@@ -16,5 +16,40 @@ enum ReviewDeck
 {
     // MARK: Use cases
     
+    enum ConfigureData {
+        struct Request {
+        }
+        struct Response {
+            let firstCardToReview: Card?
+            let numOfCardsToReview: Int?
+            let nameOfDeckBeingReviewed: String
+        }
+        struct ViewModel {
+            let cardToReviewCardModel: ReviewDeckView.ReviewCardModel
+            let numOfCardsToReview: Int?
+            let nameOfDeckBeingReviewed: String
+        }
+    }
+    
+    enum MoveToNextCard {
+        struct Request {
+            
+        }
+        struct Response {
+            let nextCardToReview: Card?
+        }
+        struct ViewModel {
+            let cardModelForNextCard: ReviewDeckView.ReviewCardModel
+        }
+    }
+    
+    enum FinishedReviewingDeck {
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
     
 }
