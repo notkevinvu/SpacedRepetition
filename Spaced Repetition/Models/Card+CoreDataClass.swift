@@ -95,6 +95,27 @@ public class Card: NSManagedObject {
         }
         
         self.dateLastReviewed = newDateLastReviewed
+        
+        do {
+            try self.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to save new review status \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
+        }
     }
 
+}
+
+
+class CardModel {
+    var frontSideText: String
+    var backSideText: String
+    var cardID: UUID
+    var dateCreated: Date
+    
+    init(frontSideText: String, backSideText: String, cardID: UUID, dateCreated: Date) {
+        self.frontSideText = frontSideText
+        self.backSideText = backSideText
+        self.cardID = cardID
+        self.dateCreated = dateCreated
+    }
 }

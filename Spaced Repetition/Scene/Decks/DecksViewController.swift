@@ -8,6 +8,8 @@
 
 import UIKit
 
+// TODO: Add a search function for deck title, review flags
+
 protocol DecksDisplayLogic: class {
     func displayFetchedDecks(viewModel: Decks.FetchDecks.ViewModel)
     

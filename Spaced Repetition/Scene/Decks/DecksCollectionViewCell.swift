@@ -26,6 +26,7 @@ class DecksCollectionViewCell: UICollectionViewCell {
     struct DeckCellModel {
         var deckTitle: String
         let numberOfCards: Int
+        let needsReview: Bool?
     }
     
     let deckTitleLabel: UILabel = {
@@ -61,12 +62,12 @@ class DecksCollectionViewCell: UICollectionViewCell {
     }()
     
     let reviewNotificationView: UIView = {
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
-        label.layer.cornerRadius = 5
+        let view = UIView(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+        view.layer.cornerRadius = 5
         
-        return label
+        return view
     }()
     
     let reviewNotificationLabel: UILabel = {
@@ -159,6 +160,14 @@ class DecksCollectionViewCell: UICollectionViewCell {
     func configureWithModel(_ model: DeckCellModel) {
         deckTitleLabel.text = model.deckTitle
         numOfCardsLabel.text = "\(model.numberOfCards) Cards"
+        
+        guard let deckNeedsReview = model.needsReview else { return }
+        switch deckNeedsReview {
+        case true:
+            reviewNotificationLabel.text = "Needs review"
+        case false:
+            reviewNotificationLabel.text = "All caught up!"
+        }
     }
     
     

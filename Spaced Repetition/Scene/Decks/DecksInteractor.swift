@@ -56,6 +56,9 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     func fetchDecks(request: Decks.FetchDecks.Request) {
         decks = decksWorker.fetchDecks()
         
+        // this checks and updates every deck
+        decksWorker.checkIfDecksNeedsReview(decks: decks)
+        
         let response = Decks.FetchDecks.Response(decks: decks)
         presenter.presentFetchedDecks(response: response)
     }

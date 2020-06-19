@@ -33,7 +33,7 @@ class DecksPresenter: DecksPresentationLogic {
         // format the Deck objects we get from the response into deck cell models
         // with which the view controller will update the view
         for deck in response.decks {
-            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count)
+            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count, needsReview: deck.needsReview)
             displayedDeckCells.append(cellModel)
         }
         
@@ -46,7 +46,7 @@ class DecksPresenter: DecksPresentationLogic {
         var displayedDeckCells: [DecksCollectionViewCell.DeckCellModel] = []
         
         for deck in response.decks {
-            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count)
+            let cellModel = DecksCollectionViewCell.DeckCellModel(deckTitle: deck.name, numberOfCards: deck.cards.count, needsReview: deck.needsReview)
             displayedDeckCells.append(cellModel)
         }
         

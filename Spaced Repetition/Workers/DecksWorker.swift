@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreData
 
 protocol DecksWorkerFactory {
     func makeDecksWorker() -> DecksWorkerProtocol
@@ -15,9 +16,12 @@ protocol DecksWorkerFactory {
 
 protocol DecksWorkerProtocol {
     func fetchDecks() -> [Deck]
+    func checkIfDecksNeedsReview(decks: [Deck])
+    
     func createDeck() -> Deck?
     func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String)
     func deleteDeck(deck: Deck)
+    
     func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck)
     func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String)
     func deleteCard(card: Card, fromDeck deck: Deck)
@@ -43,6 +47,86 @@ extension DecksWorker: DecksWorkerProtocol {
         let decks = decksStore.fetchDecks()
         
         return decks
+    }
+    
+    // MARK: Check if decks need review
+    func checkIfDecksNeedsReview(decks: [Deck]) {
+        
+        for deck in decks {
+            let cardsFromDeck = deck.cards.array as! [Card]
+            
+            for card in cardsFromDeck {
+                
+                guard let dateLastReviewed = card.dateLastReviewed else {
+                    /*
+                     TODO: if a card does not yet have a date last reviewed,
+                     it must be a new card and the deck needs to be reviewed
+                     */
+                    return
+                }
+                
+                let calendar = Calendar.current
+                
+                guard
+                    let formattedDateLastReviewed = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: dateLastReviewed),
+                    let formattedCurrentDate = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: Date())
+                    else {
+                        return
+                }
+                
+                let components = calendar.dateComponents([.day], from: formattedDateLastReviewed, to: formattedCurrentDate)
+                
+                guard let daysSinceLastReviewed = components.day else {
+                    assertionFailure("Couldn't get day count from dateComponents \(#line) - \(#file)")
+                    return
+                }
+                
+                switch card.reviewStatus {
+                case Card.ReviewStatus.everyDay.rawValue:
+                    if daysSinceLastReviewed >= 1 {
+                        deck.needsReview = true
+                        // if even one card in a deck needs review, the deck
+                        // needs to be reviewed (well, the relevant cards at least)
+                        saveContext(managedContext: deck.managedObjectContext)
+                        return
+                    } else {
+                        continue
+                    }
+                case Card.ReviewStatus.everyTwoDays.rawValue:
+                    if daysSinceLastReviewed >= 2 {
+                        deck.needsReview = true
+                        saveContext(managedContext: deck.managedObjectContext)
+                        return
+                    } else {
+                        continue
+                    }
+                case Card.ReviewStatus.everyThreeDays.rawValue:
+                    if daysSinceLastReviewed >= 3 {
+                        deck.needsReview = true
+                        saveContext(managedContext: deck.managedObjectContext)
+                        return
+                    } else {
+                        continue
+                    }
+                case Card.ReviewStatus.onceAWeek.rawValue:
+                    if daysSinceLastReviewed >= 7 {
+                        deck.needsReview = true
+                        saveContext(managedContext: deck.managedObjectContext)
+                        return
+                    } else {
+                        continue
+                    }
+                case Card.ReviewStatus.retired.rawValue:
+                    continue
+                default:
+                    assertionFailure("Somehow card's review status wasn't one of the enum raw values \(#line) - \(#file)")
+                    continue
+                }
+                
+                
+            }
+        }
+        
     }
     
     // MARK: - Create deck
@@ -126,6 +210,16 @@ extension DecksWorker: DecksWorkerProtocol {
         } catch let error as NSError {
             assertionFailure("Failed to delete card \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
             return
+        }
+    }
+    
+    
+    func saveContext(managedContext: NSManagedObjectContext?) {
+        
+        do {
+            try managedContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to save managed context \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
         }
     }
     
