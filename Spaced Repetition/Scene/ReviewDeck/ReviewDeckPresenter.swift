@@ -12,7 +12,7 @@
 
 import UIKit
 
-protocol ReviewDeckPresentationLogic {
+protocol ReviewDeckPresentationLogic: AlertDisplayablePresenter {
     func presentFirstCardAfterConfiguringData(response: ReviewDeck.ConfigureData.Response)
     
     func presentNextCardToReview(response: ReviewDeck.MoveToNextCard.Response)
@@ -23,10 +23,19 @@ protocol ReviewDeckPresentationLogic {
 class ReviewDeckPresenter: ReviewDeckPresentationLogic
 {
     weak var viewController: ReviewDeckDisplayLogic?
+    weak var alertDisplayableViewController: AlertDisplayableViewController?
   
     
     func presentFirstCardAfterConfiguringData(response: ReviewDeck.ConfigureData.Response) {
-        guard let card = response.firstCardToReview else { return }
+        
+        guard let card = response.firstCardToReview else {
+            // if card = nil, cardsToReview is empty and thus, no cards to review that day
+            let reviewCardModel = ReviewDeckView.ReviewCardModel(frontSideText: "No cards to review today!", backSideText: "")
+            
+            let viewModel = ReviewDeck.ConfigureData.ViewModel(cardToReviewCardModel: reviewCardModel, numOfCardsToReview: nil, nameOfDeckBeingReviewed: response.nameOfDeckBeingReviewed)
+            viewController?.displayFirstCardToReview(viewModel: viewModel)
+            return
+        }
         
         let reviewCardModel = ReviewDeckView.ReviewCardModel(frontSideText: card.frontSideText, backSideText: card.backSideText)
         

@@ -19,7 +19,7 @@ class CoreDataStack {
     
     private lazy var storeContainer: NSPersistentContainer = {
         
-        // MARK: TODO: REMOVE IN MEMORY STORE TYPE AFTER TESTING FOR CORRECT CD FETCHING
+        // MARK: TODO: REMOVE IN MEMORY STORE TYPE AFTER TESTING
         let persistentStoreDescription = NSPersistentStoreDescription()
         persistentStoreDescription.type = NSInMemoryStoreType
         

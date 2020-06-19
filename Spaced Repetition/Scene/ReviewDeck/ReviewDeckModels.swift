@@ -44,6 +44,9 @@ enum ReviewDeck
     }
     
     enum FinishedReviewingDeck {
+        struct Request {
+            
+        }
         struct Response {
             
         }
@@ -52,4 +55,11 @@ enum ReviewDeck
         }
     }
     
+    enum NoCardsToReview {
+        struct Request {
+            
+        }
+        // After the interactor request, response and viewmodel both follow
+        // the finishedreviewing deck model
+    }
 }

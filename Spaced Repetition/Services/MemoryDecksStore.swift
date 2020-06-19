@@ -127,9 +127,9 @@ final class MemoryDecksStore: DecksStoreProtocol {
         self.managedContext = factory.makeManagedContext()
     }
     
-    
     static var decks: [Deck] = []
     
+    // MARK: Fetch decks
     func fetchDecks() -> [Deck] {
         let deckFetchReq = Deck.deckFetchRequest()
         

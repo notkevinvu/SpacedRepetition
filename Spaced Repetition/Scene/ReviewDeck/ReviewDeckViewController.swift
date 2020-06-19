@@ -20,7 +20,7 @@ protocol ReviewDeckDisplayLogic: class {
     func displayFinishedReviewingDeck(viewModel: ReviewDeck.FinishedReviewingDeck.ViewModel)
 }
 
-class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
+class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic, AlertDisplayableViewController
 {
     var interactor: ReviewDeckBusinessLogic?
     var router: (NSObjectProtocol & ReviewDeckRoutingLogic & ReviewDeckDataPassing)?
@@ -55,6 +55,7 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
         viewController.contentView = view
         interactor.presenter = presenter
         presenter.viewController = viewController
+        presenter.alertDisplayableViewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
         view.delegate = interactor
@@ -106,7 +107,11 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
         contentView.configureCardView(cardModel: viewModel.cardToReviewCardModel)
         navigationItem.title = viewModel.nameOfDeckBeingReviewed
         
-        guard let numOfCardsToReview = viewModel.numOfCardsToReview else { return }
+        guard let numOfCardsToReview = viewModel.numOfCardsToReview else {
+            let request = ReviewDeck.NoCardsToReview.Request()
+            interactor?.showNoCardsToReviewAlert(request: request)
+            return
+        }
         contentView.progress.totalUnitCount = Int64(numOfCardsToReview)
     }
     
@@ -117,11 +122,6 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
     
     
     func displayFinishedReviewingDeck(viewModel: ReviewDeck.FinishedReviewingDeck.ViewModel) {
-        /*
-         TODO: Add an alert that tells the user that they have finished reviewing
-         the current deck with an "Ok"/"Got it!" button/action. This action will
-         be responsible for popping the view controller off the stack
-         */
         navigationController?.popViewController(animated: true)
     }
     
@@ -129,7 +129,8 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic
     // MARK: Button methods
     
     @objc func didTapDoneButton() {
-        navigationController?.popViewController(animated: true)
+        let request = ReviewDeck.FinishedReviewingDeck.Request()
+        interactor?.showConfirmPopViewControllerAlert(request: request)
     }
   
     

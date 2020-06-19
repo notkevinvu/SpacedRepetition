@@ -116,7 +116,7 @@ class ReviewDeckView: UIView {
     lazy var wrongAnswerButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(hex: "CE3A3A")
+        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
         
@@ -134,7 +134,7 @@ class ReviewDeckView: UIView {
     lazy var correctAnswerButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(hex: "3ACE3A")
+        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
         button.layer.cornerRadius = 20
         button.clipsToBounds = true
         
@@ -203,7 +203,6 @@ class ReviewDeckView: UIView {
             currentProgressBarView.heightAnchor.constraint(equalToConstant: 10),
             
             
-            
             currentCardView.leftAnchor.constraint(equalTo: currentProgressBarView.leftAnchor),
             currentCardView.rightAnchor.constraint(equalTo: currentProgressBarView.rightAnchor),
             currentCardView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 45),
@@ -235,7 +234,6 @@ class ReviewDeckView: UIView {
             flipCardButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
             flipCardButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
             
-            
             correctAnswerButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
             correctAnswerButton.leftAnchor.constraint(equalTo: buttonSeparatorView.rightAnchor),
             correctAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
@@ -251,8 +249,16 @@ class ReviewDeckView: UIView {
     
     
     // MARK: Button/gesture methods
-    
+
     @objc func didTapFlipCardButton() {
+        
+        // MARK: Flip cards
+        
+        if wrongAnswerButton.backgroundColor == UIColor.lightGray.withAlphaComponent(0.25) {
+            wrongAnswerButton.backgroundColor = UIColor(hex: "CE3A3A")
+            correctAnswerButton.backgroundColor = UIColor(hex: "3ACE3A")
+        }
+        
         if cardFrontSideTextLabel.isHidden {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
                 guard let self = self else { return }
@@ -284,14 +290,48 @@ class ReviewDeckView: UIView {
         }
     }
     
+    
+    // TODO: MAKE IT TINDER CARDS
+    // MARK: Tap correct answer
     @objc func didTapCorrectAnswerButton() {
-        delegate?.didTapCorrectAnswerButton()
         incrementProgressBar()
+        
+        if cardFrontSideTextLabel.isHidden {
+            didTapFlipCardButton()
+        }
+        
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            guard let self = self else { return }
+            
+            self.currentCardView.backgroundColor = UIColor.green.withAlphaComponent(0.25)
+            self.currentCardView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+            
+            self.wrongAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+            self.correctAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+        }
+        
+        delegate?.didTapCorrectAnswerButton()
     }
     
+    // MARK: Tap wrong answer
     @objc func didTapWrongAnswerButton() {
-        delegate?.didTapWrongAnswerButton()
         incrementProgressBar()
+        
+        if cardFrontSideTextLabel.isHidden {
+            didTapFlipCardButton()
+        }
+        
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            guard let self = self else { return }
+            
+            self.currentCardView.backgroundColor = UIColor.red.withAlphaComponent(0.25)
+            self.currentCardView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+            
+            self.wrongAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+            self.correctAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
+        }
+        
+        delegate?.didTapWrongAnswerButton()
     }
     
     // MARK: Helper methods

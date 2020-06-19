@@ -14,6 +14,10 @@ import UIKit
 
 protocol ReviewDeckBusinessLogic {
     func sortCards(request: ReviewDeck.ConfigureData.Request)
+    
+    func showConfirmPopViewControllerAlert(request: ReviewDeck.FinishedReviewingDeck.Request)
+    
+    func showNoCardsToReviewAlert(request: ReviewDeck.NoCardsToReview.Request)
 }
 
 protocol ReviewDeckDataStore
@@ -86,8 +90,11 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
                  If it has been a calendar day since, we pass the precondition check
                  and add it to the cardsToReview array.
                  */
-                guard calendar.isDateInYesterday(dateLastReviewed) else { continue }
-                cardsToReview.append(card)
+                if daysSinceLastReviewed >= 1 {
+                    cardsToReview.append(card)
+                } else {
+                    continue
+                }
                 
             case Card.ReviewStatus.everyTwoDays.rawValue:
                 if daysSinceLastReviewed >= 2 {
@@ -133,28 +140,44 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
     }
     
     
+    // MARK: Show confirm pop VC
+    func showConfirmPopViewControllerAlert(request: ReviewDeck.FinishedReviewingDeck.Request) {
+        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+        
+        let confirmAction = AlertDisplayable.Action(title: "Confirm", style: .default) { [weak self] (action, ac) in
+            guard let self = self else { return }
+            
+            let response = ReviewDeck.FinishedReviewingDeck.Response()
+            self.presenter?.presentFinishedReviewingDeck(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Please confirm", message: "Are you sure you want to leave while you're reviewing?", textFields: [], actions: [cancelAction, confirmAction])
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
+    }
+    
+    
+    // MARK: No cards to review alert
+    func showNoCardsToReviewAlert(request: ReviewDeck.NoCardsToReview.Request) {
+        let confirmAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+            guard let self = self else { return }
+            
+            let response = ReviewDeck.FinishedReviewingDeck.Response()
+            self.presenter?.presentFinishedReviewingDeck(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "All done!", message: "Good job! There aren't any cards to review for now. Please check again tomorrow!", textFields: [], actions: [confirmAction])
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
+    }
+    
     
     // MARK: Delegate methods
     
     /*
-     TODO (6/18): configure alert notifying users they have finished reviewing
-     the deck once progress is finished/cardsToReview is empty
-     
+     TODO (6/19):
      maybe configure the deckdetail scene such that card cells also show the review
      status
-     
-     configure the sort cards method to call a different method that configures the
-     current card view to show text that says something along the lines of
-     "No cards to review! Please click done to go back" or to display an alert that
-     has a confirm action to go back
-     
-     Also configure the done button on the review deck screen to have a confirm
-     alert if they are sure they want to leave review
-     
-     In regards to the main decks view, we want to also do calculations to check
-     if any of the cards in that deck need review (loop through cards to check if
-     it needs review; if even one card needs review, the deck also needs to be reviewed)
      */
+    // MARK: Tapped wrong answer
     func didTapWrongAnswerButton() {
         cardBeingReviewed?.set(newReviewStatus: .everyDay, newDateLastReviewed: Date())
         
@@ -166,9 +189,6 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
         }
         
         guard !cardsToReview.isEmpty else {
-            // TODO: create a method to show the user that they are finished
-            // reviewing the deck for this session - pass thru VIP,
-            // when it gets back to VC, pop the view controller
             return
         }
         
@@ -179,9 +199,12 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
         presenter?.presentNextCardToReview(response: response)
     }
     
+    // MARK: Tapped correct answer
     func didTapCorrectAnswerButton() {
         
         switch cardBeingReviewed?.reviewStatus {
+        // the card.set(newReviewStatus:) method has an internal call to save
+        // managed context
             
         case Card.ReviewStatus.everyDay.rawValue:
             cardBeingReviewed?.set(newReviewStatus: .everyTwoDays, newDateLastReviewed: Date())
@@ -202,17 +225,7 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
             assertionFailure("Somehow card had a non enum string \(#line) - \(#file)")
         }
         
-        do {
-            try cardBeingReviewed?.managedObjectContext?.save()
-        } catch let error as NSError {
-            assertionFailure("Failed to update review status and date last reviewed for card being reviewed - \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
-            return
-        }
-        
         guard !cardsToReview.isEmpty else {
-            // TODO: create a method to show the user that they are finished
-            // reviewing the deck for this session - pass thru VIP,
-            // when it gets back to VC, pop the view controller
             return
         }
         
@@ -223,11 +236,27 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
         presenter?.presentNextCardToReview(response: response)
     }
     
+    // MARK: Finished progress bar
     func didFinishProgressBar() {
-        print("Finished progress bar")
         
-        let response = ReviewDeck.FinishedReviewingDeck.Response()
-        presenter?.presentFinishedReviewingDeck(response: response)
+        deckInfo?.needsReview = false
+        
+        do {
+            try deckInfo?.managedObjectContext?.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to update deck's review status \(#line) - \(#file) - error: \(error) with desc: \(error.userInfo)")
+        }
+        
+        let confirmFinishedReviewedDeckAction = AlertDisplayable.Action(title: "Confirm", style: .default) { [weak self] (action, ac) in
+            
+            guard let self = self else { return }
+            
+            let response = ReviewDeck.FinishedReviewingDeck.Response()
+            self.presenter?.presentFinishedReviewingDeck(response: response)
+        }
+        
+        let viewModel = AlertDisplayable.ViewModel(title: "Finished!", message: "You have finished reviewing this deck! Press \"Confirm\" to go back to see your cards.", textFields: [], actions: [confirmFinishedReviewedDeckAction])
+        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
     }
     
 }
