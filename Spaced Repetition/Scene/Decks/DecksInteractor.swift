@@ -45,12 +45,8 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     
     var decks: [Deck] = []
     var deckInfoToPass: Deck?
+
   
-    // MARK: Setup
-  
-    // MARK: User Input
-  
-    
     // MARK: Fetching decks
     
     func fetchDecks(request: Decks.FetchDecks.Request) {

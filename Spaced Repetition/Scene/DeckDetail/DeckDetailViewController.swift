@@ -206,7 +206,6 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         cell.didTapDeleteButton = { [weak self] in
             guard let self = self else { return }
             
-            
             let request = DeckDetail.ShowDeleteCardAC.Request(cardIndexToDelete: cardIndexToEditOrDelete)
             self.interactor?.showDeleteCardAlert(request: request)
             
