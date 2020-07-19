@@ -131,14 +131,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
 
     // MARK: Display Logic
     
-    // should viewcontroller hold deckID like this?
-    // could use name to filter when creating a card but has issue if user has
-    // multiple decks with the same deck name
-    var displayedDeckID: UUID?
-    
     func displayDeckName(viewModel: DeckDetail.ShowDeck.ViewModel.DeckInfoModel) {
         navigationItem.title = viewModel.displayedDeckName
-        displayedDeckID = viewModel.displayedDeckID
     }
     
     var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?

@@ -37,7 +37,7 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
         
         // name formatting for viewmodel
         let nameOfDeck = deck.name
-        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck, displayedDeckID: deck.deckID)
+        let deckNameModel = DeckDetail.ShowDeck.ViewModel.DeckInfoModel(displayedDeckName: nameOfDeck)
         
         viewController?.displayDeckName(viewModel: deckNameModel)
         

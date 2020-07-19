@@ -26,7 +26,6 @@ enum DeckDetail {
         enum ViewModel {
             struct DeckInfoModel {
                 let displayedDeckName: String
-                let displayedDeckID: UUID
             }
             
             // might need card UUID for this?
