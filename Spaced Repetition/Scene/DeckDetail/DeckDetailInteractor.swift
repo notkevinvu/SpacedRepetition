@@ -20,9 +20,7 @@ protocol DeckDetailBusinessLogic
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
     
-    func showEditCardAlert(request: DeckDetail.ShowEditCardAC.Request)
-    
-    func showDeleteCardAlert(request: DeckDetail.ShowDeleteCardAC.Request)
+    func showCardOptionsAlert(request: DeckDetail.ShowCardOptions.Request)
 }
 
 protocol DeckDetailDataStore
@@ -97,61 +95,73 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     }
     
     
-    // MARK: Show Edit Card Alert
-    func showEditCardAlert(request: DeckDetail.ShowEditCardAC.Request) {
-        let cardFrontTextPlaceholder = AlertDisplayable.TextField(placeholder: "Front side of card")
-        let cardBackTextPlaceholder = AlertDisplayable.TextField(placeholder: "Back side of card")
-        let cardIndex = request.cardIndex
-        let cardToEdit = self.cardsFromDeck[cardIndex]
+    // MARK: - Show Card Options Alert
+    func showCardOptionsAlert(request: DeckDetail.ShowCardOptions.Request) {
+        let indexOfCardToEditOrDelete = request.cardIndexToEditOrDelete
+        let cardToEditOrDelete = cardsFromDeck[indexOfCardToEditOrDelete]
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
         
-        let saveAction = AlertDisplayable.Action(title: "Done", style: .default) { [weak self] (action, ac) in
+        // MARK: - Edit Card
+        let editCardAction = AlertDisplayable.Action(title: "Edit Card", style: .default) { [weak self] (action1, ac1) in
+            guard let self = self else { return }
+            
+            let cardFrontSideTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Front side of card")
+            let cardBackSideTextFieldPlaceholder = AlertDisplayable.TextField(placeholder: "Back side of card")
+            
+            let cancelEditCardAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
+            
+            let saveEditedCardAction = AlertDisplayable.Action(title: "Done", style: .default) { (action2, ac2) in
+                
+                guard
+                    let newCardFrontSideText = ac2.textFields?[0].text,
+                    !newCardFrontSideText.isEmpty,
+                    let newCardBackSideText = ac2.textFields?[1].text,
+                    !newCardBackSideText.isEmpty
+                    else {
+                        return
+                }
+                
+                self.decksWorker.editCard(cardToEdit: cardToEditOrDelete, newFrontText: newCardFrontSideText, newBackText: newCardBackSideText)
+                
+                let response = DeckDetail.ShowEditCardAC.Response(card: cardToEditOrDelete, cardIndex: indexOfCardToEditOrDelete)
+                self.presenter?.presentEditedCard(response: response)
+            }
+            
+            let editCardViewModel = AlertDisplayable.ViewModel(title: "Edit Card", message: "Please enter new card details", textFields: [cardFrontSideTextFieldPlaceholder, cardBackSideTextFieldPlaceholder], actions: [cancelEditCardAction, saveEditedCardAction])
+            self.presenter?.presentAlert(viewModel: editCardViewModel, alertStyle: .alert)
+        }
+        
+        // MARK: - Delete Card
+        let deleteCardAction = AlertDisplayable.Action(title: "Delete card", style: .destructive) { [weak self] (action1, ac1) in
             
             guard
                 let self = self,
-                let cardFrontText = ac.textFields?[0].text,
-                let cardBacktext = ac.textFields?[1].text else {
+                let deck = self.deckInfo
+                else {
                     return
             }
             
-            self.decksWorker.editCard(cardToEdit: cardToEdit, newFrontText: cardFrontText, newBackText: cardBacktext)
+            let cancelDeleteCardAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
             
-            let response = DeckDetail.ShowEditCardAC.Response(card: cardToEdit, cardIndex: cardIndex)
-            self.presenter?.presentEditedCard(response: response)
+            let saveDeleteCardAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { (action2, ac2) in
+                
+                self.decksWorker.deleteCard(card: cardToEditOrDelete, fromDeck: deck)
+                
+                self.cardsFromDeck.remove(at: indexOfCardToEditOrDelete)
+                
+                let response = DeckDetail.ShowDeleteCardAC.Response(cardIndexToDelete: indexOfCardToEditOrDelete)
+                self.presenter?.presentDeletedCard(response: response)
+            }
+            
+            let deleteActionViewModel = AlertDisplayable.ViewModel(title: "Confirm delete", message: "Are you sure you want to delete this card?", textFields: [], actions: [cancelDeleteCardAction, saveDeleteCardAction])
+            self.presenter?.presentAlert(viewModel: deleteActionViewModel, alertStyle: .alert)
         }
         
-        let viewModel = AlertDisplayable.ViewModel(title: "Edit Card", message: "Please enter the new card details", textFields: [cardFrontTextPlaceholder, cardBackTextPlaceholder], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
+        let actionSheetViewModel = AlertDisplayable.ViewModel(title: nil, message: nil, textFields: [], actions: [cancelAction, editCardAction, deleteCardAction])
+        presenter?.presentAlert(viewModel: actionSheetViewModel, alertStyle: .actionSheet)
     }
     
-    
-    // MARK: Show delete card alert
-    func showDeleteCardAlert(request: DeckDetail.ShowDeleteCardAC.Request) {
-        let cardIndexToDelete = request.cardIndexToDelete
-        let cardToRemove = cardsFromDeck[cardIndexToDelete]
-        
-        let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
-        
-        let saveAction = AlertDisplayable.Action(title: "Confirm", style: .destructive) { [weak self] (action, ac) in
-            
-            guard
-                let self = self,
-                let deck = self.deckInfo else { return }
-            
-            self.decksWorker.deleteCard(card: cardToRemove, fromDeck: deck)
-            
-            self.cardsFromDeck.remove(at: cardIndexToDelete)
-            
-            let response = DeckDetail.ShowDeleteCardAC.Response(cardIndexToDelete: cardIndexToDelete)
-            self.presenter?.presentDeletedCard(response: response)
-        }
-        
-        let viewModel = AlertDisplayable.ViewModel(title: "Confirm delete", message: "Are you sure you want to delete this card?", textFields: [], actions: [cancelAction, saveAction])
-        presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
-        
-        
-    }
     
 }
 

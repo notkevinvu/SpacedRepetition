@@ -67,19 +67,12 @@ enum DeckDetail {
     }
     
     
-    // MARK: Edit title
-    enum ShowEditTitleAlert {
+    // MARK: Card options
+    enum ShowCardOptions {
         struct Request {
-            
-        }
-        struct Response {
-            let newDeckTitle: String
-        }
-        struct ViewModel {
-            let newDeckTitle: String
+            let cardIndexToEditOrDelete: Int
         }
     }
-    
     
     // MARK: Edit card
     enum ShowEditCardAC {

@@ -8,15 +8,6 @@
 
 import UIKit
 
-/*
- MARK: TODO:
- Add an options button to every cell (similar to the DecksView option button for
- editing and deleting cards)
- 
- This will allow us to reserve a tap gesture for presenting an expanded card
- (in case the current cell is not big enough to show all the cell contents)
- */
-
 
 class DeckDetailCollectionViewCell: UICollectionViewCell {
     
@@ -36,10 +27,8 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "DeckDetailCollectionCell"
     
-    // callback functions to tell VC that a button was tapped
-    var didTapEditButton: (() -> ())?
-    var didTapDeleteButton: (() -> ())?
-    
+    // callback variable to tell VC that a button was tapped
+    var didTapOptionsButton: ( () -> () )?
     
     struct CardCellModel {
         let frontSide: String
@@ -86,47 +75,24 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     }()
     
     
-    lazy var editButton: UIButton = {
-        let button = UIButton(frame: .zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(hex: "a4dced")
-        button.layer.cornerRadius = self.layer.cornerRadius
-        button.layer.maskedCorners = [.layerMaxXMinYCorner]
-        button.layer.borderWidth = 0.5
-        
-        button.setImage(UIImage(systemName: "pencil.circle"), for: .normal)
+    lazy var cardOptionsButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "gear"), for: .normal)
         button.tintColor = .black
+        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+        button.layer.cornerRadius = 5
+        button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.addTarget(self, action: #selector(handleTapEditButton(sender:)), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleTapOptionsButton), for: .touchUpInside)
         
         return button
     }()
-    // used to animate the button in
-    var editButtonWidthAnchor: NSLayoutConstraint?
-    
-    
-    // same code as in decks view cell, create extension to place all this code in?
-    lazy var deleteButton: UIButton = {
-        let button = UIButton(frame: .zero)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(hex: "eb8888")
-        button.layer.cornerRadius = self.layer.cornerRadius
-        button.layer.maskedCorners = [.layerMaxXMaxYCorner]
-        button.layer.borderWidth = 0.5
-        
-        button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
-        button.tintColor = .black
-        
-        button.addTarget(self, action: #selector(handleTapDeleteButton(sender:)), for: .touchUpInside)
-        
-        return button
-    }()
-    var deleteButtonWidthAnchor: NSLayoutConstraint?
     
     
     lazy var tapGestureRecognizer: UITapGestureRecognizer = {
         let tap = UITapGestureRecognizer()
-        tap.addTarget(self, action: #selector(toggleEditViews))
+        // TODO: tap gesture should present an expanded card view (do this in
+        // view controller in didSelectItemAt
         
         return tap
     }()
@@ -139,15 +105,11 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         containerView.addSubview(cardFrontAndBackSeparator)
         containerView.addSubview(cardFrontSideLabel)
         containerView.addSubview(cardBackSideLabel)
-        containerView.addSubview(deleteButton)
-        containerView.addSubview(editButton)
-        containerView.addGestureRecognizer(tapGestureRecognizer)
+        containerView.addSubview(cardOptionsButton)
         
-        editButtonWidthAnchor = editButton.widthAnchor.constraint(equalToConstant: 0)
-        // activate here so we don't need to unwrap in the .activate() method
-        editButtonWidthAnchor?.isActive = true
-        deleteButtonWidthAnchor = deleteButton.widthAnchor.constraint(equalToConstant: 0)
-        deleteButtonWidthAnchor?.isActive = true
+        // TODO: Uncomment this back in if we still want to use a tap gesture
+        // instead of using didSelectItemAt in the VC
+//        containerView.addGestureRecognizer(tapGestureRecognizer)
         
         NSLayoutConstraint.activate([
             containerView.rightAnchor.constraint(equalTo: self.rightAnchor),
@@ -162,6 +124,12 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
             cardFrontAndBackSeparator.rightAnchor.constraint(equalTo: containerView.rightAnchor),
             
             
+            cardOptionsButton.centerXAnchor.constraint(equalTo: containerView.rightAnchor, constant: -25),
+            cardOptionsButton.centerYAnchor.constraint(equalTo: cardFrontAndBackSeparator.topAnchor, constant: -25),
+            cardOptionsButton.heightAnchor.constraint(equalToConstant: 30),
+            cardOptionsButton.widthAnchor.constraint(equalToConstant: 30),
+            
+            
             cardFrontSideLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 15),
             cardFrontSideLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -15),
             cardFrontSideLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 5),
@@ -171,15 +139,7 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
             cardBackSideLabel.leftAnchor.constraint(equalTo: containerView.leftAnchor, constant: 15),
             cardBackSideLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: -15),
             cardBackSideLabel.topAnchor.constraint(equalTo: cardFrontAndBackSeparator.bottomAnchor, constant: 5),
-            cardBackSideLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -5),
-            
-            editButton.rightAnchor.constraint(equalTo: containerView.rightAnchor),
-            editButton.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.5),
-            editButton.topAnchor.constraint(equalTo: containerView.topAnchor),
-            
-            deleteButton.rightAnchor.constraint(equalTo: containerView.rightAnchor),
-            deleteButton.heightAnchor.constraint(equalTo: containerView.heightAnchor, multiplier: 0.5),
-            deleteButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            cardBackSideLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -5)
         ])
         
     }
@@ -203,38 +163,17 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         cardBackSideLabel.text = model.backSide
     }
     
-    @objc func toggleEditViews() {
-        if editButtonWidthAnchor?.constant == 0 {
-            
-            editButtonWidthAnchor?.constant = 80
-            deleteButtonWidthAnchor?.constant = 80
-        } else {
-            editButtonWidthAnchor?.constant = 0
-            deleteButtonWidthAnchor?.constant = 0
-        }
-        
-        UIView.animate(withDuration: 0.2) {
-            self.contentView.layoutIfNeeded()
-        }
-    }
     
-    
-    // MARK: - Methods
+    // MARK: - Button Methods
     
     /*
-     when the buttons are tapped, this method is called
-     this method then calls the didTapEditButton callback variable, which is
-     defined in the view controller's collection view delegate methods
-     
-     when the didTap...Button variable methods get called, it calls whatever code
-     we set in the collection view (in the view controller)
+     - when user taps button, handleTapOptionsButton() is called
+     - handleTap...() then calls didTap...()
+     - didTap...() is defined in the VC's collection view methods (cellForRowAt)
+     and whatever is in that closure gets called
      */
-    @objc func handleTapEditButton(sender: UIButton) {
-        didTapEditButton?()
-    }
-    
-    @objc func handleTapDeleteButton(sender: UIButton) {
-        didTapDeleteButton?()
+    @objc func handleTapOptionsButton(sender: UIButton) {
+        didTapOptionsButton?()
     }
     
     

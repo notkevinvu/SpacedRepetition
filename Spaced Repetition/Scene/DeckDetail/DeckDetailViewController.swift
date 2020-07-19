@@ -191,28 +191,22 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         guard let displayedDeckCards = displayedDeckCards else { return cell }
         cell.configureWithModel(displayedDeckCards[indexPath.row])
         
-        
         let cardIndexToEditOrDelete = indexPath.row
         
-        cell.didTapEditButton = { [weak self] in
+        cell.didTapOptionsButton = { [weak self] in
             guard let self = self else { return }
             
-            let request = DeckDetail.ShowEditCardAC.Request(cardIndex: cardIndexToEditOrDelete)
-            self.interactor?.showEditCardAlert(request: request)
-            
-            cell.toggleEditViews()
-        }
-        
-        cell.didTapDeleteButton = { [weak self] in
-            guard let self = self else { return }
-            
-            let request = DeckDetail.ShowDeleteCardAC.Request(cardIndexToDelete: cardIndexToEditOrDelete)
-            self.interactor?.showDeleteCardAlert(request: request)
-            
-            cell.toggleEditViews()
+            let request = DeckDetail.ShowCardOptions.Request(cardIndexToEditOrDelete: cardIndexToEditOrDelete)
+            self.interactor?.showCardOptionsAlert(request: request)
         }
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        // TODO: present expanded card view with scrollable text views so user can
+        // see more text if needed
+        print("Tapped cell \(indexPath.row) - line \(#line) in DeckDetailVC")
     }
     
 }
