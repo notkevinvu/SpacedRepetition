@@ -20,11 +20,20 @@ protocol ExpandedCardDetailDataStore {
     var cardInfo: Card? { get set }
 }
 
-class ExpandedCardDetailInteractor: ExpandedCardDetailBusinessLogic, ExpandedCardDetailDataStore {
+class ExpandedCardDetailInteractor: ExpandedCardDetailBusinessLogic, ExpandedCardDetailDataStore, ExpandedCardDetailViewDelegate {
+    
+    
+    
     
     var presenter: ExpandedCardDetailPresentationLogic?
     var cardInfo: Card?
 
     // MARK: Do something
+    
+    func didTapBackgroundToDismissVC() {
+        let response = ExpandedCardDetail.DismissVC.Response()
+        presenter?.dismissVC(response: response)
+    }
+    
     
 }

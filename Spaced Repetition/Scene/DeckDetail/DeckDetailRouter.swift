@@ -42,9 +42,10 @@ class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
     func routeToExpandedCardDetail() {
         let destinationVC = ExpandedCardDetailViewController()
         destinationVC.modalPresentationStyle = .overCurrentContext
+        destinationVC.modalTransitionStyle = .crossDissolve
         var destinationDS = destinationVC.router!.dataStore
         passDataToExpandedCardDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
-        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+        viewController?.navigationController?.present(destinationVC, animated: true, completion: nil)
         
     }
     

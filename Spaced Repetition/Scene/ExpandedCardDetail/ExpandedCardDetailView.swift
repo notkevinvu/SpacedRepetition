@@ -8,11 +8,33 @@
 
 import UIKit
 
-class ExpandedCardDetailView: UIView {
+protocol ExpandedCardDetailViewDelegate: class {
+    func didTapBackgroundToDismissVC()
+}
 
+class ExpandedCardDetailView: UIView {
+    
+    // MARK: Properties
+    
+    typealias Delegate = ExpandedCardDetailViewDelegate
+    weak var delegate: Delegate?
+    
+    // MARK: Views
+    
+    let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 10
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    // MARK: Object lifecycle
+    
     init() {
         super.init(frame: .zero)
-        backgroundColor = .white
+        backgroundColor = UIColor.black.withAlphaComponent(0.3)
         setupSubviews()
     }
     
@@ -22,7 +44,29 @@ class ExpandedCardDetailView: UIView {
     
     // MARK: Setup
     func setupSubviews() {
+//        addGestureRecognizer(dismissVCTapGesture)
+        addSubview(containerView)
         
+        NSLayoutConstraint.activate([
+            containerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            containerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            containerView.widthAnchor.constraint(equalToConstant: 300),
+            containerView.heightAnchor.constraint(equalToConstant: 400)
+        ])
+    }
+    
+    
+    // MARK: Methods
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        
+        // Call delegate method only if the touch is not within the container view
+        // i.e. the background
+        guard touch.view != containerView else { return }
+        
+        delegate?.didTapBackgroundToDismissVC()
     }
 
 }

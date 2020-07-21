@@ -13,7 +13,7 @@
 import UIKit
 
 protocol ExpandedCardDetailDisplayLogic: class {
-    
+    func dismissVC(viewModel: ExpandedCardDetail.DismissVC.ViewModel)
 }
 
 class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisplayLogic {
@@ -47,6 +47,7 @@ class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisp
         viewController.interactor = interactor
         viewController.router = router
         viewController.contentView = view
+        view.delegate = interactor
         interactor.presenter = presenter
         presenter.viewController = viewController
         router.viewController = viewController
@@ -69,5 +70,9 @@ class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisp
     }
     
     // MARK: Display logic
+    
+    func dismissVC(viewModel: ExpandedCardDetail.DismissVC.ViewModel) {
+        self.dismiss(animated: true, completion: nil)
+    }
     
 }

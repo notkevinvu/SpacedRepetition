@@ -13,10 +13,15 @@
 import UIKit
 
 protocol ExpandedCardDetailPresentationLogic {
-    
+    func dismissVC(response: ExpandedCardDetail.DismissVC.Response)
 }
 
 class ExpandedCardDetailPresenter: ExpandedCardDetailPresentationLogic {
     
     weak var viewController: ExpandedCardDetailDisplayLogic?
+    
+    func dismissVC(response: ExpandedCardDetail.DismissVC.Response) {
+        let viewModel = ExpandedCardDetail.DismissVC.ViewModel()
+        viewController?.dismissVC(viewModel: viewModel)
+    }
 }

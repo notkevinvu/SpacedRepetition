@@ -14,18 +14,12 @@ import UIKit
 
 enum ExpandedCardDetail
 {
-  // MARK: Use cases
-  
-  enum Something
-  {
-    struct Request
-    {
+    // MARK: Use cases
+    
+    enum DismissVC {
+        struct Response {
+        }
+        struct ViewModel {
+        }
     }
-    struct Response
-    {
-    }
-    struct ViewModel
-    {
-    }
-  }
 }

@@ -100,6 +100,15 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
     
     // MARK: Setup
     
+    private func configureCellView() {
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .white
+        layer.cornerRadius = 10
+        layer.shadowRadius = 8
+        layer.shadowOffset = .zero
+        layer.shadowOpacity = 0.25
+    }
+    
     private func setupSubviews() {
         contentView.addSubview(containerView)
         containerView.addSubview(cardFrontAndBackSeparator)
@@ -141,17 +150,6 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
             cardBackSideLabel.topAnchor.constraint(equalTo: cardFrontAndBackSeparator.bottomAnchor, constant: 5),
             cardBackSideLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -5)
         ])
-        
-    }
-    
-    
-    private func configureCellView() {
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .white
-        layer.cornerRadius = 10
-        layer.shadowRadius = 8
-        layer.shadowOffset = .zero
-        layer.shadowOpacity = 0.25
         
     }
     
