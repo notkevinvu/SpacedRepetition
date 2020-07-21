@@ -66,6 +66,22 @@ enum DeckDetail {
     }
     
     
+    // MARK: Show Expanded Card
+    enum ShowExpandedCard {
+        struct Request {
+            let indexOfCardToShow: Int
+        }
+        
+        struct Response {
+            let cardToShow: Card
+        }
+        
+        struct CardModel {
+            let cardToShow: Card
+        }
+    }
+    
+    
     // MARK: Card options
     enum ShowCardOptions {
         struct Request {

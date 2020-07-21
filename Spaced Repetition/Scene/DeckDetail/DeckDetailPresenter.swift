@@ -20,6 +20,7 @@ protocol DeckDetailPresentationLogic: AlertDisplayablePresenter
     func presentDeletedCard(response: DeckDetail.ShowDeleteCardAC.Response)
     
     func presentReviewDeck(response: DeckDetail.ShowReviewDeck.Response)
+    func presentExpandedCard(response: DeckDetail.ShowExpandedCard.Response)
 }
 
 
@@ -85,6 +86,12 @@ class DeckDetailPresenter: DeckDetailPresentationLogic
     func presentReviewDeck(response: DeckDetail.ShowReviewDeck.Response) {
         let deckModel = DeckDetail.ShowReviewDeck.DeckModel(deckInfoToPass: response.deckInfoToPass)
         viewController?.displayReviewDeck(deckModel: deckModel)
+    }
+    
+    // MARK: - Show expanded card
+    func presentExpandedCard(response: DeckDetail.ShowExpandedCard.Response) {
+        let cardModel = DeckDetail.ShowExpandedCard.CardModel(cardToShow: response.cardToShow)
+        viewController?.displayExpandedCard(cardModel: cardModel)
     }
     
 }

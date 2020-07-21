@@ -15,6 +15,8 @@ import UIKit
 @objc protocol DeckDetailRoutingLogic
 {
     func routeToReviewDeck()
+    
+    func routeToExpandedCardDetail()
 }
 
 protocol DeckDetailDataPassing
@@ -37,6 +39,16 @@ class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
     }
     
     
+    func routeToExpandedCardDetail() {
+        let destinationVC = ExpandedCardDetailViewController()
+        destinationVC.modalPresentationStyle = .overCurrentContext
+        var destinationDS = destinationVC.router!.dataStore
+        passDataToExpandedCardDetail(fromDataStore: dataStore!, toDataStore: &destinationDS!)
+        viewController?.navigationController?.pushViewController(destinationVC, animated: true)
+        
+    }
+    
+    
     // MARK: Navigation
     
     
@@ -44,6 +56,12 @@ class DeckDetailRouter: NSObject, DeckDetailRoutingLogic, DeckDetailDataPassing
     
     func passDataToReviewDeck(fromDataStore: DeckDetailDataStore, toDataStore: inout ReviewDeckDataStore) {
         toDataStore.deckInfo = fromDataStore.deckInfo
+    }
+    
+    
+    func passDataToExpandedCardDetail(fromDataStore: DeckDetailDataStore, toDataStore: inout ExpandedCardDetailDataStore) {
+        // current card info is set when we select a collection view cell
+        toDataStore.cardInfo = fromDataStore.currentCardInfo
     }
     
     

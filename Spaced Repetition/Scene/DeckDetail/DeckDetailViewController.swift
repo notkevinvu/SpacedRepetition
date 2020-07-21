@@ -23,6 +23,7 @@ protocol DeckDetailDisplayLogic: class
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel)
     
     func displayReviewDeck(deckModel: DeckDetail.ShowReviewDeck.DeckModel)
+    func displayExpandedCard(cardModel: DeckDetail.ShowExpandedCard.CardModel)
 }
 
 
@@ -101,6 +102,10 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         router?.routeToReviewDeck()
     }
     
+    func displayExpandedCard(cardModel: DeckDetail.ShowExpandedCard.CardModel) {
+        router?.dataStore?.currentCardInfo = cardModel.cardToShow
+        router?.routeToExpandedCardDetail()
+    }
     
     
     // MARK: View lifecycle
@@ -166,7 +171,6 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         interactor?.showCreateCard(request: request)
     }
     
-
 }
 
 // MARK: - Collection view methods
@@ -201,6 +205,13 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
         // TODO: present expanded card view with scrollable text views so user can
         // see more text if needed
         print("Tapped cell \(indexPath.row) - line \(#line) in DeckDetailVC")
+        
+//        guard let currentCell = collectionView.cellForItem(at: indexPath) as? DeckDetailCollectionViewCell else { return }
+        
+        // card cell should always have text in it if it exists
+//        let cardToExpand = CardModel(frontSideText: currentCell.cardFrontSideLabel.text!, backSideText: currentCell.cardBackSideLabel.text!, cardID: nil, dateCreated: nil)
+        let request = DeckDetail.ShowExpandedCard.Request(indexOfCardToShow: indexPath.row)
+        interactor?.showExpandedCard(request: request)
     }
     
 }

@@ -16,6 +16,8 @@ protocol DeckDetailBusinessLogic
 {
     func getDeck(request: DeckDetail.ShowDeck.Request)
     
+    func showExpandedCard(request: DeckDetail.ShowExpandedCard.Request)
+    
 //    func createCard(request: CDDeckDetail.CreateCard.Request)
     
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
@@ -26,6 +28,8 @@ protocol DeckDetailBusinessLogic
 protocol DeckDetailDataStore
 {
     var deckInfo: Deck? { get set }
+    
+    var currentCardInfo: Card? { get set }
 }
 
 class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
@@ -36,6 +40,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     var decksWorker: DecksWorkerProtocol
     
     var deckInfo: Deck?
+    var currentCardInfo: Card?
     
     // MARK: Initialization
     
@@ -60,6 +65,15 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         let response = DeckDetail.ShowDeck.Response(deck: deckInfo)
         presenter?.presentDeck(response: response)
+    }
+    
+    
+    // MARK: Show Expanded Card
+    func showExpandedCard(request: DeckDetail.ShowExpandedCard.Request) {
+        let cardInfoToPass = cardsFromDeck[request.indexOfCardToShow]
+        
+        let response = DeckDetail.ShowExpandedCard.Response(cardToShow: cardInfoToPass)
+        presenter?.presentExpandedCard(response: response)
     }
     
     
