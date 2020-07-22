@@ -88,7 +88,7 @@ final class TestDecksStore: DecksStoreProtocol {
         
         
         let card3 = Card(context: managedContext)
-        card3.initializeCardWith(frontSideText: "Lorem ipsum", backSideText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", cardID: UUID(), dateCreated: Date())
+        card3.initializeCardWith(frontSideText: "Lorem ipsum", backSideText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", cardID: UUID(), dateCreated: Date())
         
         
         let newDeck = Deck(context: managedContext)

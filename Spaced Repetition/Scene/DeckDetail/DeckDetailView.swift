@@ -36,7 +36,7 @@ class DeckDetailView: UIView {
         layout.itemSize = CGSize(width: 360, height: 140)
         // bottom inset allows users to scroll to see last card if there are more
         // than 4 cards
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 100, right: 0)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 90, right: 0)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(DeckDetailCollectionViewCell.self, forCellWithReuseIdentifier: DeckDetailCollectionViewCell.identifier)

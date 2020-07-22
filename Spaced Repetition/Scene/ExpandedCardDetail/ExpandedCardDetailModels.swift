@@ -16,6 +16,20 @@ enum ExpandedCardDetail
 {
     // MARK: Use cases
     
+    enum ConfigureCardTextOnLoad {
+        struct Request {
+            
+        }
+        struct Response {
+            let frontSideText: String
+            let backSideText: String
+        }
+        struct ViewModel {
+            let frontSideText: String
+            let backSideText: String
+        }
+    }
+    
     enum DismissVC {
         struct Response {
         }

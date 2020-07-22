@@ -13,6 +13,8 @@
 import UIKit
 
 protocol ExpandedCardDetailDisplayLogic: class {
+    func displayConfiguredCardText(viewModel: ExpandedCardDetail.ConfigureCardTextOnLoad.ViewModel)
+    
     func dismissVC(viewModel: ExpandedCardDetail.DismissVC.ViewModel)
 }
 
@@ -36,8 +38,8 @@ class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisp
   
   // MARK: Setup
   
-    private func setup()
-    {
+    private func setup() {
+        
         let viewController = self
         let view = ExpandedCardDetailView()
         let interactor = ExpandedCardDetailInteractor()
@@ -47,9 +49,12 @@ class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisp
         viewController.interactor = interactor
         viewController.router = router
         viewController.contentView = view
+        
         view.delegate = interactor
+        
         interactor.presenter = presenter
         presenter.viewController = viewController
+        
         router.viewController = viewController
         router.dataStore = interactor
     }
@@ -66,10 +71,21 @@ class ExpandedCardDetailViewController: UIViewController, ExpandedCardDetailDisp
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureExpandedCardTextOnLoad()
+    }
+    
+    // MARK: Configure expanded card text
+    
+    func configureExpandedCardTextOnLoad() {
+        let request = ExpandedCardDetail.ConfigureCardTextOnLoad.Request()
+        interactor?.configureCardText(request: request)
     }
     
     // MARK: Display logic
+    
+    func displayConfiguredCardText(viewModel: ExpandedCardDetail.ConfigureCardTextOnLoad.ViewModel) {
+        contentView.configureExpandedCardWithCardText(frontSideText: viewModel.frontSideText, backSideText: viewModel.backSideText)
+    }
     
     func dismissVC(viewModel: ExpandedCardDetail.DismissVC.ViewModel) {
         self.dismiss(animated: true, completion: nil)

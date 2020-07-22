@@ -13,12 +13,19 @@
 import UIKit
 
 protocol ExpandedCardDetailPresentationLogic {
+    func presentConfiguredCardText(response: ExpandedCardDetail.ConfigureCardTextOnLoad.Response)
+    
     func dismissVC(response: ExpandedCardDetail.DismissVC.Response)
 }
 
 class ExpandedCardDetailPresenter: ExpandedCardDetailPresentationLogic {
     
     weak var viewController: ExpandedCardDetailDisplayLogic?
+    
+    func presentConfiguredCardText(response: ExpandedCardDetail.ConfigureCardTextOnLoad.Response) {
+        let viewModel = ExpandedCardDetail.ConfigureCardTextOnLoad.ViewModel(frontSideText: response.frontSideText, backSideText: response.backSideText)
+        viewController?.displayConfiguredCardText(viewModel: viewModel)
+    }
     
     func dismissVC(response: ExpandedCardDetail.DismissVC.Response) {
         let viewModel = ExpandedCardDetail.DismissVC.ViewModel()

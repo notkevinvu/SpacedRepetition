@@ -13,6 +13,7 @@
 import UIKit
 
 protocol ExpandedCardDetailBusinessLogic {
+    func configureCardText(request: ExpandedCardDetail.ConfigureCardTextOnLoad.Request)
     
 }
 
@@ -22,13 +23,23 @@ protocol ExpandedCardDetailDataStore {
 
 class ExpandedCardDetailInteractor: ExpandedCardDetailBusinessLogic, ExpandedCardDetailDataStore, ExpandedCardDetailViewDelegate {
     
-    
-    
-    
     var presenter: ExpandedCardDetailPresentationLogic?
     var cardInfo: Card?
 
-    // MARK: Do something
+    // MARK: Business Logic
+    
+    func configureCardText(request: ExpandedCardDetail.ConfigureCardTextOnLoad.Request) {
+        guard let cardInfo = cardInfo else { return }
+        
+        let frontSideText = cardInfo.frontSideText
+        let backSideText = cardInfo.backSideText
+        
+        let response = ExpandedCardDetail.ConfigureCardTextOnLoad.Response(frontSideText: frontSideText, backSideText: backSideText)
+        presenter?.presentConfiguredCardText(response: response)
+    }
+    
+    
+    // MARK: Delegate methods
     
     func didTapBackgroundToDismissVC() {
         let response = ExpandedCardDetail.DismissVC.Response()

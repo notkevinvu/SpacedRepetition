@@ -60,7 +60,7 @@ class DeckDetailCollectionViewCell: UICollectionViewCell {
         view.layer.borderWidth = 0.5
         view.layer.borderColor = UIColor.lightGray.cgColor
         
-       return view
+        return view
     }()
     
     
