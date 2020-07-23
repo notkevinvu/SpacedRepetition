@@ -63,24 +63,28 @@ class ReviewDeckView: UIView {
     }()
     
     
-    let cardFrontSideTextLabel: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.boldSystemFont(ofSize: 26)
+    let cardFrontSideTextView: UITextView = {
+        let txtView = UITextView(frame: .zero)
+        txtView.translatesAutoresizingMaskIntoConstraints = false
+        txtView.textAlignment = .left
+        txtView.backgroundColor = .clear
+//        label.numberOfLines = 0
+        txtView.isSelectable = false
+        txtView.font = UIFont.boldSystemFont(ofSize: 26)
         
-        return label
+        return txtView
     }()
     
-    let cardBackSideTextLabel: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.boldSystemFont(ofSize: 26)
+    let cardBackSideTextView: UITextView = {
+        let txtView = UITextView(frame: .zero)
+        txtView.translatesAutoresizingMaskIntoConstraints = false
+        txtView.textAlignment = .left
+        txtView.backgroundColor = .clear
+//        label.numberOfLines = 0
+        txtView.isSelectable = false
+        txtView.font = UIFont.boldSystemFont(ofSize: 26)
         
-        return label
+        return txtView
     }()
     
     // MARK: Card model
@@ -102,7 +106,7 @@ class ReviewDeckView: UIView {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
         btn.backgroundColor = UIColor(hex: "3399fe")
-        btn.layer.cornerRadius = 5
+        btn.layer.cornerRadius = 7
         
         btn.setTitle("Flip Card", for: .normal)
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 22)
@@ -181,8 +185,8 @@ class ReviewDeckView: UIView {
         containerView.addSubview(currentProgressBarView)
         
         containerView.addSubview(currentCardView)
-        currentCardView.addSubview(cardFrontSideTextLabel)
-        currentCardView.addSubview(cardBackSideTextLabel)
+        currentCardView.addSubview(cardFrontSideTextView)
+        currentCardView.addSubview(cardBackSideTextView)
         currentCardView.addGestureRecognizer(cardViewTapGesture)
         
         containerView.addSubview(buttonSeparatorView)
@@ -208,20 +212,20 @@ class ReviewDeckView: UIView {
             currentCardView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 45),
             currentCardView.heightAnchor.constraint(equalToConstant: 450),
             
-            cardFrontSideTextLabel.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
-            cardFrontSideTextLabel.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
-            cardFrontSideTextLabel.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
+            cardFrontSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
+            cardFrontSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
+            cardFrontSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
             /*
              Bottom anchor lessThanOrEqualTo = the label will dynamically autosize
              vertically until it hits (30 pts above) the currentCardView's
              bottom anchor - this allows us to somewhat force top+left alignment
              */
-            cardFrontSideTextLabel.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
+            cardFrontSideTextView.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
             
-            cardBackSideTextLabel.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
-            cardBackSideTextLabel.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
-            cardBackSideTextLabel.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
-            cardBackSideTextLabel.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
+            cardBackSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
+            cardBackSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
+            cardBackSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
+            cardBackSideTextView.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
             
             
             buttonSeparatorView.heightAnchor.constraint(equalToConstant: 70),
@@ -259,32 +263,32 @@ class ReviewDeckView: UIView {
             correctAnswerButton.backgroundColor = UIColor(hex: "3ACE3A")
         }
         
-        if cardFrontSideTextLabel.isHidden {
+        if cardFrontSideTextView.isHidden {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
                 guard let self = self else { return }
                 
-                self.cardFrontSideTextLabel.alpha = 1
-                self.cardBackSideTextLabel.alpha = 0
+                self.cardFrontSideTextView.alpha = 1
+                self.cardBackSideTextView.alpha = 0
             }) { [weak self] (bool) in
                 guard let self = self else { return }
                 
-                self.cardFrontSideTextLabel.isHidden = false
-                self.cardBackSideTextLabel.isHidden = true
+                self.cardFrontSideTextView.isHidden = false
+                self.cardBackSideTextView.isHidden = true
             }
             return
         }
         
-        if cardBackSideTextLabel.isHidden {
+        if cardBackSideTextView.isHidden {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
                 guard let self = self else { return }
                 
-                self.cardBackSideTextLabel.alpha = 1
-                self.cardFrontSideTextLabel.alpha = 0
+                self.cardBackSideTextView.alpha = 1
+                self.cardFrontSideTextView.alpha = 0
             }) { [weak self] (bool) in
                 guard let self = self else { return }
                 
-                self.cardBackSideTextLabel.isHidden = false
-                self.cardFrontSideTextLabel.isHidden = true
+                self.cardBackSideTextView.isHidden = false
+                self.cardFrontSideTextView.isHidden = true
             }
             return
         }
@@ -296,7 +300,7 @@ class ReviewDeckView: UIView {
     @objc func didTapCorrectAnswerButton() {
         incrementProgressBar()
         
-        if cardFrontSideTextLabel.isHidden {
+        if cardFrontSideTextView.isHidden {
             didTapFlipCardButton()
         }
         
@@ -317,7 +321,7 @@ class ReviewDeckView: UIView {
     @objc func didTapWrongAnswerButton() {
         incrementProgressBar()
         
-        if cardFrontSideTextLabel.isHidden {
+        if cardFrontSideTextView.isHidden {
             didTapFlipCardButton()
         }
         
@@ -348,10 +352,10 @@ class ReviewDeckView: UIView {
     }
     
     func configureCardView(cardModel: ReviewCardModel) {
-        cardFrontSideTextLabel.text = cardModel.frontSideText
-        cardBackSideTextLabel.text = cardModel.backSideText
+        cardFrontSideTextView.text = cardModel.frontSideText
+        cardBackSideTextView.text = cardModel.backSideText
         
-        cardBackSideTextLabel.isHidden = true
+        cardBackSideTextView.isHidden = true
     }
     
     
