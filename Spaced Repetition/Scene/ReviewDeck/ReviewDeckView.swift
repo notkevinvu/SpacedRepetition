@@ -118,36 +118,46 @@ class ReviewDeckView: UIView {
     
     // MARK: Wrong answer button
     lazy var wrongAnswerButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-        button.layer.cornerRadius = 20
-        button.clipsToBounds = true
+        
+        button.backgroundColor = .white
+        button.layer.shadowOffset = .zero
+        button.layer.shadowOpacity = 0.25
+        button.layer.shadowRadius = 7
+        
+        button.layer.cornerRadius = 35
+        button.layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapWrongAnswerButton), for: .touchUpInside)
         
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
         let xmarkImage = UIImage(systemName: "xmark", withConfiguration: config)
         button.setImage(xmarkImage, for: .normal)
-        button.tintColor = .white
+        button.tintColor = UIColor(hex: "CE3A3A")
         
         return button
     }()
     
     // MARK: Correct answer button
     lazy var correctAnswerButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(frame: .zero)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-        button.layer.cornerRadius = 20
-        button.clipsToBounds = true
+        
+        button.backgroundColor = .white
+        button.layer.shadowOffset = .zero
+        button.layer.shadowOpacity = 0.25
+        button.layer.shadowRadius = 7
+        
+        button.layer.cornerRadius = 35
+        button.layer.masksToBounds = false
         
         button.addTarget(self, action: #selector(didTapCorrectAnswerButton), for: .touchUpInside)
         
         let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .bold, scale: .large)
         let checkmarkImage = UIImage(systemName: "checkmark", withConfiguration: config)
         button.setImage(checkmarkImage, for: .normal)
-        button.tintColor = .white
+        button.tintColor = UIColor(hex: "3ACE3A")
         
         return button
     }()
@@ -238,15 +248,25 @@ class ReviewDeckView: UIView {
             flipCardButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
             flipCardButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
             
-            correctAnswerButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
-            correctAnswerButton.leftAnchor.constraint(equalTo: buttonSeparatorView.rightAnchor),
-            correctAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
-            correctAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor),
+            correctAnswerButton.centerXAnchor.constraint(equalTo: currentCardView.centerXAnchor, constant: 80),
+            correctAnswerButton.centerYAnchor.constraint(equalTo: flipCardButton.bottomAnchor, constant: 60),
+            correctAnswerButton.heightAnchor.constraint(equalToConstant: 70),
+            correctAnswerButton.widthAnchor.constraint(equalToConstant: 70),
             
-            wrongAnswerButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
-            wrongAnswerButton.rightAnchor.constraint(equalTo: buttonSeparatorView.leftAnchor),
-            wrongAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
-            wrongAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor)
+            wrongAnswerButton.centerXAnchor.constraint(equalTo: currentCardView.centerXAnchor, constant: -80),
+            wrongAnswerButton.centerYAnchor.constraint(equalTo: correctAnswerButton.centerYAnchor),
+            wrongAnswerButton.heightAnchor.constraint(equalToConstant: 70),
+            wrongAnswerButton.widthAnchor.constraint(equalToConstant: 70)
+            
+//            correctAnswerButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
+//            correctAnswerButton.leftAnchor.constraint(equalTo: buttonSeparatorView.rightAnchor),
+//            correctAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
+//            correctAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor),
+//
+//            wrongAnswerButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
+//            wrongAnswerButton.rightAnchor.constraint(equalTo: buttonSeparatorView.leftAnchor),
+//            wrongAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
+//            wrongAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor)
             
         ])
     }
@@ -258,10 +278,13 @@ class ReviewDeckView: UIView {
         
         // MARK: Flip cards
         
-        if wrongAnswerButton.backgroundColor == UIColor.lightGray.withAlphaComponent(0.25) {
-            wrongAnswerButton.backgroundColor = UIColor(hex: "CE3A3A")
-            correctAnswerButton.backgroundColor = UIColor(hex: "3ACE3A")
-        }
+        // TODO: Remove this when we invert the colors for the wrong/right answer buttons
+        // We will thus always have the accent/tint color enabled on the button
+        
+//        if wrongAnswerButton.backgroundColor == UIColor.lightGray.withAlphaComponent(0.25) {
+//            wrongAnswerButton.backgroundColor = UIColor(hex: "CE3A3A")
+//            correctAnswerButton.backgroundColor = UIColor(hex: "3ACE3A")
+//        }
         
         if cardFrontSideTextView.isHidden {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
@@ -309,9 +332,6 @@ class ReviewDeckView: UIView {
             
             self.currentCardView.backgroundColor = UIColor.green.withAlphaComponent(0.25)
             self.currentCardView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-            
-            self.wrongAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-            self.correctAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
         }
         
         delegate?.didTapCorrectAnswerButton()
@@ -330,9 +350,6 @@ class ReviewDeckView: UIView {
             
             self.currentCardView.backgroundColor = UIColor.red.withAlphaComponent(0.25)
             self.currentCardView.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-            
-            self.wrongAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
-            self.correctAnswerButton.backgroundColor = UIColor.lightGray.withAlphaComponent(0.25)
         }
         
         delegate?.didTapWrongAnswerButton()
