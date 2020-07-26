@@ -95,7 +95,15 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic, AlertD
          specifies a customView)
          */
 //        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: ourCustomView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDoneButton))
+        guard let questionMarkImage = UIImage(systemName: "questionmark.circle") else { return }
+        let reviewExplanationBarButton = UIBarButtonItem(image: questionMarkImage, style: .done, target: self, action: #selector(didTapReviewExplanationButton))
+        
+        let doneBarButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(didTapDoneButton))
+        
+        navigationItem.rightBarButtonItems = [
+            doneBarButton,
+            reviewExplanationBarButton
+        ]
         
         navigationItem.largeTitleDisplayMode = .always
     }
@@ -127,6 +135,14 @@ class ReviewDeckViewController: UIViewController, ReviewDeckDisplayLogic, AlertD
     
     
     // MARK: Button methods
+    
+    @objc func didTapReviewExplanationButton() {
+        // TODO: For now, we will create an alert that tells users what the general
+        // progression of using the review functionality is like
+        
+        let request = ReviewDeck.ShowReviewOnboardingAlert.Request()
+        interactor?.showReviewOnboardingAlert(request: request)
+    }
     
     @objc func didTapDoneButton() {
         let request = ReviewDeck.FinishedReviewingDeck.Request()

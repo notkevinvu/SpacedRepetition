@@ -31,6 +31,11 @@ enum ReviewDeck
         }
     }
     
+    enum ShowReviewOnboardingAlert {
+        struct Request {
+        }
+    }
+    
     enum MoveToNextCard {
         struct Request {
             
