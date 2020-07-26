@@ -163,7 +163,7 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
             self.presenter?.presentFinishedReviewingDeck(response: response)
         }
         
-        let viewModel = AlertDisplayable.ViewModel(title: "Please confirm", message: "Are you sure you want to leave while you're reviewing?", textFields: [], actions: [cancelAction, confirmAction])
+        let viewModel = AlertDisplayable.ViewModel(title: "Leave review?", message: "Are you sure you want to leave while you're reviewing?", textFields: [], actions: [cancelAction, confirmAction])
         presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
     }
     
