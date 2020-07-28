@@ -52,6 +52,7 @@ class ReviewDeckView: UIView {
         return progress
     }()
     
+    
     // MARK: Card view
     lazy var currentCardView: UIView = {
         let view = UIView()
@@ -93,6 +94,8 @@ class ReviewDeckView: UIView {
         let backSideText: String
     }
     
+    
+    // MARK: Flip card tap gesture
     lazy var cardViewTapGesture: UITapGestureRecognizer = {
         let gesture = UITapGestureRecognizer()
         // TODO: Maybe remove the card view tap gesture? Not sure yet
@@ -162,12 +165,13 @@ class ReviewDeckView: UIView {
         return button
     }()
     
-    lazy var buttonSeparatorView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.isUserInteractionEnabled = false
+    
+    // MARK: Pan card gesture
+    lazy var panCardGesture: UIPanGestureRecognizer = {
+        let pan = UIPanGestureRecognizer()
+        pan.addTarget(self, action: #selector(panCard(sender:)))
         
-        return view
+        return pan
     }()
     
     
@@ -198,8 +202,8 @@ class ReviewDeckView: UIView {
         currentCardView.addSubview(cardFrontSideTextView)
         currentCardView.addSubview(cardBackSideTextView)
         currentCardView.addGestureRecognizer(cardViewTapGesture)
+        currentCardView.addGestureRecognizer(panCardGesture)
         
-        containerView.addSubview(buttonSeparatorView)
         containerView.addSubview(flipCardButton)
         containerView.addSubview(wrongAnswerButton)
         containerView.addSubview(correctAnswerButton)
@@ -237,13 +241,7 @@ class ReviewDeckView: UIView {
             cardBackSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
             cardBackSideTextView.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
             
-            
-            buttonSeparatorView.heightAnchor.constraint(equalToConstant: 70),
-            buttonSeparatorView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -100),
-            buttonSeparatorView.widthAnchor.constraint(equalToConstant: 35),
-            buttonSeparatorView.centerXAnchor.constraint(equalTo: currentCardView.centerXAnchor),
-            
-            flipCardButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.topAnchor, constant: -10),
+            flipCardButton.topAnchor.constraint(equalTo: currentCardView.bottomAnchor, constant: 20),
             flipCardButton.heightAnchor.constraint(equalToConstant: 50),
             flipCardButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
             flipCardButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
@@ -258,16 +256,6 @@ class ReviewDeckView: UIView {
             wrongAnswerButton.heightAnchor.constraint(equalToConstant: 70),
             wrongAnswerButton.widthAnchor.constraint(equalToConstant: 70)
             
-//            correctAnswerButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
-//            correctAnswerButton.leftAnchor.constraint(equalTo: buttonSeparatorView.rightAnchor),
-//            correctAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
-//            correctAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor),
-//
-//            wrongAnswerButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
-//            wrongAnswerButton.rightAnchor.constraint(equalTo: buttonSeparatorView.leftAnchor),
-//            wrongAnswerButton.topAnchor.constraint(equalTo: buttonSeparatorView.topAnchor),
-//            wrongAnswerButton.bottomAnchor.constraint(equalTo: buttonSeparatorView.bottomAnchor)
-            
         ])
     }
     
@@ -277,14 +265,6 @@ class ReviewDeckView: UIView {
     @objc func didTapFlipCardButton() {
         
         // MARK: Flip cards
-        
-        // TODO: Remove this when we invert the colors for the wrong/right answer buttons
-        // We will thus always have the accent/tint color enabled on the button
-        
-//        if wrongAnswerButton.backgroundColor == UIColor.lightGray.withAlphaComponent(0.25) {
-//            wrongAnswerButton.backgroundColor = UIColor(hex: "CE3A3A")
-//            correctAnswerButton.backgroundColor = UIColor(hex: "3ACE3A")
-//        }
         
         if cardFrontSideTextView.isHidden {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
@@ -314,6 +294,32 @@ class ReviewDeckView: UIView {
                 self.cardFrontSideTextView.isHidden = true
             }
             return
+        }
+    }
+    
+    
+    @objc func panCard(sender: UIPanGestureRecognizer) {
+        guard let card = sender.view else { return }
+        let point = sender.translation(in: containerView)
+        
+        /*
+         The true center of the view is 248 points above the container view center
+         This is due to the topAnchor of the containerView being anchored to the
+         top anchor of the layoutMarginsGuide for a large display title
+         
+         We then subtract this number from the y value when updating the new card center
+         to get the true center it should be at
+         */
+        let adjustedYPointFromMarginsGuide: CGFloat = 248.0
+        
+        // continuously update card center point to new touch point
+        card.center = CGPoint(x: containerView.center.x + point.x, y: containerView.center.y + point.y - adjustedYPointFromMarginsGuide)
+        
+        if sender.state == .ended {
+            UIView.animate(withDuration: 0.2) {
+                // x: 207.0, y: 270.0 is the original card center
+                card.center = CGPoint(x: 207.0, y: 270.0)
+            }
         }
     }
     
