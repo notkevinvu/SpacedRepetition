@@ -297,13 +297,13 @@ class ReviewDeckView: UIView {
         }
     }
     
-    
+    // MARK: Pan card
     @objc func panCard(sender: UIPanGestureRecognizer) {
         guard let card = sender.view else { return }
         let point = sender.translation(in: containerView)
         
         /*
-         The true center of the view is 248 points above the container view center
+         The true center.y of the view is 248 points above the container view center
          This is due to the topAnchor of the containerView being anchored to the
          top anchor of the layoutMarginsGuide for a large display title
          
@@ -316,6 +316,32 @@ class ReviewDeckView: UIView {
         card.center = CGPoint(x: containerView.center.x + point.x, y: containerView.center.y + point.y - adjustedYPointFromMarginsGuide)
         
         if sender.state == .ended {
+            
+            if card.center.x < 50 {
+                // move card off to the left and down
+                UIView.animate(withDuration: 0.3) {
+                    card.center = CGPoint(x: card.center.x - 200, y: card.center.y + 75)
+                    card.alpha = 0
+                }
+                
+                didTapWrongAnswerButton()
+                resetCardPosition(cardView: card)
+                
+                return
+                
+            } else if card.center.x > (containerView.frame.width - 50) {
+                // move card off to the right and down
+                UIView.animate(withDuration: 0.3) {
+                    card.center = CGPoint(x: card.center.x + 200, y: card.center.y + 75)
+                    card.alpha = 0
+                }
+                
+                didTapCorrectAnswerButton()
+                resetCardPosition(cardView: card)
+                
+                return
+            }
+            
             UIView.animate(withDuration: 0.2) {
                 // x: 207.0, y: 270.0 is the original card center
                 card.center = CGPoint(x: 207.0, y: 270.0)
@@ -372,6 +398,14 @@ class ReviewDeckView: UIView {
         if progress.isFinished {
             delegate?.didFinishProgressBar()
         }
+    }
+    
+    
+    func resetCardPosition(cardView: UIView) {
+        UIView.animate(withDuration: 0.2) {
+            cardView.center = CGPoint(x: 207.0, y: 270.0)
+        }
+        cardView.alpha = 1
     }
     
     func configureCardView(cardModel: ReviewCardModel) {
