@@ -179,12 +179,12 @@ class ReviewDeckView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: .zero)
-        
         setupSubviews()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(frame: .zero)
+        setupSubviews()
     }
     
     
@@ -319,31 +319,39 @@ class ReviewDeckView: UIView {
             
             if card.center.x < 50 {
                 // move card off to the left and down
-                UIView.animate(withDuration: 0.3) {
+                UIView.animate(withDuration: 0.2) {
                     card.center = CGPoint(x: card.center.x - 200, y: card.center.y + 75)
                     card.alpha = 0
                 }
                 
                 didTapWrongAnswerButton()
-                resetCardPosition(cardView: card)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                    guard let self = self else { return }
+                    self.resetCardPositionAndAlpha(cardView: card)
+                }
                 
                 return
                 
             } else if card.center.x > (containerView.frame.width - 50) {
                 // move card off to the right and down
-                UIView.animate(withDuration: 0.3) {
+                UIView.animate(withDuration: 0.2) {
                     card.center = CGPoint(x: card.center.x + 200, y: card.center.y + 75)
                     card.alpha = 0
                 }
                 
                 didTapCorrectAnswerButton()
-                resetCardPosition(cardView: card)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+                    guard let self = self else { return }
+                    self.resetCardPositionAndAlpha(cardView: card)
+                }
                 
                 return
             }
             
             UIView.animate(withDuration: 0.2) {
-                // x: 207.0, y: 270.0 is the original card center
+                // this point is the original card center
                 card.center = CGPoint(x: 207.0, y: 270.0)
             }
         }
@@ -401,11 +409,13 @@ class ReviewDeckView: UIView {
     }
     
     
-    func resetCardPosition(cardView: UIView) {
+    func resetCardPositionAndAlpha(cardView: UIView) {
+        cardView.center = CGPoint(x: 207.0, y: 270.0)
+        
         UIView.animate(withDuration: 0.2) {
-            cardView.center = CGPoint(x: 207.0, y: 270.0)
+            cardView.alpha = 1
         }
-        cardView.alpha = 1
+        
     }
     
     func configureCardView(cardModel: ReviewCardModel) {

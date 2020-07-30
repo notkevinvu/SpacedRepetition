@@ -142,11 +142,11 @@ class ReviewDeckInteractor: ReviewDeckBusinessLogic, ReviewDeckDataStore, Review
     }
     
     
-    // MARK: Show review onboarding alert
+    // MARK: Show onboarding alert
     func showReviewOnboardingAlert(request: ReviewDeck.ShowReviewOnboardingAlert.Request) {
         let doneAction = AlertDisplayable.Action(title: "Ok!", style: .default, handler: nil)
         
-        let viewModel = AlertDisplayable.ViewModel(title: "Using the review feature:", message: "Tap the card or the \"Flip card\" button to flip to the back side! \n\nPress the X or √ button to mark if you've gotten the card wrong or right! \n\nOnce you're finished, you'll be done until the next time you need to review! \n\nCards are separated into review cycles of: \n-Every day \n-Every 2 days \n-Every 3 days \n-Once a week \n-Retired (which means you probably don't need to review it anymore!)", textFields: [], actions: [doneAction])
+        let viewModel = AlertDisplayable.ViewModel(title: "Using the review feature:", message: "Tap the card or the \"Flip card\" button to flip to the back side! \n\nPress the buttons at the bottom or swipe the card to mark if you've gotten the card wrong or right! \n\nOnce you're finished, you'll be done until the next time you need to review! \n\nCards are separated into review cycles of: \n-Every day \n-Every 2 days \n-Every 3 days \n-Once a week \n-Retired (which means you probably don't need to review it anymore!)", textFields: [], actions: [doneAction])
         presenter?.presentAlert(viewModel: viewModel, alertStyle: .alert)
     }
     
