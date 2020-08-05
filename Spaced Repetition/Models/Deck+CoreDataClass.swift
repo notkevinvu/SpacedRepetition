@@ -45,5 +45,9 @@ public class Deck: NSManagedObject {
             self.addToCards(card)
         }
     }
+    
+    public func updateDeck(withNewIndex index: Int) {
+        self.deckIndex = Int32(index)
+    }
 
 }

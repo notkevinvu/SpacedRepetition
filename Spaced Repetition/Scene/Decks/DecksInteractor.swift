@@ -16,6 +16,8 @@ protocol DecksBusinessLogic: DecksViewDelegate {
     func showDeckOptions(request: Decks.ShowDeckOptions.Request)
     
     func updateDeckCellModels(request: Decks.UpdateDeckCellModels.Request)
+    
+    func reorderDeck(request: Decks.ReorderDeck.Request)
 }
 
 protocol DecksBusinessLogicDelegate: class {
@@ -136,6 +138,25 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
         
         let viewModel = AlertDisplayable.ViewModel(title: nil, message: nil, textFields: [], actions: [cancelAction, editDeckTitleAction, deleteDeckAction])
         presenter.presentAlert(viewModel: viewModel, alertStyle: .actionSheet)
+    }
+    
+    // MARK: Reorder deck
+    func reorderDeck(request: Decks.ReorderDeck.Request) {
+        /*
+         need to check to see if the destination index is the end of the array
+         we can do this by checking if the destination index is the same as the
+         end index of the array
+         */
+        
+        if request.destinationIndex == decks.endIndex {
+            let deckToMove = decks.remove(at: request.sourceIndex)
+            decks.insert(deckToMove, at: decks.endIndex)
+        } else {
+            let deckToMove = decks.remove(at: request.sourceIndex)
+            decks.insert(deckToMove, at: request.destinationIndex)
+        }
+        
+        decksWorker.updateDeckOrder(decks: decks)
     }
     
 }

@@ -18,6 +18,7 @@ public class Card: NSManagedObject {
     }
     
     
+    // MARK: - Card initialization
     /**
     A method to help with setting all the attributes of a newly initialized/added Card object
     
@@ -78,7 +79,7 @@ public class Card: NSManagedObject {
         }
     }
     
-    
+    // MARK: - Set new review status
     func set(newReviewStatus: Card.ReviewStatus, newDateLastReviewed: Date) {
         
         switch newReviewStatus {

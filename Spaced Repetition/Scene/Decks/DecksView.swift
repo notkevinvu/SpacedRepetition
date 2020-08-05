@@ -35,6 +35,7 @@ final class DecksView: UIView {
         // give collection view a bit more space at top from the title/nav bar
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         collectionView.alwaysBounceVertical = true
+        collectionView.dragInteractionEnabled = true
         
         collectionView.collectionViewLayout = layout
         
@@ -58,6 +59,24 @@ final class DecksView: UIView {
         addDeckButton.addTarget(self, action: #selector(handleAddDeck), for: .touchUpInside)
         return addDeckButton
     }()
+    
+    
+    /*
+     TODO: If we don't want to use the UICollectionViewDragDelegate method of
+     reordering cells, we should add the longPressGesture back in
+     
+     The reason we are not using it is because it has a slight bug where the
+     cell being dragged will snap back to its original position temporarily
+     if it gets close to the original position. It will then snap back to the
+     user's touch point
+     */
+    
+//    private lazy var longPressGesture: UILongPressGestureRecognizer = {
+//        let lp = UILongPressGestureRecognizer()
+//        lp.addTarget(self, action: #selector(didLongPressCollectionView(sender:)))
+//
+//        return lp
+//    }()
 
     
     // MARK: Object lifecycle
@@ -78,6 +97,8 @@ final class DecksView: UIView {
         
         addSubview(collectionView)
         addSubview(addDeckButton)
+        // TODO: Add this back in if not using UICollectionViewDragDelegate
+//        collectionView.addGestureRecognizer(longPressGesture)
         
         NSLayoutConstraint.activate([
             collectionView.leftAnchor.constraint(equalTo: self.leftAnchor),
@@ -102,4 +123,19 @@ final class DecksView: UIView {
         delegate?.decksViewHandleTapAddDeckButton(request: request)
     }
     
+    // TODO: Add this back in if not using UICollectionViewDragDelegate
+    
+//    @objc private func didLongPressCollectionView(sender: UILongPressGestureRecognizer) {
+//        switch sender.state {
+//        case .began:
+//            guard let selectedIndexPath = collectionView.indexPathForItem(at: sender.location(in: collectionView)) else { break }
+//            collectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+//        case .changed:
+//            collectionView.updateInteractiveMovementTargetPosition(sender.location(in: collectionView))
+//        case .ended:
+//            collectionView.endInteractiveMovement()
+//        default:
+//            collectionView.cancelInteractiveMovement()
+//        }
+//    }
 }

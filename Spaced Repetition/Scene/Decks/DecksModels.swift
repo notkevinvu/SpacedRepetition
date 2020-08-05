@@ -63,6 +63,22 @@ enum Decks {
         }
     }
     
+    // MARK: Reorder deck
+    enum ReorderDeck {
+        struct Request {
+            let sourceIndex: Int
+            let destinationIndex: Int
+        }
+        // Possibly don't need Response or ViewModel? CollectionViewDrag/Drop
+        // delegate updates the collection view anyway
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
+    
     // MARK: Show deck options
     enum ShowDeckOptions {
         // only need request - response and viewmodel handled by alertdisplayable

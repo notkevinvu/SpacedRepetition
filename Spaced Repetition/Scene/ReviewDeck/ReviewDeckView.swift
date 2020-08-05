@@ -69,7 +69,6 @@ class ReviewDeckView: UIView {
         txtView.translatesAutoresizingMaskIntoConstraints = false
         txtView.textAlignment = .left
         txtView.backgroundColor = .clear
-//        label.numberOfLines = 0
         txtView.isSelectable = false
         txtView.font = UIFont.boldSystemFont(ofSize: 26)
         
@@ -81,7 +80,6 @@ class ReviewDeckView: UIView {
         txtView.translatesAutoresizingMaskIntoConstraints = false
         txtView.textAlignment = .left
         txtView.backgroundColor = .clear
-//        label.numberOfLines = 0
         txtView.isSelectable = false
         txtView.font = UIFont.boldSystemFont(ofSize: 26)
         

@@ -21,6 +21,7 @@ protocol DecksWorkerProtocol {
     func createDeck() -> Deck?
     func editDeckTitle(forDeck deck: Deck, withNewTitle newTitle: String)
     func deleteDeck(deck: Deck)
+    func updateDeckOrder(decks: [Deck])
     
     func createCard(withCardModel cardModel: CardModel, forDeck deck: Deck)
     func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String)
@@ -187,6 +188,14 @@ extension DecksWorker: DecksWorkerProtocol {
             return
         }
     }
+    
+    // MARK: - Update Deck order
+    func updateDeckOrder(decks: [Deck]) {
+        for (index, deck) in decks.enumerated() {
+            deck.updateDeck(withNewIndex: index)
+        }
+    }
+    
     
     // MARK: - Edit card
     func editCard(cardToEdit card: Card, newFrontText: String, newBackText: String) {

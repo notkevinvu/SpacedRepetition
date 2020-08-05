@@ -62,9 +62,11 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         view.delegate = interactor
     }
     
-    private func configureCollectionViewSource() {
+    private func configureCollectionView() {
         contentView.collectionView.delegate = self
         contentView.collectionView.dataSource = self
+        contentView.collectionView.dragDelegate = self
+        contentView.collectionView.dropDelegate = self
     }
     
     private func configureNavigationbar() {
@@ -87,7 +89,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureCollectionViewSource()
+        configureCollectionView()
         configureNavigationbar()
         fetchDecks()
     }
@@ -137,7 +139,33 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     }
     
     
+    // MARK: Helper methods
+    
+    fileprivate func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
+        
+        guard
+            let item = coordinator.items.first,
+            let sourceIndexPath = item.sourceIndexPath
+            else {
+                return
+        }
+        
+        collectionView.performBatchUpdates({
+            let cellModelToMove = cellModels.remove(at: sourceIndexPath.item)
+            cellModels.insert(cellModelToMove, at: destinationIndexPath.item)
+            
+            collectionView.deleteItems(at: [sourceIndexPath])
+            collectionView.insertItems(at: [destinationIndexPath])
+        }, completion: nil)
+        
+        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+        
+        let request = Decks.ReorderDeck.Request(sourceIndex: sourceIndexPath.item, destinationIndex: destinationIndexPath.item)
+        interactor?.reorderDeck(request: request)
+    }
+    
 }
+
 
 // MARK: - Collection view methods
 
@@ -167,6 +195,53 @@ extension DecksViewController: UICollectionViewDataSource, UICollectionViewDeleg
         interactor?.decksViewHandleTapDeckCell(request: request)
     }
     
+//    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+//        let temp = cellModels.remove(at: sourceIndexPath.item)
+//        cellModels.insert(temp, at: destinationIndexPath.item)
+//        print("Origin indexpath: \(sourceIndexPath.item) - destination: \(destinationIndexPath.item)")
+//
+//        // TODO: Re-implement this if we want to use the long press gesture method
+//    }
+    
 }
+
+// MARK: Drag/drop collection view ext
+extension DecksViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        
+        return UICollectionViewDropProposal(operation: .forbidden)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        let item = cellModels[indexPath.row]
+        
+        let itemProvider = NSItemProvider(object: item.deckTitle as NSString)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        dragItem.localObject = item
+        
+        return [dragItem]
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if coordinator.proposal.operation == .move {
+            reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
+        }
+        
+    }
+    
+    
+    
+    
+}
+
 
 
