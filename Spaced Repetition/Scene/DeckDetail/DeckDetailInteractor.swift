@@ -179,6 +179,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         presenter?.presentAlert(viewModel: actionSheetViewModel, alertStyle: .actionSheet)
     }
     
+    // MARK: Reorder cards
     func reorderCards(request: DeckDetail.ReorderCards.Request) {
         guard let deckInfo = deckInfo else { return }
         
@@ -186,7 +187,6 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         cardsFromDeck.insert(cardToMove, at: request.destinationIndex)
         
         deckInfo.reorder(card: cardToMove, sourceIndex: request.sourceIndex, destinationIndex: request.destinationIndex)
-        
     }
     
     

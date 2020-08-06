@@ -49,5 +49,23 @@ public class Deck: NSManagedObject {
     public func updateDeck(withNewIndex index: Int) {
         self.deckIndex = Int32(index)
     }
+    
+    public func reorder(card: Card, sourceIndex: Int, destinationIndex: Int) {
+        self.removeFromCards(at: sourceIndex)
+        self.insertIntoCards(card, at: destinationIndex)
+        
+        guard let managedContext = self.managedObjectContext else { return }
+        
+        /*
+         TODO: Maybe move this out of the class method? Might want to only save
+         if the user leaves the scene or closes the app (i.e. keep the possibility
+         for the user to undo an action - not implemented yet though)
+         */
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Failed to save reordered cards \(error) with desc: \(error.userInfo)")
+        }
+    }
 
 }

@@ -19,13 +19,14 @@ class CoreDataStack {
     
     private lazy var storeContainer: NSPersistentContainer = {
         
-        // MARK: TODO: REMOVE IN MEMORY STORE TYPE AFTER TESTING
+        
         let persistentStoreDescription = NSPersistentStoreDescription()
         persistentStoreDescription.type = NSInMemoryStoreType
         
         let container = NSPersistentContainer(name: self.modelName)
-        // TODO: Also remove this
-        container.persistentStoreDescriptions = [persistentStoreDescription]
+        // MARK: TODO: REMOVE THIS IF USING PERSISTENT STORAGE
+        // i.e. if using in memory store type, uncomment this back in
+//        container.persistentStoreDescriptions = [persistentStoreDescription]
         
         
         container.loadPersistentStores { (storeDescription, error) in

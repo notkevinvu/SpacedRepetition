@@ -164,7 +164,11 @@ class DecksCollectionViewCell: UICollectionViewCell {
         guard let deckNeedsReview = model.needsReview else { return }
         switch deckNeedsReview {
         case true:
-            reviewNotificationLabel.text = "Needs review"
+            if numOfCardsLabel.text == "0 Cards" {
+                reviewNotificationLabel.text = "No cards yet!"
+            } else {
+                reviewNotificationLabel.text = "Needs review"
+            }
         case false:
             reviewNotificationLabel.text = "All caught up!"
         }

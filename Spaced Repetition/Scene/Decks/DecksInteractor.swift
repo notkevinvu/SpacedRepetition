@@ -52,13 +52,16 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     // MARK: Fetching decks
     
     func fetchDecks(request: Decks.FetchDecks.Request) {
-        decks = decksWorker.fetchDecks()
-        
-        // this checks and updates every deck
-        decksWorker.checkIfDecksNeedsReview(decks: decks)
-        
-        let response = Decks.FetchDecks.Response(decks: decks)
-        presenter.presentFetchedDecks(response: response)
+        decksWorker.fetchDecks { [weak self] (fetchedDecks) in
+            guard let self = self else { return }
+            self.decks = fetchedDecks
+            
+            // this checks and updates every deck
+            self.decksWorker.checkIfDecksNeedsReview(decks: self.decks)
+            
+            let response = Decks.FetchDecks.Response(decks: self.decks)
+            self.presenter.presentFetchedDecks(response: response)
+        }
     }
     
     // MARK: Update deck cell models

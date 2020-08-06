@@ -15,7 +15,7 @@ protocol DecksWorkerFactory {
 
 
 protocol DecksWorkerProtocol {
-    func fetchDecks() -> [Deck]
+    func fetchDecks(completion: @escaping ([Deck]) -> () )
     func checkIfDecksNeedsReview(decks: [Deck])
     
     func createDeck() -> Deck?
@@ -44,10 +44,10 @@ extension DecksWorker: DecksWorkerProtocol {
     
     
     // MARK: - Fetch decks
-    func fetchDecks() -> [Deck] {
-        let decks = decksStore.fetchDecks()
-        
-        return decks
+    func fetchDecks(completion: @escaping ([Deck]) -> () ) {
+        decksStore.fetchDecks { (decks) in
+            completion(decks)
+        }
     }
     
     // MARK: Check if decks need review
@@ -192,7 +192,16 @@ extension DecksWorker: DecksWorkerProtocol {
     // MARK: - Update Deck order
     func updateDeckOrder(decks: [Deck]) {
         for (index, deck) in decks.enumerated() {
+            guard let managedContext = deck.managedObjectContext else { return }
+            
             deck.updateDeck(withNewIndex: index)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                assertionFailure("Failed to update deck order line: \(#line), \(#file) -- error: \(error) with desc: \(error.userInfo)")
+                return
+            }
         }
     }
     

@@ -33,8 +33,10 @@ extension DependencyContainer: DecksStoreFactory {
     func makeDecksStore() -> DecksStoreProtocol {
         
         // MARK: TODO: Switch to memoryDecksStore for final
-         return testDecksStore
-//        return memoryDecksStore
+        // Also remember to switch from in memory store in core data stack to
+        // persistent
+//        return testDecksStore
+        return memoryDecksStore
     }
 }
 

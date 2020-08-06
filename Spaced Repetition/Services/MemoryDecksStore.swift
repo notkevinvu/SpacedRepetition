@@ -21,7 +21,7 @@ protocol CoreDataManagedContextFactory {
 protocol DecksStoreProtocol {
     var managedContext: NSManagedObjectContext! { get set }
     
-    func fetchDecks() -> [Deck]
+    func fetchDecks(completion: @escaping ([Deck]) -> () )
     
     func createDeck() -> Deck?
     
@@ -45,16 +45,16 @@ final class TestDecksStore: DecksStoreProtocol {
     static var decks: [Deck] = []
     
     // MARK: Fetch decks
-    func fetchDecks() -> [Deck] {
+    func fetchDecks(completion: @escaping ([Deck]) -> ()) {
         let deckFetchReq = Deck.deckFetchRequest()
         
         /*
-         a sort descriptor for sorting by "index" - as we add decks, we set the added
-         deck's deckIndex to the count of the current store (i.e. if there are currently
-         0 decks fetched, when we add the first deck, its index will be 0 - the
-         second deck will check the fetched decks array and find 1 deck, thus the
-         index of the second deck will become 1)
-         */
+        a sort descriptor for sorting by "index" - as we add decks, we set the added
+        deck's deckIndex to the count of the current store (i.e. if there are currently
+        0 decks fetched, when we add the first deck, its index will be 0 - the
+        second deck will check the fetched decks array and find 1 deck, thus the
+        index of the second deck will become 1)
+        */
         let deckIndexSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.deckIndex), ascending: true)
         deckFetchReq.sortDescriptors = [deckIndexSortDescriptor]
         deckFetchReq.fetchBatchSize = 10
@@ -63,16 +63,16 @@ final class TestDecksStore: DecksStoreProtocol {
             guard let decks = result.finalResult else { return }
             
             TestDecksStore.decks = decks
+            
+            completion(TestDecksStore.decks)
         }
         
         do {
             try managedContext.execute(asyncFetchReq)
         } catch let error as NSError {
             assertionFailure("Failed to fetch decks \(#line), \(#file) - error: \(error) with desc \(error.userInfo)")
-            return []
+            return
         }
-        
-        return TestDecksStore.decks
     }
     
     
@@ -130,16 +130,16 @@ final class MemoryDecksStore: DecksStoreProtocol {
     static var decks: [Deck] = []
     
     // MARK: Fetch decks
-    func fetchDecks() -> [Deck] {
+    func fetchDecks(completion: @escaping ([Deck]) -> () ) {
         let deckFetchReq = Deck.deckFetchRequest()
         
         /*
-         a sort descriptor for sorting by "index" - as we add decks, we set the added
-         deck's deckIndex to the count of the current store (i.e. if there are currently
-         0 decks fetched, when we add the first deck, its index will be 0 - the
-         second deck will check the fetched decks array and find 1 deck, thus the
-         index of the second deck will become 1)
-         */
+        a sort descriptor for sorting by "index" - as we add decks, we set the added
+        deck's deckIndex to the count of the current store (i.e. if there are currently
+        0 decks fetched, when we add the first deck, its index will be 0 - the
+        second deck will check the fetched decks array and find 1 deck, thus the
+        index of the second deck will become 1)
+        */
         let deckIndexSortDescriptor = NSSortDescriptor(key: #keyPath(Deck.deckIndex), ascending: true)
         deckFetchReq.sortDescriptors = [deckIndexSortDescriptor]
         deckFetchReq.fetchBatchSize = 10
@@ -148,21 +148,33 @@ final class MemoryDecksStore: DecksStoreProtocol {
             guard let decks = result.finalResult else { return }
             
             MemoryDecksStore.decks = decks
+            
+            completion(MemoryDecksStore.decks)
         }
         
         do {
             try managedContext.execute(asyncFetchReq)
         } catch let error as NSError {
             assertionFailure("Failed to fetch decks \(#line), \(#file) - error: \(error) with desc \(error.userInfo)")
-            return []
+            return
         }
-        
-        return MemoryDecksStore.decks
     }
     
+    // MARK: Create deck
     func createDeck() -> Deck? {
+        
         let deck = Deck(context: managedContext)
         deck.initializeDeckWithValues(name: "Untitled Deck", deckID: UUID(), dateCreated: Date(), deckIndex: MemoryDecksStore.decks.count, cards: [])
+        
+        MemoryDecksStore.decks.append(deck)
+        
+        do {
+            guard managedContext.hasChanges else { return nil }
+            try managedContext.save()
+        } catch let error as NSError {
+            assertionFailure("Error saving new deck \(#line), \(#file) - error: \(error) with desc: \(error.userInfo)")
+            return nil
+        }
         
         return deck
     }
