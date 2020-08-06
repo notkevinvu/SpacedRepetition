@@ -93,6 +93,8 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     private func configureCollectionDataSource() {
         contentView.collectionView.delegate = self
         contentView.collectionView.dataSource = self
+        contentView.collectionView.dragDelegate = self
+        contentView.collectionView.dropDelegate = self
     }
   
     // MARK: Routing/Navigation
@@ -140,7 +142,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         navigationItem.title = viewModel.displayedDeckName
     }
     
-    var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel]?
+    var displayedDeckCards: [DeckDetailCollectionViewCell.CardCellModel] = []
     
     func displayDeckCards(viewModel: DeckDetail.ShowDeck.ViewModel.DeckCardModels) {
         displayedDeckCards = viewModel.displayedCards
@@ -148,19 +150,19 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     }
     
     func displayCreatedCard(viewModel: DeckDetail.CreateCard.ViewModel) {
-        displayedDeckCards?.append(viewModel.displayedCard)
+        displayedDeckCards.append(viewModel.displayedCard)
         contentView.collectionView.reloadData()
     }
     
     func displayEditedCard(viewModel: DeckDetail.ShowEditCardAC.ViewModel) {
         // replacing the card model at the given index with the new card model
         // specified by the user
-        displayedDeckCards?[viewModel.cardIndex] = viewModel.displayedCard
+        displayedDeckCards[viewModel.cardIndex] = viewModel.displayedCard
         contentView.collectionView.reloadData()
     }
     
     func displayDeletedCard(viewModel: DeckDetail.ShowDeleteCardAC.ViewModel) {
-        displayedDeckCards?.remove(at: viewModel.cardIndexToDelete)
+        displayedDeckCards.remove(at: viewModel.cardIndexToDelete)
         contentView.collectionView.reloadData()
     }
     
@@ -171,6 +173,35 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         interactor?.showCreateCard(request: request)
     }
     
+    // MARK: Helper methods
+    
+    fileprivate func reorderItems(coordinator: UICollectionViewDropCoordinator, destinationIndexPath: IndexPath, collectionView: UICollectionView) {
+        
+        guard
+            let item = coordinator.items.first,
+            let sourceIndexpath = item.sourceIndexPath
+            else {
+                return
+        }
+        
+        // batch update allows us to remove and insert as a group (so we don't
+        // have to check if the destination index is a valid index
+        collectionView.performBatchUpdates({
+            let cardModelToMove = displayedDeckCards.remove(at: sourceIndexpath.item)
+            displayedDeckCards.insert(cardModelToMove, at: destinationIndexPath.item)
+            collectionView.reloadData()
+            
+            collectionView.deleteItems(at: [sourceIndexpath])
+            collectionView.insertItems(at: [destinationIndexPath])
+            
+        }, completion: nil)
+        
+        coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+        
+        let request = DeckDetail.ReorderCards.Request(sourceIndex: sourceIndexpath.item, destinationIndex: destinationIndexPath.item)
+        interactor?.reorderCards(request: request)
+    }
+    
 }
 
 // MARK: - Collection view methods
@@ -178,15 +209,12 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
 extension DeckDetailViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let displayedDeckCards = displayedDeckCards else { return 0 }
         return displayedDeckCards.count
     }
     
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DeckDetailCollectionViewCell.identifier, for: indexPath) as! DeckDetailCollectionViewCell
-        
-        guard let displayedDeckCards = displayedDeckCards else { return cell }
         cell.configureWithModel(displayedDeckCards[indexPath.row])
         
         let cardIndexToEditOrDelete = indexPath.row
@@ -211,3 +239,39 @@ extension DeckDetailViewController: UICollectionViewDataSource, UICollectionView
     
 }
 
+
+// MARK: Drag/drop collection view ext
+extension DeckDetailViewController: UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, dropSessionDidUpdate session: UIDropSession, withDestinationIndexPath destinationIndexPath: IndexPath?) -> UICollectionViewDropProposal {
+        
+        if collectionView.hasActiveDrag {
+            return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+        }
+        
+        return UICollectionViewDropProposal(operation: .forbidden)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        
+        let item = displayedDeckCards[indexPath.row]
+        
+        let itemProvider = NSItemProvider(object: item.frontSide as NSString)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        dragItem.localObject = item
+        
+        return [dragItem]
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+        
+        if coordinator.proposal.operation == .move {
+            reorderItems(coordinator: coordinator, destinationIndexPath: destinationIndexPath, collectionView: collectionView)
+        }
+        
+    }
+    
+}

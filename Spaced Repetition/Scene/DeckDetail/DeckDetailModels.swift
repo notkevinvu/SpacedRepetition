@@ -118,6 +118,20 @@ enum DeckDetail {
         }
     }
     
+    // MARK: Reorder cards
+    enum ReorderCards {
+        struct Request {
+            let sourceIndex: Int
+            let destinationIndex: Int
+        }
+        struct Response {
+            
+        }
+        struct ViewModel {
+            
+        }
+    }
+    
     
     // MARK: Review deck
     enum ShowReviewDeck {

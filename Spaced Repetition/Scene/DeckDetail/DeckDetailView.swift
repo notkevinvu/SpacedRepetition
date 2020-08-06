@@ -43,6 +43,7 @@ class DeckDetailView: UIView {
         collectionView.backgroundColor = .white
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.alwaysBounceVertical = true
+        collectionView.dragInteractionEnabled = true
         
         return collectionView
     }()

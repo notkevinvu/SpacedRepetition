@@ -23,6 +23,8 @@ protocol DeckDetailBusinessLogic
     func showCreateCard(request: DeckDetail.ShowCreateCard.Request)
     
     func showCardOptionsAlert(request: DeckDetail.ShowCardOptions.Request)
+    
+    func reorderCards(request: DeckDetail.ReorderCards.Request)
 }
 
 protocol DeckDetailDataStore
@@ -112,6 +114,7 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
     // MARK: - Show Card Options Alert
     func showCardOptionsAlert(request: DeckDetail.ShowCardOptions.Request) {
         let indexOfCardToEditOrDelete = request.cardIndexToEditOrDelete
+        print(indexOfCardToEditOrDelete, cardsFromDeck.count)
         let cardToEditOrDelete = cardsFromDeck[indexOfCardToEditOrDelete]
         
         let cancelAction = AlertDisplayable.Action(title: "Cancel", style: .cancel, handler: nil)
@@ -174,6 +177,16 @@ class DeckDetailInteractor: DeckDetailBusinessLogic, DeckDetailDataStore
         
         let actionSheetViewModel = AlertDisplayable.ViewModel(title: nil, message: nil, textFields: [], actions: [cancelAction, editCardAction, deleteCardAction])
         presenter?.presentAlert(viewModel: actionSheetViewModel, alertStyle: .actionSheet)
+    }
+    
+    func reorderCards(request: DeckDetail.ReorderCards.Request) {
+        guard let deckInfo = deckInfo else { return }
+        
+        let cardToMove = cardsFromDeck.remove(at: request.sourceIndex)
+        cardsFromDeck.insert(cardToMove, at: request.destinationIndex)
+        
+        deckInfo.reorder(card: cardToMove, sourceIndex: request.sourceIndex, destinationIndex: request.destinationIndex)
+        
     }
     
     
