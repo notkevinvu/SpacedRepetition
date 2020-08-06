@@ -142,19 +142,9 @@ class DecksInteractor: DecksBusinessLogic, DecksDataStore {
     
     // MARK: Reorder deck
     func reorderDeck(request: Decks.ReorderDeck.Request) {
-        /*
-         need to check to see if the destination index is the end of the array
-         we can do this by checking if the destination index is the same as the
-         end index of the array
-         */
         
-        if request.destinationIndex == decks.endIndex {
-            let deckToMove = decks.remove(at: request.sourceIndex)
-            decks.insert(deckToMove, at: decks.endIndex)
-        } else {
-            let deckToMove = decks.remove(at: request.sourceIndex)
-            decks.insert(deckToMove, at: request.destinationIndex)
-        }
+        let deckToMove = decks.remove(at: request.sourceIndex)
+        decks.insert(deckToMove, at: request.destinationIndex)
         
         decksWorker.updateDeckOrder(decks: decks)
     }
