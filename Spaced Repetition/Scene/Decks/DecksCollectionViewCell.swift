@@ -169,8 +169,14 @@ class DecksCollectionViewCell: UICollectionViewCell {
             } else {
                 reviewNotificationLabel.text = "Needs review"
             }
+            let image = UIImage(systemName: "hourglass")
+            reviewNotificationImageView.image = image
         case false:
             reviewNotificationLabel.text = "All caught up!"
+            
+            let largeImageConfig = UIImage.SymbolConfiguration(pointSize: 8, weight: .bold)
+            let image = UIImage(systemName: "checkmark", withConfiguration: largeImageConfig)
+            reviewNotificationImageView.image = image
         }
     }
     
