@@ -171,12 +171,14 @@ class DecksCollectionViewCell: UICollectionViewCell {
             }
             let image = UIImage(systemName: "hourglass")
             reviewNotificationImageView.image = image
+            reviewNotificationImageView.tintColor = UIColor(hex: "CE3A3A")
         case false:
             reviewNotificationLabel.text = "All caught up!"
             
             let largeImageConfig = UIImage.SymbolConfiguration(pointSize: 8, weight: .bold)
             let image = UIImage(systemName: "checkmark", withConfiguration: largeImageConfig)
             reviewNotificationImageView.image = image
+            reviewNotificationImageView.tintColor = UIColor(hex: "3ACE3A")
         }
     }
     
