@@ -20,7 +20,7 @@ final class DecksView: UIView {
     weak var delegate: Delegate?
     
     let collectionView: UICollectionView = {
-       let layout = UICollectionViewFlowLayout()
+        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
         layout.itemSize = CGSize(width: 360, height: 110)

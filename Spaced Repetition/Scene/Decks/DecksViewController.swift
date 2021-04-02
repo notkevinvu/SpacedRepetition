@@ -106,7 +106,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         interactor?.updateDeckCellModels(request: request)
     }
     
-    // MARK: Display
+    // MARK: Display logic
     
     var cellModels: [DecksCollectionViewCell.DeckCellModel] = []
     
@@ -131,7 +131,6 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     }
     
     // MARK: Navigation
-    
     func displayDeckDetail(deckInfoToPass: Deck) {
         router.dataStore?.deckInfoToPass = deckInfoToPass
         router.routeToDeckDetail()
