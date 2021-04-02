@@ -7,23 +7,93 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */; };
+		2534395224379DB700EA34D0 /* DeckDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */; };
+		2534395424379DB700EA34D0 /* DeckDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */; };
+		2534395524379DB700EA34D0 /* DeckDetailModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534394F24379DB700EA34D0 /* DeckDetailModels.swift */; };
+		2534395624379DB700EA34D0 /* DeckDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534395024379DB700EA34D0 /* DeckDetailViewController.swift */; };
+		2534395724379DB700EA34D0 /* DeckDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */; };
+		2555528B244B7D790059D420 /* DependencyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2555528A244B7D790059D420 /* DependencyContainer.swift */; };
+		255D74C02450B08A005D7DD4 /* ReusableProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D74BF2450B08A005D7DD4 /* ReusableProtocols.swift */; };
+		255D750324536B49005D7DD4 /* ReviewDeckPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D74FD24536B49005D7DD4 /* ReviewDeckPresenter.swift */; };
+		255D750524536B49005D7DD4 /* ReviewDeckRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D74FF24536B49005D7DD4 /* ReviewDeckRouter.swift */; };
+		255D750624536B49005D7DD4 /* ReviewDeckModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750024536B49005D7DD4 /* ReviewDeckModels.swift */; };
+		255D750724536B49005D7DD4 /* ReviewDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750124536B49005D7DD4 /* ReviewDeckViewController.swift */; };
+		255D750824536B49005D7DD4 /* ReviewDeckInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D750224536B49005D7DD4 /* ReviewDeckInteractor.swift */; };
+		255D750C2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */; };
+		255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75B424849A18005D7DD4 /* CoreDataStack.swift */; };
+		255D75C224858B0C005D7DD4 /* Deck+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */; };
+		255D75C324858B0C005D7DD4 /* Deck+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */; };
+		255D75C424858B0C005D7DD4 /* Card+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */; };
+		255D75C524858B0C005D7DD4 /* Card+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */; };
+		257BCD9324959C37003ADB41 /* ReviewDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 257BCD9224959C37003ADB41 /* ReviewDeckView.swift */; };
+		259806EF244F60E600151168 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259806EE244F60E600151168 /* Extensions.swift */; };
+		25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */; };
+		25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */; };
+		25BF792F2436916500CE0E7A /* NaiveDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF792E2436916500CE0E7A /* NaiveDeck.swift */; };
+		25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BF7930243691A100CE0E7A /* DecksWorker.swift */; };
+		25CAD5A824C6845B009570C2 /* ExpandedCardDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5A224C6845B009570C2 /* ExpandedCardDetailPresenter.swift */; };
+		25CAD5AA24C6845B009570C2 /* ExpandedCardDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5A424C6845B009570C2 /* ExpandedCardDetailRouter.swift */; };
+		25CAD5AB24C6845B009570C2 /* ExpandedCardDetailModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5A524C6845B009570C2 /* ExpandedCardDetailModels.swift */; };
+		25CAD5AC24C6845B009570C2 /* ExpandedCardDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5A624C6845B009570C2 /* ExpandedCardDetailViewController.swift */; };
+		25CAD5AD24C6845B009570C2 /* ExpandedCardDetailInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5A724C6845B009570C2 /* ExpandedCardDetailInteractor.swift */; };
+		25CAD5B024C685CD009570C2 /* ExpandedCardDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25CAD5AF24C685CD009570C2 /* ExpandedCardDetailView.swift */; };
+		25DABD4A243BD53300037E7E /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DABD49243BD53300037E7E /* DeckDetailView.swift */; };
 		8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E95A2429753A0023992C /* AppDelegate.swift */; };
-		8E02E95D2429753A0023992C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E95C2429753A0023992C /* SceneDelegate.swift */; };
-		8E02E95F2429753A0023992C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E95E2429753A0023992C /* ViewController.swift */; };
-		8E02E9622429753A0023992C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9602429753A0023992C /* Main.storyboard */; };
 		8E02E9642429753B0023992C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9632429753B0023992C /* Assets.xcassets */; };
 		8E02E9672429753B0023992C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8E02E9652429753B0023992C /* LaunchScreen.storyboard */; };
+		8E02E973242AF4590023992C /* DecksPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E96E242AF4590023992C /* DecksPresenter.swift */; };
+		8E02E974242AF4590023992C /* DecksRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E96F242AF4590023992C /* DecksRouter.swift */; };
+		8E02E975242AF4590023992C /* DecksModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E970242AF4590023992C /* DecksModels.swift */; };
+		8E02E976242AF4590023992C /* DecksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E971242AF4590023992C /* DecksViewController.swift */; };
+		8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E972242AF4590023992C /* DecksInteractor.swift */; };
+		8E02E97B242AF4CF0023992C /* DecksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E02E97A242AF4CF0023992C /* DecksView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailPresenter.swift; sourceTree = "<group>"; };
+		2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailRouter.swift; sourceTree = "<group>"; };
+		2534394F24379DB700EA34D0 /* DeckDetailModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailModels.swift; sourceTree = "<group>"; };
+		2534395024379DB700EA34D0 /* DeckDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailViewController.swift; sourceTree = "<group>"; };
+		2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailInteractor.swift; sourceTree = "<group>"; };
+		2555528A244B7D790059D420 /* DependencyContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DependencyContainer.swift; sourceTree = "<group>"; };
+		255D74BF2450B08A005D7DD4 /* ReusableProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProtocols.swift; sourceTree = "<group>"; };
+		255D74FD24536B49005D7DD4 /* ReviewDeckPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckPresenter.swift; sourceTree = "<group>"; };
+		255D74FF24536B49005D7DD4 /* ReviewDeckRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckRouter.swift; sourceTree = "<group>"; };
+		255D750024536B49005D7DD4 /* ReviewDeckModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckModels.swift; sourceTree = "<group>"; };
+		255D750124536B49005D7DD4 /* ReviewDeckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckViewController.swift; sourceTree = "<group>"; };
+		255D750224536B49005D7DD4 /* ReviewDeckInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckInteractor.swift; sourceTree = "<group>"; };
+		255D750B2458B155005D7DD4 /* DataModels.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModels.xcdatamodel; sourceTree = "<group>"; };
+		255D75B424849A18005D7DD4 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Deck+CoreDataClass.swift"; sourceTree = "<group>"; };
+		255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Deck+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataClass.swift"; sourceTree = "<group>"; };
+		255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Card+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		257BCD9224959C37003ADB41 /* ReviewDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewDeckView.swift; sourceTree = "<group>"; };
+		259806EE244F60E600151168 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryDecksStore.swift; sourceTree = "<group>"; };
+		25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksCollectionViewCell.swift; sourceTree = "<group>"; };
+		25BF792E2436916500CE0E7A /* NaiveDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaiveDeck.swift; sourceTree = "<group>"; };
+		25BF7930243691A100CE0E7A /* DecksWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksWorker.swift; sourceTree = "<group>"; };
+		25CAD5A224C6845B009570C2 /* ExpandedCardDetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailPresenter.swift; sourceTree = "<group>"; };
+		25CAD5A424C6845B009570C2 /* ExpandedCardDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailRouter.swift; sourceTree = "<group>"; };
+		25CAD5A524C6845B009570C2 /* ExpandedCardDetailModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailModels.swift; sourceTree = "<group>"; };
+		25CAD5A624C6845B009570C2 /* ExpandedCardDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailViewController.swift; sourceTree = "<group>"; };
+		25CAD5A724C6845B009570C2 /* ExpandedCardDetailInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailInteractor.swift; sourceTree = "<group>"; };
+		25CAD5AF24C685CD009570C2 /* ExpandedCardDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedCardDetailView.swift; sourceTree = "<group>"; };
+		25DABD49243BD53300037E7E /* DeckDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailView.swift; sourceTree = "<group>"; };
 		8E02E9572429753A0023992C /* Spaced Repetition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spaced Repetition.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E02E95A2429753A0023992C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8E02E95C2429753A0023992C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8E02E95E2429753A0023992C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8E02E9612429753A0023992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8E02E9632429753B0023992C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E02E9662429753B0023992C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8E02E9682429753B0023992C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8E02E96E242AF4590023992C /* DecksPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksPresenter.swift; sourceTree = "<group>"; };
+		8E02E96F242AF4590023992C /* DecksRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksRouter.swift; sourceTree = "<group>"; };
+		8E02E970242AF4590023992C /* DecksModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksModels.swift; sourceTree = "<group>"; };
+		8E02E971242AF4590023992C /* DecksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksViewController.swift; sourceTree = "<group>"; };
+		8E02E972242AF4590023992C /* DecksInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksInteractor.swift; sourceTree = "<group>"; };
+		8E02E97A242AF4CF0023992C /* DecksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecksView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +107,79 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2534394B24379DA700EA34D0 /* DeckDetail */ = {
+			isa = PBXGroup;
+			children = (
+				25DABD49243BD53300037E7E /* DeckDetailView.swift */,
+				250834B32446541E00284638 /* DeckDetailCollectionViewCell.swift */,
+				2534395024379DB700EA34D0 /* DeckDetailViewController.swift */,
+				2534395124379DB700EA34D0 /* DeckDetailInteractor.swift */,
+				2534394C24379DB700EA34D0 /* DeckDetailPresenter.swift */,
+				2534394E24379DB700EA34D0 /* DeckDetailRouter.swift */,
+				2534394F24379DB700EA34D0 /* DeckDetailModels.swift */,
+			);
+			path = DeckDetail;
+			sourceTree = "<group>";
+		};
+		255D750924536B4D005D7DD4 /* ReviewDeck */ = {
+			isa = PBXGroup;
+			children = (
+				257BCD9224959C37003ADB41 /* ReviewDeckView.swift */,
+				255D750124536B49005D7DD4 /* ReviewDeckViewController.swift */,
+				255D750224536B49005D7DD4 /* ReviewDeckInteractor.swift */,
+				255D74FD24536B49005D7DD4 /* ReviewDeckPresenter.swift */,
+				255D74FF24536B49005D7DD4 /* ReviewDeckRouter.swift */,
+				255D750024536B49005D7DD4 /* ReviewDeckModels.swift */,
+			);
+			path = ReviewDeck;
+			sourceTree = "<group>";
+		};
+		25BF7921243454F900CE0E7A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				255D75BE24858B0C005D7DD4 /* Deck+CoreDataClass.swift */,
+				255D75BF24858B0C005D7DD4 /* Deck+CoreDataProperties.swift */,
+				255D75C024858B0C005D7DD4 /* Card+CoreDataClass.swift */,
+				255D75C124858B0C005D7DD4 /* Card+CoreDataProperties.swift */,
+				25BF792E2436916500CE0E7A /* NaiveDeck.swift */,
+				255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		25BF79222434550000CE0E7A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				25BF792424345E9300CE0E7A /* MemoryDecksStore.swift */,
+				2555528A244B7D790059D420 /* DependencyContainer.swift */,
+				259806EE244F60E600151168 /* Extensions.swift */,
+				255D74BF2450B08A005D7DD4 /* ReusableProtocols.swift */,
+				255D75B424849A18005D7DD4 /* CoreDataStack.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		25BF792D24368F4600CE0E7A /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				25BF7930243691A100CE0E7A /* DecksWorker.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		25CAD5AE24C68463009570C2 /* ExpandedCardDetail */ = {
+			isa = PBXGroup;
+			children = (
+				25CAD5AF24C685CD009570C2 /* ExpandedCardDetailView.swift */,
+				25CAD5A624C6845B009570C2 /* ExpandedCardDetailViewController.swift */,
+				25CAD5A724C6845B009570C2 /* ExpandedCardDetailInteractor.swift */,
+				25CAD5A224C6845B009570C2 /* ExpandedCardDetailPresenter.swift */,
+				25CAD5A424C6845B009570C2 /* ExpandedCardDetailRouter.swift */,
+				25CAD5A524C6845B009570C2 /* ExpandedCardDetailModels.swift */,
+			);
+			path = ExpandedCardDetail;
+			sourceTree = "<group>";
+		};
 		8E02E94E2429753A0023992C = {
 			isa = PBXGroup;
 			children = (
@@ -56,15 +199,41 @@
 		8E02E9592429753A0023992C /* Spaced Repetition */ = {
 			isa = PBXGroup;
 			children = (
+				25BF792D24368F4600CE0E7A /* Workers */,
+				25BF79222434550000CE0E7A /* Services */,
+				25BF7921243454F900CE0E7A /* Models */,
+				8E02E979242AF4670023992C /* Scene */,
 				8E02E95A2429753A0023992C /* AppDelegate.swift */,
-				8E02E95C2429753A0023992C /* SceneDelegate.swift */,
-				8E02E95E2429753A0023992C /* ViewController.swift */,
-				8E02E9602429753A0023992C /* Main.storyboard */,
 				8E02E9632429753B0023992C /* Assets.xcassets */,
 				8E02E9652429753B0023992C /* LaunchScreen.storyboard */,
 				8E02E9682429753B0023992C /* Info.plist */,
 			);
 			path = "Spaced Repetition";
+			sourceTree = "<group>";
+		};
+		8E02E978242AF4600023992C /* Decks */ = {
+			isa = PBXGroup;
+			children = (
+				8E02E97A242AF4CF0023992C /* DecksView.swift */,
+				25BF79262435B2F100CE0E7A /* DecksCollectionViewCell.swift */,
+				8E02E971242AF4590023992C /* DecksViewController.swift */,
+				8E02E972242AF4590023992C /* DecksInteractor.swift */,
+				8E02E96E242AF4590023992C /* DecksPresenter.swift */,
+				8E02E96F242AF4590023992C /* DecksRouter.swift */,
+				8E02E970242AF4590023992C /* DecksModels.swift */,
+			);
+			path = Decks;
+			sourceTree = "<group>";
+		};
+		8E02E979242AF4670023992C /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				8E02E978242AF4600023992C /* Decks */,
+				2534394B24379DA700EA34D0 /* DeckDetail */,
+				25CAD5AE24C68463009570C2 /* ExpandedCardDetail */,
+				255D750924536B4D005D7DD4 /* ReviewDeck */,
+			);
+			path = Scene;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -127,7 +296,6 @@
 			files = (
 				8E02E9672429753B0023992C /* LaunchScreen.storyboard in Resources */,
 				8E02E9642429753B0023992C /* Assets.xcassets in Resources */,
-				8E02E9622429753A0023992C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +306,51 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E02E95F2429753A0023992C /* ViewController.swift in Sources */,
+				255D75C224858B0C005D7DD4 /* Deck+CoreDataClass.swift in Sources */,
+				8E02E975242AF4590023992C /* DecksModels.swift in Sources */,
+				25CAD5A824C6845B009570C2 /* ExpandedCardDetailPresenter.swift in Sources */,
+				25CAD5AD24C6845B009570C2 /* ExpandedCardDetailInteractor.swift in Sources */,
 				8E02E95B2429753A0023992C /* AppDelegate.swift in Sources */,
-				8E02E95D2429753A0023992C /* SceneDelegate.swift in Sources */,
+				2534395724379DB700EA34D0 /* DeckDetailInteractor.swift in Sources */,
+				255D75C424858B0C005D7DD4 /* Card+CoreDataClass.swift in Sources */,
+				2534395624379DB700EA34D0 /* DeckDetailViewController.swift in Sources */,
+				25DABD4A243BD53300037E7E /* DeckDetailView.swift in Sources */,
+				25CAD5B024C685CD009570C2 /* ExpandedCardDetailView.swift in Sources */,
+				25BF792F2436916500CE0E7A /* NaiveDeck.swift in Sources */,
+				25CAD5AB24C6845B009570C2 /* ExpandedCardDetailModels.swift in Sources */,
+				2555528B244B7D790059D420 /* DependencyContainer.swift in Sources */,
+				255D75B524849A18005D7DD4 /* CoreDataStack.swift in Sources */,
+				25CAD5AA24C6845B009570C2 /* ExpandedCardDetailRouter.swift in Sources */,
+				257BCD9324959C37003ADB41 /* ReviewDeckView.swift in Sources */,
+				8E02E977242AF4590023992C /* DecksInteractor.swift in Sources */,
+				255D74C02450B08A005D7DD4 /* ReusableProtocols.swift in Sources */,
+				250834B42446541E00284638 /* DeckDetailCollectionViewCell.swift in Sources */,
+				255D75C524858B0C005D7DD4 /* Card+CoreDataProperties.swift in Sources */,
+				25BF79272435B2F100CE0E7A /* DecksCollectionViewCell.swift in Sources */,
+				25BF7931243691A100CE0E7A /* DecksWorker.swift in Sources */,
+				8E02E973242AF4590023992C /* DecksPresenter.swift in Sources */,
+				25CAD5AC24C6845B009570C2 /* ExpandedCardDetailViewController.swift in Sources */,
+				255D750824536B49005D7DD4 /* ReviewDeckInteractor.swift in Sources */,
+				259806EF244F60E600151168 /* Extensions.swift in Sources */,
+				2534395424379DB700EA34D0 /* DeckDetailRouter.swift in Sources */,
+				255D750324536B49005D7DD4 /* ReviewDeckPresenter.swift in Sources */,
+				255D750524536B49005D7DD4 /* ReviewDeckRouter.swift in Sources */,
+				2534395524379DB700EA34D0 /* DeckDetailModels.swift in Sources */,
+				255D750C2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld in Sources */,
+				255D75C324858B0C005D7DD4 /* Deck+CoreDataProperties.swift in Sources */,
+				25BF792524345E9300CE0E7A /* MemoryDecksStore.swift in Sources */,
+				255D750624536B49005D7DD4 /* ReviewDeckModels.swift in Sources */,
+				8E02E974242AF4590023992C /* DecksRouter.swift in Sources */,
+				8E02E97B242AF4CF0023992C /* DecksView.swift in Sources */,
+				255D750724536B49005D7DD4 /* ReviewDeckViewController.swift in Sources */,
+				2534395224379DB700EA34D0 /* DeckDetailPresenter.swift in Sources */,
+				8E02E976242AF4590023992C /* DecksViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		8E02E9602429753A0023992C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8E02E9612429753A0023992C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		8E02E9652429753B0023992C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -338,6 +534,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		255D750A2458B155005D7DD4 /* SpacedRepetition.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				255D750B2458B155005D7DD4 /* DataModels.xcdatamodel */,
+			);
+			currentVersion = 255D750B2458B155005D7DD4 /* DataModels.xcdatamodel */;
+			path = SpacedRepetition.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8E02E94F2429753A0023992C /* Project object */;
 }
