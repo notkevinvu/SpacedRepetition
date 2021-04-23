@@ -59,17 +59,22 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
         let interactor = DeckDetailInteractor(factory: DependencyContainer())
         let presenter = DeckDetailPresenter()
         let router = DeckDetailRouter()
-        let view = DeckDetailView()
         
         viewController.interactor = interactor
         viewController.router = router
-        viewController.contentView = view
+        
         interactor.presenter = presenter
         presenter.viewController = viewController
         presenter.alertDisplayableViewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
-        view.delegate = interactor
+        
+    }
+    
+    func setupView() {
+        let contentView = DeckDetailView(view: view)
+        self.contentView = contentView
+        contentView.delegate = interactor as? DeckDetailView.Delegate
     }
     
     private func configureNavBar() {
@@ -114,6 +119,7 @@ class DeckDetailViewController: UIViewController, DeckDetailDisplayLogic, AlertD
     
     override func loadView() {
         super.loadView()
+        setupView()
         view = contentView
     }
       

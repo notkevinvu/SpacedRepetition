@@ -28,12 +28,15 @@ class DeckDetailView: UIView {
     typealias Delegate = DeckDetailViewDelegate
     weak var delegate: Delegate?
     
+    let parentView: UIView
     
-    let collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
        let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 30
-        layout.itemSize = CGSize(width: 360, height: 140)
+        let horizontalPadding: CGFloat = 20
+        let paddedWidth = parentView.bounds.width - (horizontalPadding * 2)
+        layout.itemSize = CGSize(width: paddedWidth, height: 140)
         // bottom inset allows users to scroll to see last card if there are more
         // than 4 cards
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 90, right: 0)
@@ -75,7 +78,8 @@ class DeckDetailView: UIView {
     
     // MARK: Object lifecycle
 
-    init() {
+    init(view: UIView) {
+        self.parentView = view
         super.init(frame: .zero)
         backgroundColor = .white
         setupSubViews()

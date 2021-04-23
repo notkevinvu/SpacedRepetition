@@ -34,12 +34,10 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
   
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        setup()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setup()
     }
     
     // MARK: Setup
@@ -49,17 +47,17 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
         let interactor = DecksInteractor(factory: DependencyContainer())
         let presenter = DecksPresenter()
         let router = DecksRouter()
-        let view = DecksView()
+        let contentView = DecksView(view: view)
         
         viewController.interactor = interactor
         viewController.router = router
-        viewController.contentView = view
+        viewController.contentView = contentView
         interactor.presenter = presenter
         presenter.viewController = viewController
         presenter.alertDisplayableViewController = viewController
         router.viewController = viewController
         router.dataStore = interactor
-        view.delegate = interactor
+        contentView.delegate = interactor
     }
     
     private func configureCollectionView() {
@@ -78,6 +76,7 @@ class DecksViewController: UIViewController, DecksDisplayLogic, AlertDisplayable
     
     override func loadView() {
         super.loadView()
+        setup()
         view = contentView
         
     }
