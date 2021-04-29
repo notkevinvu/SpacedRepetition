@@ -62,9 +62,11 @@ class ReviewDeckView: UIView {
         
         return view
     }()
+    var originalCardPosition = CGPoint(x: 0, y: 0)
+    var shouldGetCurrentCardPosition = true
     
     
-    let cardFrontSideTextView: UITextView = {
+    lazy var cardFrontSideTextView: UITextView = {
         let txtView = UITextView(frame: .zero)
         txtView.translatesAutoresizingMaskIntoConstraints = false
         txtView.textAlignment = .left
@@ -75,7 +77,7 @@ class ReviewDeckView: UIView {
         return txtView
     }()
     
-    let cardBackSideTextView: UITextView = {
+    lazy var cardBackSideTextView: UITextView = {
         let txtView = UITextView(frame: .zero)
         txtView.translatesAutoresizingMaskIntoConstraints = false
         txtView.textAlignment = .left
@@ -185,6 +187,14 @@ class ReviewDeckView: UIView {
         setupSubviews()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if currentCardView.center.x != 0, shouldGetCurrentCardPosition == true {
+            originalCardPosition = currentCardView.center
+            shouldGetCurrentCardPosition = false
+        }
+    }
+    
     
     // MARK: Setup subviews
     
@@ -219,41 +229,37 @@ class ReviewDeckView: UIView {
             currentProgressBarView.heightAnchor.constraint(equalToConstant: 10),
             
             
-            currentCardView.leftAnchor.constraint(equalTo: currentProgressBarView.leftAnchor),
-            currentCardView.rightAnchor.constraint(equalTo: currentProgressBarView.rightAnchor),
-            currentCardView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 45),
-            currentCardView.heightAnchor.constraint(equalToConstant: 450),
+            correctAnswerButton.centerXAnchor.constraint(equalTo: currentProgressBarView.centerXAnchor, constant: 80),
+            correctAnswerButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            correctAnswerButton.heightAnchor.constraint(equalToConstant: 70),
+            correctAnswerButton.widthAnchor.constraint(equalToConstant: 70),
             
-            cardFrontSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
-            cardFrontSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
-            cardFrontSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
-            /*
-             Bottom anchor lessThanOrEqualTo = the label will dynamically autosize
-             vertically until it hits (30 pts above) the currentCardView's
-             bottom anchor - this allows us to somewhat force top+left alignment
-             */
-            cardFrontSideTextView.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
+            wrongAnswerButton.centerXAnchor.constraint(equalTo: currentProgressBarView.centerXAnchor, constant: -80),
+            wrongAnswerButton.centerYAnchor.constraint(equalTo: correctAnswerButton.centerYAnchor),
+            wrongAnswerButton.heightAnchor.constraint(equalToConstant: 70),
+            wrongAnswerButton.widthAnchor.constraint(equalToConstant: 70),
             
-            cardBackSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
-            cardBackSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
-            cardBackSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
-            cardBackSideTextView.bottomAnchor.constraint(lessThanOrEqualTo: currentCardView.bottomAnchor, constant: -30),
             
-            flipCardButton.topAnchor.constraint(equalTo: currentCardView.bottomAnchor, constant: 20),
+            flipCardButton.bottomAnchor.constraint(equalTo: wrongAnswerButton.topAnchor, constant: -20),
             flipCardButton.heightAnchor.constraint(equalToConstant: 50),
             flipCardButton.leftAnchor.constraint(equalTo: currentCardView.leftAnchor),
             flipCardButton.rightAnchor.constraint(equalTo: currentCardView.rightAnchor),
             
-            correctAnswerButton.centerXAnchor.constraint(equalTo: currentCardView.centerXAnchor, constant: 80),
-            correctAnswerButton.centerYAnchor.constraint(equalTo: flipCardButton.bottomAnchor, constant: 60),
-            correctAnswerButton.heightAnchor.constraint(equalToConstant: 70),
-            correctAnswerButton.widthAnchor.constraint(equalToConstant: 70),
             
-            wrongAnswerButton.centerXAnchor.constraint(equalTo: currentCardView.centerXAnchor, constant: -80),
-            wrongAnswerButton.centerYAnchor.constraint(equalTo: correctAnswerButton.centerYAnchor),
-            wrongAnswerButton.heightAnchor.constraint(equalToConstant: 70),
-            wrongAnswerButton.widthAnchor.constraint(equalToConstant: 70)
+            currentCardView.leftAnchor.constraint(equalTo: currentProgressBarView.leftAnchor),
+            currentCardView.rightAnchor.constraint(equalTo: currentProgressBarView.rightAnchor),
+            currentCardView.topAnchor.constraint(equalTo: currentProgressBarView.bottomAnchor, constant: 20),
+            currentCardView.bottomAnchor.constraint(equalTo: flipCardButton.topAnchor, constant: -20),
             
+            cardFrontSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
+            cardFrontSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
+            cardFrontSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
+            cardFrontSideTextView.bottomAnchor.constraint(equalTo: currentCardView.bottomAnchor, constant: -30),
+            
+            cardBackSideTextView.leftAnchor.constraint(equalTo: currentCardView.leftAnchor, constant: 30),
+            cardBackSideTextView.rightAnchor.constraint(equalTo: currentCardView.rightAnchor, constant: -30),
+            cardBackSideTextView.topAnchor.constraint(equalTo: currentCardView.topAnchor, constant: 30),
+            cardBackSideTextView.bottomAnchor.constraint(equalTo: currentCardView.bottomAnchor, constant: -30)
         ])
     }
     
@@ -308,7 +314,7 @@ class ReviewDeckView: UIView {
          We then subtract this number from the y value when updating the new card center
          to get the true center it should be at
          */
-        let adjustedYPointFromMarginsGuide: CGFloat = 248.0
+        let adjustedYPointFromMarginsGuide = originalCardPosition.y
         
         // continuously update card center point to new touch point
         card.center = CGPoint(x: containerView.center.x + point.x, y: containerView.center.y + point.y - adjustedYPointFromMarginsGuide)
@@ -348,10 +354,7 @@ class ReviewDeckView: UIView {
                 return
             }
             
-            UIView.animate(withDuration: 0.2) {
-                // this point is the original card center
-                card.center = CGPoint(x: 207.0, y: 270.0)
-            }
+            self.resetCardPositionAndAlpha(cardView: card)
         }
     }
     
@@ -408,12 +411,10 @@ class ReviewDeckView: UIView {
     
     
     func resetCardPositionAndAlpha(cardView: UIView) {
-        cardView.center = CGPoint(x: 207.0, y: 270.0)
-        
         UIView.animate(withDuration: 0.2) {
+            cardView.center = self.originalCardPosition
             cardView.alpha = 1
         }
-        
     }
     
     func configureCardView(cardModel: ReviewCardModel) {
